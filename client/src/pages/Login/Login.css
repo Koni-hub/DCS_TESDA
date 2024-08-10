@@ -1,0 +1,201 @@
+.container-login-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
+    max-height: 100%;
+    margin: 0 auto;
+    background: 
+        linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+        url('../../assets/logo/background-img.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  
+  .login-form .signin {
+    width: 550px;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+  }
+  
+  .login-form .signin .content {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 40px;
+  }
+  
+  .login-form .signin .content h2 {
+    font-size: 2em;
+    color: var(--light);
+  }
+  
+  .login-form .signin .content .form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
+  
+  .login-form .signin .content .form .inputBox {
+    position: relative;
+    width: 100%;
+  }
+  
+  .login-form .signin .content .form .inputBox input {
+    position: relative;
+    width: 100%;
+    background: var(--input-background);
+    border: none;
+    outline: none;
+    padding: 25px 10px 7.5px;
+    border-radius: 4px;
+    color: #000;
+    font-weight: 500;
+    font-size: 1em;
+  }
+  
+  .login-form .signin .content .form .inputBox i {
+    position: absolute;
+    left: 0;
+    padding: 15px 10px;
+    font-style: normal;
+    color: #000;
+    transition: 0.5s;
+  }
+  
+  .login-form .signin .content .form .inputBox .no-event {
+    pointer-events: none;
+  }
+  
+  .login-form .signin .content .form .inputBox .show-password {
+    position: absolute;
+    right: 50px;
+    font-size: 25px;
+    font-style: normal;
+    color: #000;
+    transition: 0.5s;
+    cursor: pointer;
+    z-index: 10;
+  }
+  
+  .signin .content .form .inputBox input:focus ~ i,
+  .signin .content .form .inputBox input:valid ~ i {
+    transform: translateY(-7.5px);
+    font-size: 0.8em;
+    color: #000;
+  }
+  
+  .signin .content .form .inputBox input:focus,
+  .signin .content .form .inputBox input:valid {
+    border: 1px solid #cacaca;
+  }
+  
+  .signin .content .form .links {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .signin .content .form .links a {
+    color: var(--light);
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  .remeber-me-section {
+    display: flex;
+    gap: 10px;
+    color: var(--light);
+  }
+  
+  .signin .content .form .links a:nth-child(2) {
+    color: var(--light);
+    font-weight: 400;
+  }
+  
+  .signin .content .form .inputBox input[type="submit"] {
+    padding: 10px;
+    background: var(--secondary);
+    color: #f0f0f0;
+    font-weight: 600;
+    font-size: 1.35em;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+  }
+  
+  input[type="submit"]:active {
+    opacity: 0.6;
+  }
+
+  
+  .links-register {
+    text-align: center;
+    font-size: 13px;
+    color: #f0f0f0;
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+  }
+
+  .links-register p {
+    color: var(--light);
+  }
+  
+  .links-register a {
+    font-weight: bold;
+    text-align: center;
+    font-size: 13px;
+    color: #f0f0f0;
+  }
+
+  .break {
+    display: flex;
+    align-items: center;
+  }
+
+  .break span {
+    color: var(--light);
+  }
+  
+  .break hr {
+    flex: 1;
+    border: none; 
+    border-top: 1px solid var(--light);
+    margin: 0 10px;
+  }
+  
+  .break span {
+    padding: 0 10px; 
+    text-transform: uppercase;
+  }
+  
+  .google-container {
+    border: 1px solid #d5d5d5;
+    padding: 15px 25px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+  }
+
+  .google-container .google-text {
+    color: var(--light);
+  }
+  
+  .google-container:hover {
+    border: 1px solid #b8b8b8c7;
+    cursor: pointer;
+  }
+  
+  .google-container .google-img img {
+    background-attachment: fixed;
+  }

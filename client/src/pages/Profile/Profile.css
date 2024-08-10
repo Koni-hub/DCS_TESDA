@@ -1,0 +1,263 @@
+/* MAIN */
+#content main {
+  width: 100%;
+  font-family: var(--poppins);
+  overflow-y: auto;
+}
+
+#content {
+  position: relative;
+  width: 100%;
+  left: 0;
+  transition: 0.3s ease;
+}
+
+#sidebar.hide ~ #content {
+  width: auto;
+  left: 0;
+}
+
+/* default A href */
+a {
+  text-decoration: none;
+}
+
+/* NAVBAR */
+#profile-content nav {
+  height: 80px;
+  background: var(--light);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  grid-gap: 10px;
+  font-family: var(--poppins);
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  box-shadow: 5px 10px 50px #88888878;
+}
+#profile-content nav a {
+  color: var(--dark);
+}
+#profile-content nav .bx.bx-menu {
+  cursor: pointer;
+  color: var(--dark);
+}
+#profile-content nav .nav-link {
+  font-size: 16px;
+  transition: 0.3s ease;
+}
+#profile-content nav .nav-link:hover {
+  color: var(--secondary);
+}
+#profile-content nav .logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 400px;
+  width: 100%;
+  margin-right: auto;
+}
+#profile-content nav .logo h1 {
+  color: var(--secondary);
+}
+
+/* Dropdown Profile */
+
+.container-logut-drop-down {
+  position: relative;
+  display: inline-block;
+  padding: 10px;
+}
+
+.container-logut-drop-down:hover {
+  background-color: #f1f1f1;
+  border-radius: 10px;
+}
+
+.profile-name {
+  display: flex;
+  cursor: pointer;
+  gap: 5px;
+}
+
+.profile-content-drop-down-menu i {
+  font-size: 20px;
+  color: var(--secondary);
+}
+
+.dropdown-content {
+  position: absolute;
+  background-color: #f9f9f9;
+  right: 0;
+  top: 45px;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-content a i {
+  margin-right: 8px;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.bx-chevron-down {
+  transition: transform 0.3s ease;
+}
+
+.rotate {
+  transform: rotate(180deg);
+}
+
+/* Form */
+.container-account-form {
+  display: flex;
+  justify-content: center;
+  height: auto;
+  margin: 5% auto;
+}
+
+.account-form .account-container {
+  width: 550px;
+  z-index: 1000;
+}
+
+.account-form .account-container .account-content {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.account-form .account-container .account-content #info {
+  font-size: 1em;
+  color: rgba(6, 18, 238, 0.58);
+}
+
+.account-form .account-container .account-content .account-form-field {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.account-form
+  .account-container
+  .account-content
+  .account-form-field
+  .account-inputBox {
+  position: relative;
+  width: 100%;
+}
+
+.account-form
+  .account-container
+  .account-content
+  .account-form-field
+  .account-inputBox
+  input {
+  position: relative;
+  width: 100%;
+  background: var(--tertiary);
+  border: 1px solid #cacaca;
+  outline: none;
+  padding: 25px 10px 7.5px;
+  border-radius: 5px;
+  color: #000;
+  font-weight: 500;
+  font-size: 1em;
+}
+
+.account-form
+  .account-container
+  .account-content
+  .account-form-field
+  .account-inputBox
+  i {
+  position: absolute;
+  left: 0;
+  padding: 15px 10px;
+  font-style: normal;
+  color: #000;
+  transition: 0.5s;
+  
+}
+
+.account-form
+  .account-content
+  .account-form-field
+  .account-inputBox
+  input:focus
+  ~ i,
+.account-form
+  .account-content
+  .account-form-field
+  .account-inputBox
+  input:valid
+  ~ i {
+  transform: translateY(-7.5px);
+  font-size: 0.8em;
+  color: #000;
+}
+
+.account-form
+  .account-container
+  .account-content
+  .account-form-field
+  .account-inputBox
+  .show-password {
+  position: absolute;
+  right: 50px;
+  font-size: 25px;
+  font-style: normal;
+  color: #000;
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+.account-form-field .edit-save-account button {
+  background-color: var(--secondary);
+  border: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-family: var(--poppins);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 2;
+  padding: 5px 25px;
+  border-radius: 8px;
+  position: relative;
+  user-select: none;
+  white-space: nowrap;
+  color: var(--tertiary);
+}
+
+.edit-save-account {
+  margin: 10px 0px;
+}
+
+@media (max-width: 550px) {
+  .account-form .account-container {
+    width: 350px; 
+  }
+}
+
+@media (max-width: 400px) {
+  .account-form .account-container {
+    width: 250px; 
+  }
+}

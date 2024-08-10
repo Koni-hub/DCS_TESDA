@@ -1,0 +1,246 @@
+/* MAIN */
+:root {
+  --danger: #d32f2f;
+  --grey: #eee;
+}
+
+#content main {
+  width: 100%;
+  font-family: var(--poppins);
+  overflow-y: auto;
+  background-color: #f9f9ff;
+}
+
+.overview-section {
+  margin: 20px;
+  display: flex;
+  gap: 75px;
+}
+
+.overview-section .completed-task {
+  width: 450px;
+  height: 150px;
+  padding: 50px;
+  border-radius: 15px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 10px 10px;
+  color: var(--secondary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.completed-task .icon-completed-task {
+  border-radius: 10px;
+  background-color: rgb(87, 87, 87);
+  width: 75px;
+  height: 75px;
+  font-size: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.text-completed-task h1 {
+  color: black;
+}
+
+.text-completed-task h2 {
+  font-weight: 500;
+  color: black;
+}
+
+.overview-section .pending-task {
+  width: 450px;
+  height: 150px;
+  padding: 50px;
+  border-radius: 15px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 10px 10px;
+  color: var(--secondary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pending-task .icon-pending-task {
+  border-radius: 10px;
+  background-color: rgb(87, 87, 87);
+  width: 75px;
+  height: 75px;
+  font-size: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.text-pending-task h1 {
+  color: black;
+}
+
+.text-pending-task h2 {
+  font-weight: 500;
+  color: black;
+}
+
+.overview-section .rejected-task {
+  width: 450px;
+  height: 150px;
+  padding: 50px;
+  border-radius: 15px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 10px 10px;
+  color: var(--secondary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rejected-task .icon-rejected-task {
+  border-radius: 10px;
+  background-color: rgb(87, 87, 87);
+  width: 75px;
+  height: 75px;
+  font-size: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.text-rejected-task h1 {
+  color: black;
+}
+
+.text-rejected-task h2 {
+  font-weight: 500;
+  color: black;
+}
+
+.features-section {
+  margin: 20px;
+  display: flex;
+  gap: 50px;
+}
+
+.features-section .audit-section {
+  padding: 20px;
+  width: 75%;
+  height: 600px;
+  border-radius: 15px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 10px 24px;
+  border: solid 1px rgb(252, 252, 252);
+  color: var(--secondary);
+  overflow-x: auto;
+}
+
+/* Audit Section Styling */
+.audit-section {
+  padding: 20px;
+  width: 100%; 
+  height: auto;
+}
+
+/* Header Styling */
+.audit-section h2 {
+  color: var(--secondary);
+  margin: 0 0 15px 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* Table Styling */
+.audit-section table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.audit-section th, .audit-section td {
+  padding: 12px; 
+  color: #333333;
+}
+
+.audit-section th {
+  border-bottom: #7a7979 solid 2px;
+  background: none;
+  color: #333333;
+  text-align: left;
+}
+
+.audit-section tr:nth-child(even) {
+  background-color: #f4f4f4;
+}
+
+.features-section .reminder-section {
+  padding: 20px;
+  width: 50%;
+  height: 600px;
+  border-radius: 15px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 10px 24px;
+  border: solid 1px rgb(252, 252, 252);
+  color: var(--secondary);
+}
+
+.reminder-section {
+  overflow-x: auto;
+}
+
+.reminders .task_list {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.reminders .task_list li {
+  width: 100%;
+  margin-bottom: 16px;
+  background-color: var(--grey);
+  padding: 14px 10px;
+  border-radius: 05px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.reminders .task_list li .task_title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.reminders h2 {
+  padding: 0 0 10px 0;
+  font-size: 25px;
+}
+
+.text-list #reminder-edit-btn {
+  padding: 10px 0;
+  font-size: 20px;
+}
+
+
+.reminders .task_list li.uncomplete {
+  border-left: 5px solid var(--danger);
+}
+
+/* Notification Badge */
+.notification-container {
+  position: relative;
+  display: inline-block;
+}
+
+.notification-container i {
+  position: relative;
+  right: 25px;
+  font-size: 24px;
+}
+
+.notification-count {
+  position: absolute;
+  top: -10px;
+  right: -1px;
+  background: var(--secondary);
+  color: white;
+  border-radius: 50%;
+  padding: 3px 6px;
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
