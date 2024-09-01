@@ -27,7 +27,7 @@ function AppRoutes() {
 
   const getGoogleInfo = async () => {
     try {
-      const response = await fetch(`${API_URL}/auth/login/success`, {
+      const response = await axios(`${API_URL}/auth/login/success`, {
         method: 'GET',
         credentials: 'include',
         headers: {
