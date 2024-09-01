@@ -7,7 +7,15 @@ const database = new Sequelize(
     process.env.PASSWORD,
     {
         host: process.env.HOST,
-        dialect: process.env.DIALECT
+        dialect: process.env.DIALECT,
+        port: process.env.PORT,
+        dialectOptions: {
+            connectTimeout: 60000,
+            ssl: {
+                require: true,
+                rejectUnauthorized: false
+            }
+        }
     }
 );
 
