@@ -442,6 +442,29 @@ const Document = ({ normalAccount, googleAccount }) => {
     }
   };
 
+  // Status Cchecker
+
+  const getStatusChecker = (dateCreated) => {
+    if (!dateCreated) return '';
+  
+    const createdDate = new Date(dateCreated);
+    const today = new Date();
+    const diffTime = today - createdDate; // Swap to get positive diff
+    const diffMonths = diffTime / (1000 * 60 * 60 * 24 * 30);
+
+    console.log('Diff months: ' + diffMonths);
+    console.log('Diff time: ' + diffTime);
+  
+    if (diffMonths < 2) {
+      return 'status-green'; // Within 1-2 months
+    } else if (diffMonths < 5) {
+      return 'status-yellow'; // Within 4-5 months
+    } else {
+      return 'status-red'; // More than 5 months
+    }
+  };
+  
+
   return (
     <>
       {/* SIDEBAR */}
@@ -590,13 +613,14 @@ const Document = ({ normalAccount, googleAccount }) => {
                     <th>Person Concern</th>
                     <th>Action Taken</th>
                     <th>Date Completed</th>
+                    <th>Status</th>
                     <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filterDocuments.length > 0 ? (
                     filterDocuments.map((document, index) => (
-                      <tr key={index}>
+                      <tr key={index} className={getStatusChecker(document.dateCreated)}>
                         <td>{document.No}</td>
                         <td>{formatDate(document.dateReceived)}</td>
                         <td>{document.documentType}</td>
@@ -609,6 +633,7 @@ const Document = ({ normalAccount, googleAccount }) => {
                         <td>{document.personConcern}</td>
                         <td>{document.actionTaken}</td>
                         <td>{formatDate(document.dateCompleted)}</td>
+                        <td>{document.status}</td>
                         <td className="action-icons">
                           <i
                             id="bx-edit"

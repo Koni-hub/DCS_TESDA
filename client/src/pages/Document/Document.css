@@ -246,3 +246,16 @@ label {
 .document-btn-cancel:hover {
   background-color: var(--light-cancel-button);
 }
+
+/* Status Checker */
+.status-green {
+  background-color: #d4edda; /* Light green */
+}
+
+.status-yellow {
+  background-color: #fff3cd; /* Light yellow */
+}
+
+.status-red {
+  background-color: #f8d7da; /* Light red */
+}
