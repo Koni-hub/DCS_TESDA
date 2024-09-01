@@ -38,7 +38,7 @@ app.use(passportSetup.initialize());
 app.use(passportSetup.session());
 
 app.use(cors({
-    origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5173", "https://dcs-cz15.onrender.com"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true
 }));
