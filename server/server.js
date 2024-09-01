@@ -38,9 +38,10 @@ app.use(passportSetup.initialize());
 app.use(passportSetup.session());
 
 app.use(cors({
-    origin: ["http://localhost:5173", "https://documentcontrollersystem.onrender.com", "https://dcs-vzfi.onrender.com"],
+    // origin: ["http://localhost:5173", "https://documentcontrollersystem.onrender.com"],
+    origin: ["*"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-    credentials: true
+    credentials: true,
 }));
 app.use(express.json());
 
