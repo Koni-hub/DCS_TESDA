@@ -15,7 +15,7 @@ const app = express();
 
 //Database Connection
 
-const port = 5000;
+const port = 5000 || process.env.PORT;
 
 try {
     await database.authenticate();
