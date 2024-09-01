@@ -36,6 +36,10 @@ function AppRoutes() {
         },
       });
 
+      if (!response.ok) {
+        console.error('Failed to fetch:', response.status, response.statusText);
+      } 
+
       const data = await response.json(); 
 
       const GoogleAccountEmail = data.user.profile.emails[0].value;
