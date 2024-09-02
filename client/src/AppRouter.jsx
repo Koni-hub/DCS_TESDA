@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import * as jose from 'jose';
-import axios from 'axios';
 
 // Pages
 import ProtectedRoutes from './utils/ProtectedRoutes.jsx';
@@ -25,49 +24,33 @@ function AppRoutes() {
   const [accounts, setAccounts] = useState({ normalAccount: null, googleAccount: null });
   const [loading, setLoading] = useState(true);
 
-  const getGoogleInfo = async () => {
+  async function getGoogleInfo() {
     try {
-      const response = await axios.get(`${API_URL}/auth/login/success`, {
+      const response = await fetch(`${API_URL}/auth/login/success`, {
+        method: 'GET',
+        credentials: 'include',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        withCredentials: true,
       });
   
-      const data = response.data;
-  
-      const GoogleAccountEmail = data.user.profile.emails[0].value;
-      console.log(GoogleAccountEmail);
-  
-      const accountResponse = await axios.post(
-        `${API_URL}/find-account`,
-        { email: GoogleAccountEmail },
-        { withCredentials: true }
-      );
-  
-      if (accountResponse.data && accountResponse.data.createdBy) {
-        console.log('Account createdBy:', accountResponse.data.createdBy);
+      if (response.status === 200) {
+        console.log('A data of the google has been authorized fetch', response.status);
+        const data = await response.json();
+        return data.user;
+      } if (response.status === 401) {
+        console.log('Unauthorized Data fetch yet', response.status);
       }
-  
-      window.localStorage.setItem('loggedIn', 'true');
-      window.localStorage.setItem('token', data.user.accessToken);
-      window.localStorage.setItem('role', accountResponse.data);
-  
-      return data.user;
+      else {
+        console.error('Failed to fetch google data:', response.status);
+        return null;
+      }
     } catch (error) {
-      if (error.response) {
-        if (error.response.status === 401) {
-          console.log('Unauthorized Data fetch yet', error.response.status);
-        } else {
-          console.error('Failed to fetch google data:', error.response.status);
-        }
-      } else {
-        console.error('Error fetching google data:', error.message);
-      }
+      console.error('Error fetching google data:', error);
       return null;
     }
-  };
+  }
 
   const getNormalAccount = async () => {
     try {
