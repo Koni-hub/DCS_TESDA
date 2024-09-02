@@ -37,11 +37,14 @@ app.use(session({
 app.use(passportSetup.initialize());
 app.use(passportSetup.session());
 
-app.use(cors({
+const corsOptions = {
     origin: ["http://localhost:5173", "https://documentcontrollersystem.onrender.com"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
-}));
+    allowedHeaders: ["Content-Type", "Authorization"]
+};
+app.use(cors(corsOptions));
+
 app.use(express.json());
 
 
