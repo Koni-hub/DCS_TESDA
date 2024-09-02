@@ -25,44 +25,26 @@ try {
     console.log("Failed to connect!", error);
 }
 
-// IDK
-// app.use(session({
-//     name: 'session',
-//     keys: ['dcskey'],
-//     secret: 'dcm',
-//     maxAge: 24 * 60 * 60 * 1000,
-//     cookie: { secure: false },
-//     resave: false,
-// }));
-
-const sessionName = process.env.SESSION_NAME || 'session';
-const sessionSecret = process.env.SESSION_SECRET || 'default_secret';
-const sessionMaxAge = parseInt(process.env.SESSION_MAX_AGE, 10) || 24 * 60 * 60 * 1000;
-const cookieSecure = process.env.COOKIE_SECURE === 'true';
-const saveUninitialized = process.env.SAVE_UNINITIALIZED === 'true';
-
 app.use(session({
-    name: sessionName,
-    secret: sessionSecret,
+    name: 'session',
+    keys: ['DocumentControllerSystem'],
+    secret: 'documentsystem',
+    maxAge: 24 * 60 * 60 * 1000,
+    cookie: { secure: false },
     resave: false,
-    saveUninitialized: saveUninitialized,
-    cookie: {
-        maxAge: sessionMaxAge,
-        secure: cookieSecure,
-        httpOnly: true
-    }
+    saveUninitialized: false
 }));
 
 app.use(passportSetup.initialize());
 app.use(passportSetup.session());
 
+// Middleware setup
 app.use(cors({
-    origin: ["http://localhost:5173", "https://documentcontrollersystem.onrender.com"],
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    origin: ["http://localhost:5173", "https://documentcontrollersystem.onrender.com/"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }));
 app.use(express.json());
-
 
 app.use('/', AccountRoutes);
 app.use('/documents', DocumentRoutes);
