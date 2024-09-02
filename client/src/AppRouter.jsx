@@ -29,7 +29,7 @@ function AppRoutes() {
     try {
       const response = await fetch(`${API_URL}/auth/login/success`, {
         method: 'GET',
-        withCredentials: true,
+        credentials: 'include',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ function AppRoutes() {
         { email: GoogleAccountEmail }, // Send correct data format
         { withCredentials: true } // Include withCredentials in request configuration
       );
-  
+
       if (accountResponse.data && accountResponse.data.createdBy) {
         console.log('Account createdBy:', accountResponse.data.createdBy);
       }
