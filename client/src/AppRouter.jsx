@@ -27,45 +27,44 @@ function AppRoutes() {
 
   const getGoogleInfo = async () => {
     try {
-      const response = await fetch(`${API_URL}/auth/login/success`, {
-        method: 'GET',
-        credentials: 'include',
+      const response = await axios.get(`${API_URL}/auth/login/success`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
+        withCredentials: true,
       });
-
-      const data = await response.json(); 
-
+  
+      const data = response.data;
+  
       const GoogleAccountEmail = data.user.profile.emails[0].value;
       console.log(GoogleAccountEmail);
-       // Send email to the server to find the account
+  
       const accountResponse = await axios.post(
         `${API_URL}/find-account`,
-        { email: GoogleAccountEmail }, // Send correct data format
-        { withCredentials: true } // Include withCredentials in request configuration
+        { email: GoogleAccountEmail },
+        { withCredentials: true }
       );
-
+  
       if (accountResponse.data && accountResponse.data.createdBy) {
         console.log('Account createdBy:', accountResponse.data.createdBy);
       }
-
-      if (response.ok) {
-        window.localStorage.setItem('loggedIn', 'true');
-        window.localStorage.setItem('token', data.user.accessToken);
-        window.localStorage.setItem('role', accountResponse.data);
-
-        return data.user;
-      } else if (response.status === 401) {
-        console.log('Unauthorized Data fetch yet', response.status);
-        return null;
-      } else {
-        console.error('Failed to fetch google data:', response.status);
-        return null;
-      }
+  
+      window.localStorage.setItem('loggedIn', 'true');
+      window.localStorage.setItem('token', data.user.accessToken);
+      window.localStorage.setItem('role', accountResponse.data);
+  
+      return data.user;
     } catch (error) {
-      console.error('Error fetching google data:', error);
+      if (error.response) {
+        if (error.response.status === 401) {
+          console.log('Unauthorized Data fetch yet', error.response.status);
+        } else {
+          console.error('Failed to fetch google data:', error.response.status);
+        }
+      } else {
+        console.error('Error fetching google data:', error.message);
+      }
       return null;
     }
   };
