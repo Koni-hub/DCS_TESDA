@@ -25,13 +25,32 @@ try {
     console.log("Failed to connect!", error);
 }
 
+// IDK
+// app.use(session({
+//     name: 'session',
+//     keys: ['dcskey'],
+//     secret: 'dcm',
+//     maxAge: 24 * 60 * 60 * 1000,
+//     cookie: { secure: false },
+//     resave: false,
+// }));
+
+const sessionName = process.env.SESSION_NAME || 'session';
+const sessionSecret = process.env.SESSION_SECRET || 'default_secret';
+const sessionMaxAge = parseInt(process.env.SESSION_MAX_AGE, 10) || 24 * 60 * 60 * 1000;
+const cookieSecure = process.env.COOKIE_SECURE === 'true';
+const saveUninitialized = process.env.SAVE_UNINITIALIZED === 'true';
+
 app.use(session({
-    name: 'session',
-    keys: ['dcskey'],
-    secret: 'dcm',
-    maxAge: 24 * 60 * 60 * 1000,
-    cookie: { secure: false },
+    name: sessionName,
+    secret: sessionSecret,
     resave: false,
+    saveUninitialized: saveUninitialized,
+    cookie: {
+        maxAge: sessionMaxAge,
+        secure: cookieSecure,
+        httpOnly: true
+    }
 }));
 
 app.use(passportSetup.initialize());
