@@ -27,7 +27,7 @@ function AppRoutes() {
 
   const getGoogleInfo = async () => {
     try {
-      const response = await axios.get(`${API_URL}/auth/login/success`, {
+      const response = await fetch(`${API_URL}/auth/login/success`, {
         method: 'GET',
         withCredentials: true,
         headers: {
@@ -35,10 +35,6 @@ function AppRoutes() {
           'Content-Type': 'application/json',
         },
       });
-
-      if (!response.ok) {
-        console.error('Failed to fetch:', response.status, response.statusText);
-      } 
 
       const data = await response.json(); 
 
