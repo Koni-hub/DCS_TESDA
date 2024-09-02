@@ -41,7 +41,6 @@ app.use(cors({
     origin: ["http://localhost:5173", "https://documentcontrollersystem.onrender.com"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 
