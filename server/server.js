@@ -41,7 +41,7 @@ app.use(passportSetup.session());
 // Middleware setup
 app.use(cors({
     origin: ["http://localhost:5173", "https://documentcontrollersystem.onrender.com"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true
 }));
 app.use(express.json());
