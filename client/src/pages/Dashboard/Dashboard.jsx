@@ -137,7 +137,7 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
 
   // Check if a document is rejected based on your criteria
   const isRejected = (document) => {
-    return document.status === 'rejected';
+    return document.status === 'Rejected';
   };
 
   // Count completed, pending, and rejected documents
