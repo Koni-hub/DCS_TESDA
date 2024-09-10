@@ -259,3 +259,50 @@ label {
 .status-red {
   background-color: #f8d7da; /* Light red */
 }
+
+/* Display Status guide */
+/*
+green - 1-2 months
+yellow - 4-5 months
+red - more than 5 moths 
+ */
+.display-status-document {
+  display: flex;
+  gap: 10px;
+}
+
+.display-status-document .display-container-document {
+  margin: 10px;
+  display: flex;
+  gap: 10px;
+  padding: 0 0 10px 10px;
+  padding-bottom: 10px;
+  border-left: 2px solid blue;
+}
+
+.display-container-document .green-date {
+  background-color: #d4edda; /* Light green */
+  width: 150px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.display-container-document .yellow-date {
+  background-color: #fff3cd; /* Light green */
+  width: 150px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.display-container-document .red-date {
+  background-color: #f8d7da; /* Light green */
+  width: 150px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

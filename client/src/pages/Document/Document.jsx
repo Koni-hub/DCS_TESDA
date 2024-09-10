@@ -676,7 +676,20 @@ const Document = ({ normalAccount, googleAccount }) => {
         {/* MAIN */}
         <main>
           <div className="document-section">
-            <h1>Document Table</h1>
+            <div className="display-status-document">
+              <h1>Document Table</h1>
+              <div className='display-container-document'>
+                <div className="green-date">
+                  <p>1-2 Months</p>
+                </div>
+                <div className="yellow-date">
+                  <p>2-5 Months</p>
+                </div>
+                <div className="red-date">
+                  <p>5+ Months</p>
+                </div>
+              </div>
+            </div>
             <hr className="document-break-line" />
             <button className="add-doc-btn" onClick={toggleModalCreate}>
               Add Document <i className="bx bx-plus"></i>
