@@ -734,7 +734,7 @@ const Document = ({ normalAccount, googleAccount }) => {
                           ></i>
                           <Link to={`/viewDocument/${document.No}`}>
                             <i
-                              id="bx-"
+                              id="bx-view"
                               className="bx bx-show-alt"
                               title="View"
                             ></i>

@@ -104,11 +104,11 @@ td:not(.action-icons) {
 .action-icons {
   text-align: center;
   gap: 10px;
-  font-size: 18px;
+  font-size: 21px;
 }
 
 .action-icons a {
-  font-size: 18px;
+  font-size: 21px;
   color: black;
 }
 
