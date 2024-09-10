@@ -375,24 +375,31 @@ const Document = ({ normalAccount, googleAccount }) => {
 
   // Update document status to 'rejected'
   const rejectDocument = async (documentId) => {
-    try {
-      await axios.patch(`${API_URL}/documents/${documentId}`, {
-        status: 'rejected',
-      });
-
-      setDocuments((prevDocs) =>
-        prevDocs.map((document) =>
-          document.id === documentId
-            ? { ...document, status: 'rejected' }
-            : document
-        )
-      );
-      toast.success('Successfully added to rejected', toastConfig);
-    } catch (error) {
-      toast.error('Failed to reject the document', toastConfig);
-      console.error('Error rejecting document', error);
+    if (confirm('Are you sure you want to reject this document ' + documentId)) {
+      try {
+        const response = await axios.patch(`${API_URL}/documents/${documentId}`, {
+          status: 'Rejected',
+        });
+  
+        const updatedDocument = response.data; 
+  
+        setDocuments((prevDocs) =>
+          prevDocs.map((document) =>
+            document.id === documentId
+              ? { ...document, status: 'Rejected' }
+              : document
+          )
+        );
+  
+        console.log(updatedDocument);
+        toast.success('Successfully added to rejected', toastConfig);
+      } catch (error) {
+        toast.error('Failed to reject the document', toastConfig);
+        console.error('Error rejecting document', error);
+      }
     }
   };
+  
 
   // Event handler for clicking the trash icon
   const handleRejectClick = (documentId) => {
@@ -401,22 +408,51 @@ const Document = ({ normalAccount, googleAccount }) => {
 
   const [pendingCount, setPendingCount] = useState(0);
 
-  // Check if a document is pending based on any field being empty
-  const isPending = (document) => {
-    return Object.values(document).some(
-      (field) => field === '' || field === null
+  const updateDocumentStatus = async (documentId, status) => {
+    console.log(`Updating document ${documentId} to status ${status}`);
+    try {
+      await axios.patch(`${API_URL}/documents/${documentId}`, { status });
+      setDocuments(prevDocs =>
+        prevDocs.map(doc =>
+          doc.id === documentId
+            ? { ...doc, status }
+            : doc
+        )
+      );
+    } catch (error) {
+      console.error('Error updating document status:', error);
+    }
+  };
+  
+  const isPending = async (documentId, document) => {
+    if (Object.values(document).some(field => field === '' || field === null)) {
+      await updateDocumentStatus(documentId, 'Pending');
+      return true;
+    }
+    return false;
+  };
+
+  const documentChecker = async () => {
+    console.log('Starting document check...');
+    const pendingDocuments = await Promise.all(
+      allDocuments.map(async (doc) => {
+        if (doc.No) {
+          return isPending(doc.No, doc);
+        }
+        return false;
+      })
     );
+  
+    // Count the number of documents marked as pending
+    const pendingCount = pendingDocuments.filter(isPending => isPending).length;
+    console.log('Pending count:', pendingCount);
+    setPendingCount(pendingCount);
   };
-
-  // Count completed, pending
-  const documentChecker = () => {
-    const pending = allDocuments.filter(isPending).length;
-    setPendingCount(pending);
-  };
-
+  
   useEffect(() => {
     documentChecker();
   }, [allDocuments]);
+  
 
   const handleSearchSubmit = (event) => {
     event.preventDefault();
@@ -451,10 +487,6 @@ const Document = ({ normalAccount, googleAccount }) => {
     const today = new Date();
     const diffTime = today - createdDate; // Swap to get positive diff
     const diffMonths = diffTime / (1000 * 60 * 60 * 24 * 30);
-
-    console.log('Diff months: ' + diffMonths);
-    console.log('Diff time: ' + diffTime);
-  
     if (diffMonths < 2) {
       return 'status-green'; // Within 1-2 months
     } else if (diffMonths < 5) {

@@ -94,7 +94,7 @@ export const createDocument = async (req, res) => {
             personConcern: personConcern,
             actionTaken: actionTaken,
             dateCompleted: dateCompleted,
-            status: 'Accepted',
+            status: '',
         });
         res.status(201).json({message: "Document created Successfully"});
     } catch (error) {
