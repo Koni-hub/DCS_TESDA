@@ -372,87 +372,140 @@ const Document = ({ normalAccount, googleAccount }) => {
     theme: 'light',
   };
   // -- END
-
+  
   // Update document status to 'rejected'
   const rejectDocument = async (documentId) => {
     if (confirm('Are you sure you want to reject this document ' + documentId)) {
-      try {
-        const response = await axios.patch(`${API_URL}/documents/${documentId}`, {
-          status: 'Rejected',
-        });
-  
-        const updatedDocument = response.data; 
-  
-        setDocuments((prevDocs) =>
-          prevDocs.map((document) =>
-            document.id === documentId
-              ? { ...document, status: 'Rejected' }
-              : document
-          )
-        );
-  
-        console.log(updatedDocument);
-        toast.success('Successfully added to rejected', toastConfig);
-      } catch (error) {
-        toast.error('Failed to reject the document', toastConfig);
-        console.error('Error rejecting document', error);
-      }
+        try {
+            const response = await axios.patch(`${API_URL}/documents/${documentId}`, {
+                status: 'Rejected',
+            });
+
+            const updatedDocument = response.data;
+
+            setDocuments((prevDocs) =>
+                prevDocs.map((document) =>
+                    document.id === documentId
+                        ? { ...document, status: 'Rejected' }
+                        : document
+                )
+            );
+
+            console.log(updatedDocument);
+            toast.success('Successfully added to rejected', toastConfig);
+        } catch (error) {
+            toast.error('Failed to reject the document', toastConfig);
+            console.error('Error rejecting document', error);
+        }
     }
   };
-  
 
   // Event handler for clicking the trash icon
-  const handleRejectClick = (documentId) => {
-    rejectDocument(documentId);
+  const handleRejectClick = async (documentId) => {
+    console.log('Document ID: ', documentId);
+    try {
+        const response = await axios.get(`${API_URL}/documents/${documentId}`);
+        const documentData = response.data;
+        console.log('Response Rejected: ', documentData);
+
+        // Check if any field in the documentData is empty
+        const hasEmptyField = Object.values(documentData).some(field => field === '' || field === null || field === undefined);
+
+        if (!hasEmptyField) {
+            toast.error('The document has been finished and cannot be rejected.');
+        } else {
+            rejectDocument(documentId);
+        }
+    } catch (error) {
+        toast.error('Failed to reject the document', toastConfig);
+        console.error('Error rejecting document', error);
+    }
   };
 
   const [pendingCount, setPendingCount] = useState(0);
+  const [, setCompletedCount] = useState(0);
+  const [, setRejectedCount] = useState(0);
 
+  // Helper functions to update document status
   const updateDocumentStatus = async (documentId, status) => {
-    console.log(`Updating document ${documentId} to status ${status}`);
     try {
-      await axios.patch(`${API_URL}/documents/${documentId}`, { status });
-      setDocuments(prevDocs =>
-        prevDocs.map(doc =>
-          doc.id === documentId
-            ? { ...doc, status }
-            : doc
-        )
-      );
+        await axios.patch(`${API_URL}/documents/${documentId}`, { status });
+        setDocuments(prevDocs =>
+            prevDocs.map(doc =>
+                doc.id === documentId ? { ...doc, status } : doc
+            )
+        );
     } catch (error) {
-      console.error('Error updating document status:', error);
+        console.error('Error updating document status:', error);
     }
   };
-  
-  const isPending = async (documentId, document) => {
-    if (Object.values(document).some(field => field === '' || field === null)) {
-      await updateDocumentStatus(documentId, 'Pending');
-      return true;
+
+  // Logic for checking document status
+  const isRejected = async (documentId, document) => {
+    if (document.status === 'Rejected') {
+        await updateDocumentStatus(documentId, 'Rejected');
+        return true;
     }
     return false;
   };
 
+  const isPending = async (documentId, document) => {
+    if (document.status !== 'Rejected' && Object.values(document).some(field => field === '' || field === null)) {
+        await updateDocumentStatus(documentId, 'Pending');
+        return true;
+    }
+    return false;
+};
+
+
+  const isCompleted = async (documentId, document) => {
+    if (Object.values(document).every(field => field !== '' && field !== null)) {
+        await updateDocumentStatus(documentId, 'Completed');
+        return true;
+    }
+    return false;
+  };
+
+  // Main document checker
   const documentChecker = async () => {
     console.log('Starting document check...');
-    const pendingDocuments = await Promise.all(
-      allDocuments.map(async (doc) => {
-        if (doc.No) {
-          return isPending(doc.No, doc);
-        }
-        return false;
-      })
+
+    const rejectedDocuments = await Promise.all(
+        allDocuments.map(async (doc) => {
+            if (doc.No) return isRejected(doc.No, doc);
+        })
     );
-  
-    // Count the number of documents marked as pending
-    const pendingCount = pendingDocuments.filter(isPending => isPending).length;
+
+    const completedDocuments = await Promise.all(
+        allDocuments.map(async (doc) => {
+            if (doc.No) return isCompleted(doc.No, doc);
+        })
+    );
+
+    const pendingDocuments = await Promise.all(
+        allDocuments.map(async (doc) => {
+            if (doc.No) return isPending(doc.No, doc);
+        })
+    );
+
+    // Update counts
+    const pendingCount = pendingDocuments.filter(Boolean).length;
     console.log('Pending count:', pendingCount);
     setPendingCount(pendingCount);
+
+    const completedCount = completedDocuments.filter(Boolean).length;
+    console.log('Completed count:', completedCount);
+    setCompletedCount(completedCount);
+
+    const rejectedCount = rejectedDocuments.filter(Boolean).length;
+    console.log('Rejected count:', rejectedCount);
+    setRejectedCount(rejectedCount); // Fixed variable to setRejectedCount
   };
-  
+
+  // Trigger the document check on load or document updates
   useEffect(() => {
     documentChecker();
-  }, [allDocuments]);
-  
+}, [allDocuments]);
 
   const handleSearchSubmit = (event) => {
     event.preventDefault();
