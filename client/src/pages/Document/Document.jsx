@@ -808,7 +808,7 @@ const Document = ({ normalAccount, googleAccount }) => {
                     <th>Date Created</th>
                     <th>Date Deadline</th>
                     <th>RD's Instruction</th>
-                    <th>Person Concern</th>
+                    <th>Person Concerned</th>
                     <th>Action Taken</th>
                     <th>Date Completed</th>
                     <th>Status</th>
@@ -992,7 +992,7 @@ const Document = ({ normalAccount, googleAccount }) => {
                   <br />
                   {/* <h5 >Validation Text</h5> */}
                   <label>
-                    Person Concerned<span>*</span>
+                    Person Concerned<span>*</span>  
                   </label>{' '}
                   <br></br>
                   <select
