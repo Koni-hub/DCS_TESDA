@@ -115,6 +115,7 @@
     display: flex;
     gap: 10px;
     color: var(--light);
+    align-items: center;
   }
   
   .signin .content .form .links a:nth-child(2) {
