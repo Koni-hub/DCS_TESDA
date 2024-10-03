@@ -198,163 +198,60 @@ const ViewDocument = ({ normalAccount, googleAccount }) => {
         </nav>
         {/* NAVBAR */}
         <main>
-          <form className="form">
-            <div className="form-grid">
-              <div className="first-row">
-                <label>
-                  Title of Documents<span>*</span>
-                </label>{' '}
-                <br></br>
-                <input
-                  className="input"
-                  type="text"
-                  value={documents.No}
-                  readOnly
-                />
-                <br />
-                <br />
-                {/* <h5 >Validation Text</h5> */}
-                <label>
-                  RD's Instruction<span>*</span>
-                </label>
-                <input
-                  className="input"
-                  type="text"
-                  value={documents.rdInstruction}
-                  placeholder="Ex. for report"
-                  readOnly
-                />
-                <br />
-                <br />
-                {/* <h5 >Validation Text</h5> */}
-                <label>
-                  Document Date Created<span>*</span>
-                </label>
-                <input
-                  className="input"
-                  type="input"
-                  value={formatDate(documents.dateCreated)}
-                  readOnly
-                />
-                <br />
-                <br />
-                {/* <h5 >Validation Text</h5> */}
-              </div>
-              <div className="second-row">
-                <label>
-                  Origin of Document<span>*</span>
-                </label>{' '}
-                <br></br>
-                <input
-                  className="input"
-                  type="text"
-                  value={documents.documentOrigin}
-                  placeholder="Ex. ODDG-PP"
-                  readOnly
-                />
-                <br />
-                <br />
-                <label>
-                  Control No<span>*</span>
-                </label>{' '}
-                <br></br>
-                <input
-                  className="input"
-                  type="text"
-                  value={documents.controlNo}
-                  placeholder="Ex. Memo No. 001 s.2024"
-                  readOnly
-                />
-                <br />
-                <br />
-                <label>
-                  Document Date Received<span>*</span>
-                </label>
-                <input
-                  className="input"
-                  type="input"
-                  value={formatDate(documents.dateReceived)}
-                  readOnly
-                />
-                <br />
-                <br />
-                {/* <h5 >Validation Text</h5> */}
-              </div>
-              <div className="third-row">
-                <label>
-                  Type of Documents<span>*</span>
-                </label>{' '}
-                <br></br>
-                <input
-                  className="input"
-                  type="text"
-                  value={documents.documentType}
-                  placeholder="Sample Type"
-                  readOnly
-                />
-                <br />
-                <br />
-                {/* <h5 >Validation Text</h5> */}
-                <label>
-                  Person Concern<span>*</span>
-                </label>{' '}
-                <br></br>
-                <input
-                  className="input"
-                  type="text"
-                  value={documents.personConcern}
-                  placeholder="Ex. Joyce"
-                  readOnly
-                />
-                <br />
-                <br />
-                <label>
-                  Deadline / Action / Effectivety Date<span>*</span>
-                </label>
-                <input
-                  className="input"
-                  type="text"
-                  value={documents.dateDeadline}
-                  placeholder="Ex. January 18, 2024, via google meet"
-                  readOnly
-                />
-                <br />
-                <br />
-                {/* <h5 >Validation Text</h5> */}
-              </div>
-              <div className="fourth-row">
-                {/* <h5 >Validation Text</h5> */}
-                <label>
-                  Date Completed<span>*</span>
-                </label>{' '}
-                <br></br>
-                <input
-                  className="input"
-                  type="input"
-                  value={formatDate(documents.dateCompleted)}
-                  placeholder="Sample Date Completed"
-                  readOnly
-                />
-                <br />
-                <br />
-                {/* <h5 >Validation Text</h5> */}
-              </div>
-            </div>
-            <div className="document-description">
-              <label>
-                Action Taken<span>*</span>
-              </label>{' '}
-              <br></br>
-              <textarea
-                className="input"
-                value={documents.actionTaken}
-                rows={5}
-                cols={70}
-                placeholder="Enter the description"
-                readOnly
-              />
-            </div>
-          </form>
+        <div className="document-view">
+  <div className="document-header">
+    <h2>Document Details</h2>
+  </div>
+  <div className="document-content">
+    <div className="document-section">
+      <h3>Title of Documents:</h3>
+      <p>{documents.No}</p>
+    </div>
+    <div className="document-section">
+      <h3>RD's Instruction:</h3>
+      <p>{documents.rdInstruction}</p>
+    </div>
+    <div className="document-section">
+      <h3>Document Date Created:</h3>
+      <p>{formatDate(documents.dateCreated)}</p>
+    </div>
+    <div className="document-section">
+      <h3>Origin of Document:</h3>
+      <p>{documents.documentOrigin}</p>
+    </div>
+    <div className="document-section">
+      <h3>Control No:</h3>
+      <p>{documents.controlNo}</p>
+    </div>
+    <div className="document-section">
+      <h3>Document Date Received:</h3>
+      <p>{formatDate(documents.dateReceived)}</p>
+    </div>
+    <div className="document-section">
+      <h3>Type of Documents:</h3>
+      <p>{documents.documentType}</p>
+    </div>
+    <div className="document-section">
+      <h3>Person Concern:</h3>
+      <p>{documents.personConcern}</p>
+    </div>
+    <div className="document-section">
+      <h3>Deadline / Action / Effectivity Date:</h3>
+      <p>{documents.dateDeadline}</p>
+    </div>
+    <div className="document-section">
+      <h3>Date Completed:</h3>
+      <p>{formatDate(documents.dateCompleted)}</p>
+    </div>
+    <div className="document-section">
+      <h3>Action Taken:</h3>
+      <div className="document-action-taken">
+        <p>{documents.actionTaken}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
         </main>
       </section>
     </>
