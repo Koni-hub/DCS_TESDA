@@ -375,28 +375,70 @@ const Document = ({ normalAccount, googleAccount }) => {
   
   // Update document status to 'rejected'
   const rejectDocument = async (documentId) => {
-    if (confirm('Are you sure you want to reject this document ' + documentId)) {
-        try {
-            const response = await axios.patch(`${API_URL}/documents/${documentId}`, {
-                status: 'Rejected',
-            });
+    const userName = normalAccount?.email || googleAccount.profile.emails[0].value;
 
-            const updatedDocument = response.data;
+    const confirmation = confirm('Are you sure you want to reject this document ' + documentId + '?');
+    
+    if (!confirmation) {
+      return;
+    }
+    
+    try {
+      // Fetch the document data
+      const response = await axios.get(`${API_URL}/documents/${documentId}`);
+      const documentData = response.data;
+  
+      console.log('Document Data', documentData);
+    
+      // Backup the document in the 'rejected-documents' section
+      await axios.post(`${API_URL}/rejected-documents/${documentData.No}`, {
+        No: documentData.No,
+        dateReceived: documentData.dateReceived,
+        documentType: documentData.documentType,
+        documentOrigin: documentData.documentOrigin,
+        controlNo: documentData.controlNo,
+        documentTitle: documentData.documentTitle,
+        dateCreated: documentData.dateCreated,
+        dateDeadline: documentData.dateDeadline,
+        rdInstruction: documentData.rdInstruction,
+        personConcern: documentData.personConcern,
+        actionTaken: documentData.actionTaken,
+        dateCompleted: documentData.dateCompleted,
+        status: 'Rejected' // Set status to 'Rejected'
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    
+      // Update the original document status to 'Rejected'
+      await axios.patch(`${API_URL}/documents/${documentId}`, {
+        status: 'Rejected',
+      });
+      
+      // Update Audit Log
+      const auditLogData = {
+        userName,
+        action: `Reject and backup document with control number ${controlNo}`,
+      };
 
-            setDocuments((prevDocs) =>
-                prevDocs.map((document) =>
-                    document.id === documentId
-                        ? { ...document, status: 'Rejected' }
-                        : document
-                )
-            );
-
-            console.log(updatedDocument);
-            toast.success('Successfully added to rejected', toastConfig);
-        } catch (error) {
-            toast.error('Failed to reject the document', toastConfig);
-            console.error('Error rejecting document', error);
-        }
+      await axios.post(`${API_URL}/audit-logs`, auditLogData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    
+      setDocuments((prevDocs) =>
+        prevDocs.map((document) =>
+          document.id === documentId ? { ...document, status: 'Rejected' } : document
+        )
+      );
+    
+      toast.success('Document successfully rejected and backed up', toastConfig);
+    
+    } catch (error) {
+      toast.error('Failed to reject the document', toastConfig);
+      console.error('Error rejecting document:', error);
     }
   };
 
@@ -594,6 +636,14 @@ const Document = ({ normalAccount, googleAccount }) => {
               <a href="#" onClick={() => handleMenuItemClick(0)}>
                 <i className="bx bx-user"></i>
                 <span className="text">Scholarship</span>
+              </a>
+            </li>
+          </Link>
+          <Link to="/rejected-docs">
+            <li className={activeMenuItem === 1 ? 'active' : ''}>
+              <a href="#" onClick={() => handleMenuItemClick(0)}>
+                <i className="bx bx-task-x"></i>
+                <span className="text">Rejected</span>
               </a>
             </li>
           </Link>
