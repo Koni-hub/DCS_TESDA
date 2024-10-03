@@ -9,6 +9,8 @@ import Document from './pages/Document/Document.jsx';
 import Notification from './pages/Notification/Notification.jsx';
 import ViewDocument from './pages/ViewDocuments/ViewDocument.jsx';
 import Profile from './pages/Profile/Profile.jsx';
+import RejectedDocuments from './pages/RejectedDocument/RejectedDocuments.jsx';
+import Registry from './pages/Registry/Registry.jsx';
 
 // Auth Pages
 import Login from './pages/Login/Login.jsx';
@@ -111,6 +113,14 @@ function AppRoutes() {
           <Route
             path="/document"
             element={<Document normalAccount={accounts.normalAccount} googleAccount={accounts.googleAccount} />}
+          />
+          <Route
+            path="/registry"
+            element={<Registry normalAccount={accounts.normalAccount} googleAccount={accounts.googleAccount} />}
+          />
+          <Route
+            path="/rejected-docs"
+            element={<RejectedDocuments normalAccount={accounts.normalAccount} googleAccount={accounts.googleAccount} />}
           />
           <Route
             path="/viewDocument/:No"
