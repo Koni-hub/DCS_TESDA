@@ -7,10 +7,10 @@ import logo from '../../assets/logo/logo.png';
 import { API_URL } from '../../config.js';
 
 const Register = () => {
-  const Navigate = useNavigate();
-  const [verifyPassowrd, setVerifyPassowrd] = useState('');
+  const navigate = useNavigate();
+  const [verifyPassword, setVerifyPassword] = useState('');
 
-  //User Inputted Data Functions, request => server
+  // User Inputted Data Functions, request => server
   const [formData, setFormData] = useState({
     account_username: '',
     account_firstName: '',
@@ -36,31 +36,68 @@ const Register = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    // Simple form validation
-    if (
-      !formData.account_username ||
-      !formData.account_email ||
-      !formData.account_password ||
-      !formData.account_firstName ||
-      !formData.account_lastName ||
-      !verifyPassowrd
-    ) {
-      toast.error('Please fill in all fields.', toastConfig);
+  const validateInputs = () => {
+    const { account_username, account_email, account_password, account_firstName, account_lastName, account_contactNo } = formData;
+
+    // Username validation: Must be numeric and at most 8 characters
+    if (!/^\d{1,8}$/.test(account_username)) {
+      toast.error('Username must be numeric and exactly 8 characters long.', toastConfig);
       return;
     }
+    
+    // Email validation (valid format)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(account_email)) {
+      toast.error('Please enter a valid email address.', toastConfig);
+      return false;
+    }
 
-    if (formData.account_password !== verifyPassowrd) {
+    // First Name validation (non-empty and max length)
+    if (!account_firstName || account_firstName.length > 30) {
+      toast.error('First Name must be 30 characters or less.', toastConfig);
+      return false;
+    }
+
+    // Last Name validation (non-empty and max length)
+    if (!account_lastName || account_lastName.length > 30) {
+      toast.error('Last Name must be 30 characters or less.', toastConfig);
+      return false;
+    }
+
+    // Phone Number validation (must be 10 digits)
+    const phoneRegex = /^\d{11}$/; // Change this regex to match your requirements
+    if (!account_contactNo || !phoneRegex.test(account_contactNo)) {
+      toast.error('Phone Number must be 11 digits.', toastConfig);
+      return false;
+    }
+
+    // Password validation (max length, at least one special character, at least one uppercase letter)
+    const passwordRegex = /^(?=.*[!@#$%^&*])(?=.*[A-Z]).{1,16}$/;
+    if (!passwordRegex.test(account_password)) {
+      toast.error('Password must be 16 characters or less, include at least one uppercase letter and one special character.', toastConfig);
+      return false;
+    }
+
+    // Confirm Password validation
+    if (account_password !== verifyPassword) {
       toast.error('Passwords do not match.', toastConfig);
-      return;
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateInputs()) {
+      return; // Stop submission if validation fails
     }
 
     try {
       const response = await axios.post(`${API_URL}/register`, formData);
       toast.success('Successfully registered user', toastConfig);
       setTimeout(() => {
-        Navigate('/');
+        navigate('/');
       }, 2100);
       console.log(response.data);
     } catch (error) {
@@ -87,7 +124,6 @@ const Register = () => {
   const [passwordVisible2, setPasswordVisible2] = useState(false);
 
   const togglePassword1 = () => {
-    console.log('trigger shit');
     setPasswordVisible1(!passwordVisible1);
   };
 
@@ -189,8 +225,8 @@ const Register = () => {
                   <input
                     type={passwordVisible2 ? 'text' : 'password'}
                     name="account_verifyPassword"
-                    onChange={(e) => setVerifyPassowrd(e.target.value)}
-                    value={verifyPassowrd}
+                    onChange={(e) => setVerifyPassword(e.target.value)}
+                    value={verifyPassword}
                     required
                   />
                   <i className="no-event">Confirm Password</i>

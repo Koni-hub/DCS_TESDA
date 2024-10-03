@@ -6,7 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import logo from '../../assets/logo/logo.png';
-import googleImage from '../../assets/logo/google.png';
+// import googleImage from '../../assets/logo/google.png';
 import { API_URL } from '../../config.js';
 import * as jose from 'jose';
 
@@ -47,11 +47,30 @@ const Login = () => {
     setLoginFormData({ ...loginformData, [e.target.name]: e.target.value });
   };
 
+  const validateInputs = () => {
+    const { emailOrUsername, account_password } = loginformData;
+
+    // Email/Username validation (non-empty)
+    if (!emailOrUsername) {
+      toast.error('Please enter your email or username', toastConfig);
+      return false;
+    }
+
+    // Password validation (non-empty)
+    if (!account_password) {
+      toast.error('Please enter your password', toastConfig);
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!loginformData.emailOrUsername || !loginformData.account_password) {
-      toast.error('Please enter both email/username and password', toastConfig);
-      return;
+    
+    // Validate inputs before submitting
+    if (!validateInputs()) {
+      return; // Stop submission if validation fails
     }
 
     try {
@@ -103,21 +122,21 @@ const Login = () => {
         setTimeout(() => {
             localStorage.removeItem('retryUntil');
         }, waitTime);
-    } else if (error.response && error.response.data && error.response.data.message) {
+      } else if (error.response && error.response.data && error.response.data.message) {
         toast.error('Login failed: ' + error.response.data.message, toastConfig);
-    } else {
+      } else {
         toast.error('An error occurred while logging in. Please try again.', toastConfig);
+      }
     }
-  }
   };
 
   const togglePassword = () => {
     setPasswordVisible(!passwordVisible);
   };
 
-  const googleLogin = () => {
-    window.open(`${API_URL}/auth/google`, '_self');
-  };
+  // const googleLogin = () => {
+  //   window.open(`${API_URL}/auth/google`, '_self');
+  // };
 
   return (
     <>
@@ -132,7 +151,7 @@ const Login = () => {
               </Link>
               <h2>Log In</h2>
 
-              <form className="form">
+              <form className="form" onSubmit={handleSubmit}>
                 <div className="inputBox">
                   <input
                     type="text"
@@ -141,7 +160,7 @@ const Login = () => {
                     value={loginformData.emailOrUsername}
                     onChange={handleChange}
                   />
-                  <i className="no-event">Username</i>
+                  <i className="no-event">Employee ID</i>
                 </div>
 
                 <div className="inputBox">
@@ -180,16 +199,16 @@ const Login = () => {
                   <input onClick={handleSubmit} type="submit" value="Login" />
                 </div>
 
-                <div className="links-register">
+                {/* <div className="links-register">
                   <p>Don't have an account?</p>
                   <Link to={'/register'}> register here</Link>
-                </div>
-                <div className="break">
+                </div> */}
+                {/* <div className="break">
                   <hr />
                   <span>Or</span>
                   <hr />
-                </div>
-                <div className="google-container" onClick={googleLogin}>
+                </div> */}
+                {/* <div className="google-container" onClick={googleLogin}>
                   <div className="google-img">
                     <img
                       src={googleImage}
@@ -201,7 +220,7 @@ const Login = () => {
                   <div className="google-text">
                     <div className="google-login">Continue with Google</div>
                   </div>
-                </div>
+                </div> */}
               </form>
             </div>
           </div>
