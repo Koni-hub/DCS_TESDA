@@ -11,7 +11,7 @@ const router = express.Router();
 router.get('/', getAllRegistry);
 router.get('/:id', getRegistryByID);
 router.post('/', saveRegistry);
-router.put('/:id', editRegistry);
+router.patch('/:id', editRegistry);
 router.delete('/:id', deleteRegistry);
 
 export default router;
