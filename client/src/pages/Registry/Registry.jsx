@@ -635,7 +635,7 @@ const Registry = ({ normalAccount, googleAccount }) => {
         <div className="modal">
           <div onClick={toggleModalCreate} className="overlay"></div>
           <div className="modal-document">
-            <h1>Add Registry Account</h1>
+            <h1>Add Registry</h1>
             <hr />
             <form className="form" onSubmit={createRegistry}>
               <div className="form-grid">
@@ -883,7 +883,7 @@ const Registry = ({ normalAccount, googleAccount }) => {
         <div className="modal">
           <div onClick={toggleModalUpdate} className="overlay"></div>
           <div className="modal-document">
-            <h1>Update Registry Account</h1>
+            <h1>Update Registry</h1>
             <hr />
             <form className="form" onSubmit={updateRegistry}>
               <div className="form-grid">
