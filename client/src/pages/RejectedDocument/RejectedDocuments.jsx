@@ -154,8 +154,6 @@ const RejectedDocuments = ({ normalAccount, googleAccount }) => {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
     };
     return date.toLocaleDateString('en-US', options);
   };
@@ -271,14 +269,6 @@ const RejectedDocuments = ({ normalAccount, googleAccount }) => {
               <a href="#" onClick={() => handleMenuItemClick(0)}>
                 <i className="bx bx-registered"></i>
                 <span className="text">Registry</span>
-              </a>
-            </li>
-          </Link>
-          <Link to="/scholarship">
-            <li className={activeMenuItem === 1 ? 'active' : ''}>
-              <a href="#" onClick={() => handleMenuItemClick(0)}>
-                <i className="bx bx-user"></i>
-                <span className="text">Scholarship</span>
               </a>
             </li>
           </Link>
