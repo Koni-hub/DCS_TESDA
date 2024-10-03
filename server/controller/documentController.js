@@ -1,4 +1,5 @@
 import Document from '../model/documentModels.js';
+import RejectDocuments from '../model/rejectDocumentsModels.js';
 
 export const getAllDocuments = async (req, res) => {
     try {
@@ -186,3 +187,74 @@ export const deleteDocument = async (req, res) => {
         return res.status(500).json({ message: "Internal Server Error" });
     }
 };
+
+export const rejectDocuments = async (req, res) => {
+    try {
+      // Find the original document using the No parameter
+      const document = await Document.findOne({
+        where: { 
+          No: req.params.No
+        }
+      });
+  
+      if (!document) {
+        return res.status(404).json({ message: "No Document Found" });
+      }
+  
+      // Destructure required fields from the document
+      const {
+        No,
+        dateReceived,
+        documentOrigin,
+        documentType,
+        controlNo,
+        documentTitle,
+        dateCreated,
+        dateDeadline,
+        rdInstruction,
+        personConcern,
+        actionTaken,
+        dateCompleted,
+        status 
+      } = document; // Use the found document's data
+  
+      // Create a new rejected document entry
+      await RejectDocuments.create({
+        No,
+        dateReceived,
+        documentType,
+        documentOrigin,
+        controlNo,
+        documentTitle,
+        dateCreated,
+        dateDeadline,
+        rdInstruction,
+        personConcern,
+        actionTaken,
+        dateCompleted,
+        status: 'Rejected' // Set status to 'Rejected'
+      });
+  
+      // Update the original document status to 'Rejected'
+      await Document.update({ status: 'Rejected' }, {
+        where: {
+          No: req.params.No
+        }
+      });
+  
+      return res.status(200).json({ message: "Document successfully rejected and backed up" });
+      
+    } catch (error) {
+      console.error('Error rejecting document:', error);
+      res.status(500).json({ message: 'Failed to reject the document' });
+    }
+}
+
+export const getAllRejectedDocuments = async (req, res) => {
+    try {
+        const rejectedRes = await RejectDocuments.findAll();
+        res.json(rejectedRes);
+    } catch (error) {
+        res.status(500).json({message: "Internal Server Error"});
+    }
+}
