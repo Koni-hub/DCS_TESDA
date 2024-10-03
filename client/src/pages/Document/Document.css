@@ -93,12 +93,6 @@ th {
   color: var(--tertiary);
 }
 
-td:not(.action-icons) {
-  border-collapse: collapse;
-  white-space: nowrap; 
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 
 /* ICONS */
 .action-icons {
