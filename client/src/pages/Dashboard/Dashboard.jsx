@@ -128,9 +128,9 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
 
   // Check if a document is pending based on any field being empty
   const isPending = (document) => {
-    return Object.values(document).some(
-      (field) => field === '' || field === null
-    );
+      return Object.values(document).some((field) => 
+          document.status !== 'Rejected' && (field === '' || field === null)
+      );
   };
 
   const pendingDocuments = documents.filter(isPending);
@@ -227,6 +227,14 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
               <a href="#" onClick={() => handleMenuItemClick(0)}>
                 <i className="bx bx-user"></i>
                 <span className="text">Scholarship</span>
+              </a>
+            </li>
+          </Link>
+          <Link to="/rejected-docs">
+            <li className={activeMenuItem === 1 ? 'active' : ''}>
+              <a href="#" onClick={() => handleMenuItemClick(0)}>
+                <i className="bx bx-task-x"></i>
+                <span className="text">Rejected</span>
               </a>
             </li>
           </Link>
@@ -373,11 +381,6 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
                                 Title:{' '}
                                 {doc.documentTitle ? doc.documentTitle : 'N/A'}
                               </p>
-                              <hr />
-                              <i
-                                id="reminder-edit-btn"
-                                className="bx bx-edit"
-                              ></i>
                             </div>
                           </div>
                         </li>
