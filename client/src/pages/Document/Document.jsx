@@ -41,10 +41,17 @@ const Document = ({ normalAccount, googleAccount }) => {
   const [rdInstruction, setrdInstruction] = useState('');
   const [personConcern, setPersonConcern] = useState('');
   const [dateReceived, setDateReceived] = useState(new Date());
-  const [dateCreated, setDateCreated] = useState(new Date());
+  const [dateCreated, setDateCreated] = useState(new Date().toISOString().split('T')[0]);
   const [dateDeadline, setDateDeadline] = useState('');
   const [dateCompleted, setDateCompleted] = useState(new Date());
   const [actionTaken, setActionTaken] = useState('');
+  
+  useEffect(() => {
+    const today = new Date().toISOString().split('T')[0];
+      (today);
+      setDateCreated(today);
+    console.log('Document Date Created: ' + dateCreated);
+  }, []);
 
   // -- END
 
@@ -58,7 +65,6 @@ const Document = ({ normalAccount, googleAccount }) => {
     setrdInstruction();
     setPersonConcern('');
     setDateReceived('');
-    setDateCreated('');
     setDateDeadline('');
     setDateCompleted('');
     setActionTaken('');
@@ -98,7 +104,7 @@ const Document = ({ normalAccount, googleAccount }) => {
   // Creating Document
   const createDocument = async (e) => {
     e.preventDefault();
-    const userName = normalAccount?.email || googleAccount.profile.emails[0].value;
+    const userName = normalAccount?.username || googleAccount.profile.emails[0].value;
     console.log('Username: ', userName);
     const formData = {
       documentTitle,
@@ -166,7 +172,7 @@ const Document = ({ normalAccount, googleAccount }) => {
   // Updating Document
   const updateDocument = async (e) => {
     e.preventDefault();
-    const userName = normalAccount?.email || googleAccount.profile.emails[0].value;
+    const userName = normalAccount?.username || googleAccount.profile.emails[0].value;
 
     const formData = {
       documentTitle,
@@ -352,8 +358,6 @@ const Document = ({ normalAccount, googleAccount }) => {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
     };
     return date.toLocaleDateString('en-US', options);
   };
@@ -375,7 +379,7 @@ const Document = ({ normalAccount, googleAccount }) => {
   
   // Update document status to 'rejected'
   const rejectDocument = async (documentId) => {
-    const userName = normalAccount?.email || googleAccount.profile.emails[0].value;
+    const userName = normalAccount?.username || googleAccount.profile.emails[0].value;
 
     const confirmation = confirm('Are you sure you want to reject this document ' + documentId + '?');
     
@@ -404,7 +408,7 @@ const Document = ({ normalAccount, googleAccount }) => {
         personConcern: documentData.personConcern,
         actionTaken: documentData.actionTaken,
         dateCompleted: documentData.dateCompleted,
-        status: 'Rejected' // Set status to 'Rejected'
+        status: 'Archive' // Set status to 'Rejected'
       }, {
         headers: {
           'Content-Type': 'application/json',
@@ -413,7 +417,7 @@ const Document = ({ normalAccount, googleAccount }) => {
     
       // Update the original document status to 'Rejected'
       await axios.patch(`${API_URL}/documents/${documentId}`, {
-        status: 'Rejected',
+        status: 'Archive',
       });
       
       // Update Audit Log
@@ -430,7 +434,7 @@ const Document = ({ normalAccount, googleAccount }) => {
     
       setDocuments((prevDocs) =>
         prevDocs.map((document) =>
-          document.id === documentId ? { ...document, status: 'Rejected' } : document
+          document.id === documentId ? { ...document, status: 'Archive' } : document
         )
       );
     
@@ -591,6 +595,60 @@ const Document = ({ normalAccount, googleAccount }) => {
     }
   };
   
+  const optionsDocumentType = [
+    'MEMORANDUM CIRCULAR',
+    'MEMORANDUM',
+    'TESDA ORDER',
+    'OFFICE ORDER',
+    'CIRCULAR',
+    'BULLETIN',
+    'CLUSTER ORDER',
+    'ADVISORY',
+  ];
+
+  const optionsDocumentOrigin = [
+    'Provincial Office - Aurora',
+    'Provincial Office - Bataan',
+    'Provincial Office - Bulacan',
+    'Provincial Office - Nueva Ecija',
+    'Provincial Office - Pampanga',
+    'Provincial Office - Tarlac',
+    'Provincial Office - Zambales',
+    'Provincial Training Center - Baler',
+    'Provincial Training Center - Orion',
+    'Regional Training Center - Mariveles',
+    'Provincial Training Center - Calumpit',
+    'Regional Training Center - Guiguinto',
+    'Korea-Philippines IT Training Center - Bulacan',
+    'Provincial Training Center - Nueva Ecija (Palayan)',
+    'Provincial Training Center - Guagua',
+    'Gonzalo Puyat School of Arts and Trades (GPSAT)',
+    'Provincial Training Center - Tarlac',
+    'Concepcion Vocational School (CVS)',
+    'Provincial Training Center - Iba'
+  ];
+
+  const optionsDocumentPersonConcern = [
+    'BARON JOSE L. LAGRAN',
+    'EVELYN M. LUNA',
+    'JULIETTE T. FELICIANO',
+    'ELLA NESS D. DE LARA',
+    'LIWAYWAY D. CALAGUAS',
+    'ROSE ANNE S. ZALDIVAR',
+    'HEIDIN P. MOHAMMAD AKIL',
+    'GENER D. NICOLAS JR.',
+    'OLIVIA D. ABAD',
+    'MARIA FRANCES C. CASTRO',
+    'GUIA MARIE V. FERNANDEZ',
+    'MARY JOYCE ANN C. DAVID',
+    'JACKELENE CLAIRE N. DE JESUS',
+    'ERICA FE D. HERNANDEZ',
+    'JOAINA C. TEODORO',
+    'GINA G. CABRERA',
+    'NICOLE ANGELA L. PINEDA',
+    'KATE D. FLORES',
+    'JOVITA M. NICDAO'
+  ];
 
   return (
     <>
@@ -628,14 +686,6 @@ const Document = ({ normalAccount, googleAccount }) => {
               <a href="#" onClick={() => handleMenuItemClick(0)}>
                 <i className="bx bx-registered"></i>
                 <span className="text">Registry</span>
-              </a>
-            </li>
-          </Link>
-          <Link to="/scholarship">
-            <li className={activeMenuItem === 1 ? 'active' : ''}>
-              <a href="#" onClick={() => handleMenuItemClick(0)}>
-                <i className="bx bx-user"></i>
-                <span className="text">Scholarship</span>
               </a>
             </li>
           </Link>
@@ -859,10 +909,9 @@ const Document = ({ normalAccount, googleAccount }) => {
                   </label>
                   <input
                     className="input"
-                    type="date"
+                    type="text"
                     value={dateCreated}
-                    onChange={(e) => setDateCreated(e.target.value)}
-                    required
+                    disabled
                   />
                   <br />
                   <br />
@@ -873,14 +922,22 @@ const Document = ({ normalAccount, googleAccount }) => {
                     Origin of Document<span>*</span>
                   </label>{' '}
                   <br></br>
-                  <input
+                  <select
                     className="input"
                     type="text"
                     value={documentOrigin}
                     onChange={(e) => setDocumentOrigin(e.target.value)}
-                    placeholder="Ex. ODDG-PP"
                     required
-                  />
+                  >
+                    <option value="" disabled>
+                      Ex. ODDG-PP
+                    </option>
+                    {optionsDocumentOrigin.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
                   <br />
                   <br />
                   <label>
@@ -916,14 +973,21 @@ const Document = ({ normalAccount, googleAccount }) => {
                     Type of Documents<span>*</span>
                   </label>{' '}
                   <br></br>
-                  <input
+                  <select
                     className="input"
-                    type="text"
                     value={documentType}
                     onChange={(e) => setDocumentType(e.target.value)}
-                    placeholder="Ex. Memo"
                     required
-                  />
+                  >
+                    <option value="" disabled>
+                      Ex. Memo
+                    </option>
+                    {optionsDocumentType.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
                   <br />
                   <br />
                   {/* <h5 >Validation Text</h5> */}
@@ -931,13 +995,21 @@ const Document = ({ normalAccount, googleAccount }) => {
                     Person Concern<span>*</span>
                   </label>{' '}
                   <br></br>
-                  <input
+                  <select
                     className="input"
                     type="text"
                     value={personConcern}
                     onChange={(e) => setPersonConcern(e.target.value)}
-                    placeholder="Ex. Joyce"
-                  />
+                  >
+                    <option value="" disabled>
+                      Ex. Joyce
+                    </option>
+                    {optionsDocumentPersonConcern.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
                   <br />
                   <br />
                   <label>
@@ -1058,14 +1130,13 @@ const Document = ({ normalAccount, googleAccount }) => {
                   <br />
                   {/* <h5 >Validation Text</h5> */}
                   <label>
-                    Document Date Created<span>*</span>
+                    Document Date Created<span></span>
                   </label>
                   <input
                     className="input"
-                    type="date"
-                    value={dateCreated}
-                    onChange={(e) => setDateCreated(e.target.value)}
-                    required
+                    type="text"
+                    value={dateCompleted}
+                    disabled
                   />
                   <br />
                   <br />
@@ -1076,14 +1147,22 @@ const Document = ({ normalAccount, googleAccount }) => {
                     Origin of Document<span>*</span>
                   </label>{' '}
                   <br></br>
-                  <input
+                  <select
                     className="input"
                     type="text"
                     value={documentOrigin}
                     onChange={(e) => setDocumentOrigin(e.target.value)}
-                    placeholder="Ex. ODDG-PP"
                     required
-                  />
+                  >
+                    <option value="" disabled>
+                    Ex. ODDG-PP
+                    </option>
+                    {optionsDocumentOrigin.map((option) => (
+                      <option key={option} value={option} >
+                        {option}
+                      </option>
+                    ))}
+                  </select>
                   <br />
                   <br />
                   <label>
@@ -1119,14 +1198,21 @@ const Document = ({ normalAccount, googleAccount }) => {
                     Type of Documents<span>*</span>
                   </label>{' '}
                   <br></br>
-                  <input
+                  <select
                     className="input"
-                    type="text"
                     value={documentType}
                     onChange={(e) => setDocumentType(e.target.value)}
-                    placeholder="Sample Type"
                     required
-                  />
+                  >
+                    <option value="" disabled>
+                      Ex. Memo
+                    </option>
+                    {optionsDocumentType.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
                   <br />
                   <br />
                   {/* <h5 >Validation Text</h5> */}
@@ -1134,13 +1220,21 @@ const Document = ({ normalAccount, googleAccount }) => {
                     Person Concern<span>*</span>
                   </label>{' '}
                   <br></br>
-                  <input
+                  <select
                     className="input"
                     type="text"
                     value={personConcern}
                     onChange={(e) => setPersonConcern(e.target.value)}
-                    placeholder="Ex. Joyce"
-                  />
+                  >
+                    <option value="" disabled>
+                      Ex. Joyce
+                    </option>
+                    {optionsDocumentPersonConcern.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
                   <br />
                   <br />
                   <label>
