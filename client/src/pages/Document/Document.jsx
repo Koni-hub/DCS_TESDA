@@ -992,7 +992,7 @@ const Document = ({ normalAccount, googleAccount }) => {
                   <br />
                   {/* <h5 >Validation Text</h5> */}
                   <label>
-                    Person Concern<span>*</span>
+                    Person Concerned<span>*</span>
                   </label>{' '}
                   <br></br>
                   <select
@@ -1217,7 +1217,7 @@ const Document = ({ normalAccount, googleAccount }) => {
                   <br />
                   {/* <h5 >Validation Text</h5> */}
                   <label>
-                    Person Concern<span>*</span>
+                    Person Concerned<span>*</span>
                   </label>{' '}
                   <br></br>
                   <select
