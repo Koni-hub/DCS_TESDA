@@ -222,14 +222,6 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
               </a>
             </li>
           </Link>
-          <Link to="/scholarship">
-            <li className={activeMenuItem === 1 ? 'active' : ''}>
-              <a href="#" onClick={() => handleMenuItemClick(0)}>
-                <i className="bx bx-user"></i>
-                <span className="text">Scholarship</span>
-              </a>
-            </li>
-          </Link>
           <Link to="/rejected-docs">
             <li className={activeMenuItem === 1 ? 'active' : ''}>
               <a href="#" onClick={() => handleMenuItemClick(0)}>
