@@ -232,11 +232,11 @@ export const rejectDocuments = async (req, res) => {
         personConcern,
         actionTaken,
         dateCompleted,
-        status: 'Rejected' // Set status to 'Rejected'
+        status: 'Archive' // Set status to 'Rejected'
       });
   
       // Update the original document status to 'Rejected'
-      await Document.update({ status: 'Rejected' }, {
+      await Document.update({ status: 'Archive' }, {
         where: {
           No: req.params.No
         }
