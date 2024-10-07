@@ -105,6 +105,8 @@ const Document = ({ normalAccount, googleAccount }) => {
   const createDocument = async (e) => {
     e.preventDefault();
     const userName = normalAccount?.username || googleAccount.profile.emails[0].value;
+    const fullName = normalAccount?.fullname || null;
+
     console.log('Username: ', userName);
     const formData = {
       documentTitle,
@@ -150,6 +152,7 @@ const Document = ({ normalAccount, googleAccount }) => {
       // Create Audit Log
       const auditLogData = {
         userName,
+        fullName,
         action: `Created document with control number ${controlNo}`,
       };
 
@@ -173,6 +176,9 @@ const Document = ({ normalAccount, googleAccount }) => {
   const updateDocument = async (e) => {
     e.preventDefault();
     const userName = normalAccount?.username || googleAccount.profile.emails[0].value;
+    const fullName = normalAccount?.fullname || null;
+
+    console.log('FullName', normalAccount);
 
     const formData = {
       documentTitle,
@@ -222,6 +228,7 @@ const Document = ({ normalAccount, googleAccount }) => {
       // Update Audit Log
       const auditLogData = {
         userName,
+        fullName,
         action: `Updated document with control number ${controlNo}`,
       };
 
@@ -380,6 +387,7 @@ const Document = ({ normalAccount, googleAccount }) => {
   // Update document status to 'rejected'
   const rejectDocument = async (documentId) => {
     const userName = normalAccount?.username || googleAccount.profile.emails[0].value;
+    const fullName = normalAccount?.fullname || null;
 
     const confirmation = confirm('Are you sure you want to reject this document ' + documentId + '?');
     
@@ -423,6 +431,7 @@ const Document = ({ normalAccount, googleAccount }) => {
       // Update Audit Log
       const auditLogData = {
         userName,
+        fullName,
         action: `Reject and backup document with control number ${controlNo}`,
       };
 

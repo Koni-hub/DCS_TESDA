@@ -6,6 +6,10 @@ const AuditLog = database.define("auditLogs", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  fullName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   action: {
     type: DataTypes.STRING,
     allowNull: false,

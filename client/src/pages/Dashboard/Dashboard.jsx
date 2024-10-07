@@ -334,6 +334,7 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
                 <thead>
                   <tr>
                     <th>User</th>
+                    <th>Full Name</th>
                     <th>Action</th>
                     <th>Date</th>
                   </tr>
@@ -343,6 +344,7 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
                     auditLogs.map((log) => (
                       <tr key={log.id}>
                         <td>{log.userName}</td>
+                        <td>{log.fullName}</td>
                         <td>{log.action}</td>
                         <td>{formatDate(log.timestamp)}</td>
                       </tr>

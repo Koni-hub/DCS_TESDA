@@ -10,9 +10,9 @@ export const getAllAuditLogs = async(req,res) => {
 }
 
 export const createAuditLog = async (req,res) => {
-    const { userName, action } = req.body;
+    const { userName, fullName, action } = req.body;
     try {
-        const log = await AuditLog.create({ userName, action });
+        const log = await AuditLog.create({ userName, fullName, action });
         res.status(201).json(log);
     } catch (error) {
         res.status(500).json({ error: error.message });

@@ -121,6 +121,7 @@ export const loginAccount = async (req, res) => {
         id: user.id,
         email: user.account_email,
         username: user.account_username,
+        fullname: user.account_firstName + " " + user.account_lastName,
         role: user.createdBy
       },
       secretKey,
