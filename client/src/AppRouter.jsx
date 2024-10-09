@@ -102,10 +102,13 @@ function AppRoutes() {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
 
         {/* Protected Routes */}
         <Route element={<ProtectedRoutes />}>
+          <Route
+            path='/register'
+            element={<Register normalAccount={accounts.normalAccount} googleAccount={accounts.googleAccount}/>}
+          />
           <Route
             path="/dashboard"
             element={<Dashboard normalAccount={accounts.normalAccount} googleAccount={accounts.googleAccount} />}
