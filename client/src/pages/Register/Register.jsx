@@ -1,13 +1,60 @@
 import './Register.css';
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import logo from '../../assets/logo/logo.png';
 import { API_URL } from '../../config.js';
 
-const Register = () => {
+const Register = (normalAccount, googleAccount) => {
+
+  const [role, setRole] = useState(null);
+
   const navigate = useNavigate();
+
+  console.log('here is a passed data from app routes', googleAccount);
+  console.log('here is a passed normal data from app routes GG', normalAccount.normalAccount.role);
+
+  // Fetch data from json webtoken local storage = function
+  useEffect(() => {
+    const getUsernameForData = async () => {
+      if (!normalAccount.normalAccount || !normalAccount.normalAccount.email) {
+        console.error('Normal account or email is not defined');
+        return;
+      }
+
+      const normalAccount_email = normalAccount.email;
+      console.log('User email:', normalAccount_email);
+
+      try {
+        const createdBy = normalAccount.normalAccount.role;
+        setRole(createdBy);
+        console.log('Role:',  normalAccount.normalAccount.role);
+      } catch (error) {
+        if (error.response) {
+          console.error('Error response:', error.response);
+        } else if (error.request) {
+          console.error('Error request:', error.request);
+        } else {
+          console.error('Error message:', error.message);
+        }
+      }
+    };
+
+    getUsernameForData();
+  }, [normalAccount]);
+
+
+  useEffect(() => {
+    console.log('Select Role: ', role);
+    if (role && role !== 'Admin' && role === 'System') {
+      navigate('/forbidden');
+    } else {
+      console.log('Role:', role || 'not defined yet');
+    }
+  }, [role, navigate]);
+
+
   const [verifyPassword, setVerifyPassword] = useState('');
 
   // User Inputted Data Functions, request => server
@@ -153,7 +200,7 @@ const Register = () => {
                     value={formData.account_username}
                     onChange={handleChange}
                   />{' '}
-                  <i className="no-event">Username </i>
+                  <i className="no-event">Employee ID </i>
                 </div>
 
                 <div className="inputBox">
@@ -242,11 +289,6 @@ const Register = () => {
 
                 <div className="inputBox">
                   <input type="submit" value="Register" />
-                </div>
-
-                <div className="links-register">
-                  <p>Already have an account?</p>
-                  <Link to={'/'}> login here</Link>
                 </div>
               </form>
             </div>
