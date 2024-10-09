@@ -299,7 +299,7 @@ const Registry = ({ normalAccount, googleAccount }) => {
   // Role
 
   useEffect(() => {
-    if (role && role !== 'Admin') {
+    if (role && role !== 'Admin' && role !== 'System') {
       navigate('/forbidden');
     } else {
       console.log('Role:', role || 'not defined yet');
@@ -480,6 +480,14 @@ const Registry = ({ normalAccount, googleAccount }) => {
               <a href="#" onClick={() => handleMenuItemClick(0)}>
                 <i className="bx bx-task-x"></i>
                 <span className="text">Rejected</span>
+              </a>
+            </li>
+          </Link>
+          <Link to="/register">
+            <li className={activeMenuItem === 1 ? 'active' : ''}>
+              <a href="#" onClick={() => handleMenuItemClick(0)}>
+                <i className="bx bx-user"></i>
+                <span className="text">Add Employees</span>
               </a>
             </li>
           </Link>

@@ -86,7 +86,7 @@ const ViewDocument = ({ normalAccount, googleAccount }) => {
   // Role
 
   useEffect(() => {
-    if (role && role !== 'Admin') {
+    if (role && role !== 'Admin' && role !== 'System') {
       navigate('/forbidden');
     } else {
       console.log('Role:', role || 'not defined yet');
