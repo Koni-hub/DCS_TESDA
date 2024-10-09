@@ -11,6 +11,15 @@
   background-color: #f9f9ff;
 }
 
+.welcome-msg {
+  border-radius: 15px;
+  padding: 20px;
+  background-color: #f9f9ff;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 10px 10px;
+  font-size: 25px;
+  margin: 20px;
+}
+
 .overview-section {
   margin: 20px;
   display: flex;
