@@ -183,6 +183,8 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
     return date.toLocaleDateString('en-US', options);
   };
 
+  const userLoginRole = (normalAccount?.role == 'Admin') ? 'Administrator' : 'Employee'; 
+
   return (
     <>
       {/* SIDEBAR */}
@@ -227,6 +229,14 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
               <a href="#" onClick={() => handleMenuItemClick(0)}>
                 <i className="bx bx-task-x"></i>
                 <span className="text">Rejected</span>
+              </a>
+            </li>
+          </Link>
+          <Link to="/register">
+            <li className={activeMenuItem === 1 ? 'active' : ''}>
+              <a href="#" onClick={() => handleMenuItemClick(0)}>
+                <i className="bx bx-user"></i>
+                <span className="text">Add Employees</span>
               </a>
             </li>
           </Link>
@@ -297,6 +307,9 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
         {/* MAIN */}
         <main>
           {/* Overview Section */}
+          <div className='welcome-msg'>
+            <h1>Hello, {userLoginRole} </h1>
+          </div>
           <div className="overview-section">
             <div className="completed-task">
               <div className="icon-completed-task">
