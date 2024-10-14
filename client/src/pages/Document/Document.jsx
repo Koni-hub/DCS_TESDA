@@ -105,7 +105,8 @@ const Document = ({ normalAccount, googleAccount }) => {
   const createDocument = async (e) => {
     e.preventDefault();
     const userName = normalAccount?.username || googleAccount.profile.emails[0].value;
-    const fullName = normalAccount?.fullname || null;
+    const fullName = normalAccount.fullname || null;
+
 
     console.log('Username: ', userName);
     const formData = {
@@ -176,9 +177,9 @@ const Document = ({ normalAccount, googleAccount }) => {
   const updateDocument = async (e) => {
     e.preventDefault();
     const userName = normalAccount?.username || googleAccount.profile.emails[0].value;
-    const fullName = normalAccount?.fullname || null;
+    const fullName = normalAccount.fullname || null;
 
-    console.log('FullName', normalAccount);
+    console.log('FullName is this', normalAccount.fullname);
 
     const formData = {
       documentTitle,
@@ -388,7 +389,7 @@ const Document = ({ normalAccount, googleAccount }) => {
   // Update document status to 'rejected'
   const rejectDocument = async (documentId) => {
     const userName = normalAccount?.username || googleAccount.profile.emails[0].value;
-    const fullName = normalAccount?.fullname || null;
+    const fullName = normalAccount.fullname || null;
 
     const confirmation = confirm('Are you sure you want to reject this document ' + documentId + '?');
     
