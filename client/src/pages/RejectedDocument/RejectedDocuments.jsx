@@ -232,6 +232,7 @@ const RejectedDocuments = ({ normalAccount, googleAccount }) => {
     }
   };
   
+  const userLoginRole = (normalAccount?.role == 'Admin') ? 'Administrator' : 'Employee';
 
   return (
     <>
@@ -264,14 +265,6 @@ const RejectedDocuments = ({ normalAccount, googleAccount }) => {
               </a>
             </li>
           </Link>
-          <Link to="/registry">
-            <li className={activeMenuItem === 1 ? 'active' : ''}>
-              <a href="#" onClick={() => handleMenuItemClick(0)}>
-                <i className="bx bx-registered"></i>
-                <span className="text">Registry</span>
-              </a>
-            </li>
-          </Link>
           <Link to="/rejected-docs">
             <li className={activeMenuItem === 1 ? 'active' : ''}>
               <a href="#" onClick={() => handleMenuItemClick(0)}>
@@ -280,14 +273,26 @@ const RejectedDocuments = ({ normalAccount, googleAccount }) => {
               </a>
             </li>
           </Link>
-          <Link to="/register">
-            <li className={activeMenuItem === 1 ? 'active' : ''}>
-              <a href="#" onClick={() => handleMenuItemClick(0)}>
-                <i className="bx bx-user"></i>
-                <span className="text">Add Employees</span>
-              </a>
-            </li>
-          </Link>
+          { userLoginRole === 'Administrator' && (
+            <>
+              <Link to="/registry">
+                <li className={activeMenuItem === 1 ? 'active' : ''}>
+                  <a href="#" onClick={() => handleMenuItemClick(0)}>
+                    <i className="bx bx-registered"></i>
+                    <span className="text">Registry</span>
+                  </a>
+                </li>
+              </Link>
+              <Link to="/register">
+                <li className={activeMenuItem === 1 ? 'active' : ''}>
+                  <a href="#" onClick={() => handleMenuItemClick(0)}>
+                    <i className="bx bx-user"></i>
+                    <span className="text">Add Employees</span>
+                  </a>
+                </li>
+              </Link>
+            </>
+          )}
         </ul>
       </section>
       {/* SIDEBAR */}
