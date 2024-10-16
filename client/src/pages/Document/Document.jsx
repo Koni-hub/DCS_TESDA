@@ -826,10 +826,10 @@ const Document = ({ normalAccount, googleAccount }) => {
                   <tr>
                     <th>No</th>
                     <th>Date Received</th>
-                    <th>Document Type</th>
-                    <th>Document Origin</th>
+                    <th>Type</th>
+                    <th>Origin</th>
                     <th>Control No</th>
-                    <th>Document Title</th>
+                    <th>Title</th>
                     <th>Date Created</th>
                     <th>Date Deadline</th>
                     <th>RD's Instruction</th>
