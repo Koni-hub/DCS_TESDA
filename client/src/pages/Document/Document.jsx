@@ -902,7 +902,7 @@ const Document = ({ normalAccount, googleAccount }) => {
               <div className="form-grid">
                 <div className="first-row">
                   <label>
-                    Title of Documents<span>*</span>
+                    Title<span>*</span>
                   </label>{' '}
                   <br></br>
                   <input
@@ -944,7 +944,7 @@ const Document = ({ normalAccount, googleAccount }) => {
                 </div>
                 <div className="second-row">
                   <label>
-                    Origin of Document<span>*</span>
+                    Origin<span>*</span>
                   </label>{' '}
                   <br></br>
                   <select
@@ -995,7 +995,7 @@ const Document = ({ normalAccount, googleAccount }) => {
                 </div>
                 <div className="third-row">
                   <label>
-                    Type of Documents<span>*</span>
+                    Type<span>*</span>
                   </label>{' '}
                   <br></br>
                   <select
@@ -1127,7 +1127,7 @@ const Document = ({ normalAccount, googleAccount }) => {
               <div className="form-grid">
                 <div className="first-row">
                   <label>
-                    Title of Documents<span>*</span>
+                    Title<span>*</span>
                   </label>{' '}
                   <br></br>
                   <input
@@ -1169,7 +1169,7 @@ const Document = ({ normalAccount, googleAccount }) => {
                 </div>
                 <div className="second-row">
                   <label>
-                    Origin of Document<span>*</span>
+                    Origin<span>*</span>
                   </label>{' '}
                   <br></br>
                   <select
@@ -1220,7 +1220,7 @@ const Document = ({ normalAccount, googleAccount }) => {
                 </div>
                 <div className="third-row">
                   <label>
-                    Type of Documents<span>*</span>
+                    Type<span>*</span>
                   </label>{' '}
                   <br></br>
                   <select
