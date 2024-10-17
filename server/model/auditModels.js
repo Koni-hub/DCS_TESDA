@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import database from '../config/dbConfig.js';
 
-const AuditLog = database.define("auditLogs", {
+const AuditLog = database.define("auditlogs", {
   userName: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -23,7 +23,7 @@ const AuditLog = database.define("auditLogs", {
 (async () => {
     // Check if the table exists
     const tableExists = await database.getQueryInterface().showAllTables()
-        .then(tables => tables.includes('auditLogs'));
+        .then(tables => tables.includes('auditlogs'));
 
     if (!tableExists) {
         console.log('Table does not exist. Syncing database...');
