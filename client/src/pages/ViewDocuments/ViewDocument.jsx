@@ -203,7 +203,7 @@ const ViewDocument = ({ normalAccount, googleAccount }) => {
   <div className="document-content">
     <div className="document-section">
       <h3>Title of Documents:</h3>
-      <p>{documents.No}</p>
+      <p>{documents.documentTitle}</p>
     </div>
     <div className="document-section">
       <h3>RD's Instruction:</h3>
