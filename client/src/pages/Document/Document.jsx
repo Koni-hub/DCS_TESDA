@@ -499,15 +499,15 @@ const Document = ({ normalAccount, googleAccount }) => {
 
   // Logic for checking document status
   const isRejected = async (documentId, document) => {
-    if (document.status === 'Rejected') {
-        await updateDocumentStatus(documentId, 'Rejected');
+    if (document.status === 'Archive') {
+        await updateDocumentStatus(documentId, 'Archive');
         return true;
     }
     return false;
   };
 
   const isPending = async (documentId, document) => {
-    if (document.status !== 'Rejected' && Object.values(document).some(field => field === '' || field === null)) {
+    if (document.status !== 'Archive' && Object.values(document).some(field => field === '' || field === null)) {
         await updateDocumentStatus(documentId, 'Pending');
         return true;
     }
