@@ -467,19 +467,19 @@ const Registry = ({ normalAccount, googleAccount }) => {
               </a>
             </li>
           </Link>
-          <Link to="/registry">
-            <li className={activeMenuItem === 1 ? 'active' : ''}>
-              <a href="#" onClick={() => handleMenuItemClick(0)}>
-                <i className="bx bx-registered"></i>
-                <span className="text">Registry</span>
-              </a>
-            </li>
-          </Link>
           <Link to="/rejected-docs">
             <li className={activeMenuItem === 1 ? 'active' : ''}>
               <a href="#" onClick={() => handleMenuItemClick(0)}>
                 <i className="bx bx-task-x"></i>
                 <span className="text">Rejected</span>
+              </a>
+            </li>
+          </Link>
+          <Link to="/registry">
+            <li className={activeMenuItem === 1 ? 'active' : ''}>
+              <a href="#" onClick={() => handleMenuItemClick(0)}>
+                <i className="bx bx-registered"></i>
+                <span className="text">Registry</span>
               </a>
             </li>
           </Link>
