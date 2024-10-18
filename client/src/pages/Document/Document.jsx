@@ -851,7 +851,7 @@ const Document = ({ normalAccount, googleAccount }) => {
                         <td>{document.controlNo}</td>
                         <td>{document.documentTitle}</td>
                         <td>{formatDate(document.dateCreated)}</td>
-                        <td>{formatDate(document.dateDeadline)}</td>
+                        <td>{document.dateDeadline}</td>
                         <td>{document.rdInstruction}</td>
                         <td>{document.personConcern}</td>
                         <td>{document.actionTaken}</td>
