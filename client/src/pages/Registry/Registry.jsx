@@ -166,6 +166,7 @@ const Registry = ({ normalAccount, googleAccount }) => {
     const userName =
       normalAccount?.username || googleAccount.profile.emails[0].value;
     console.log('Username: ', userName);
+    const fullName = normalAccount.fullName || null;
 
     const formData = {
       region,
@@ -192,6 +193,7 @@ const Registry = ({ normalAccount, googleAccount }) => {
       // Create Audit Log
       const auditLogData = {
         userName,
+        fullName,
         action: 'Successfully updated registry',
       };
 
