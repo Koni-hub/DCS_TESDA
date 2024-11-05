@@ -10,6 +10,12 @@ import axios from 'axios';
 const Dashboard = ({ normalAccount, googleAccount }) => {
   document.title = 'Dashboard';
 
+  const [isSideDropDownOpen, setSideDropDownOpen] = useState(false);
+
+  const handleDropdownSidebar = () => {
+    setSideDropDownOpen(!isSideDropDownOpen);
+  };
+
   // Navigation = state
   const navigate = useNavigate();
   // -- END
@@ -109,6 +115,46 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
   const [pendingCount, setPendingCount] = useState(0);
   const [rejectedCount, setRejectedCount] = useState(0);
 
+  const [accounts, setAccounts] = useState([]);
+  const [adminCount, setAdminCounts] = useState(0);
+  const [officeCount, setOfficeCount] = useState(0);
+  const [employeeCount, setEmployeeCount] = useState(0);
+
+  const [recDocs, setRecDocs] = useState([]);
+  const [recDocsCount, setRecDocsCount] = useState(0);
+
+  // Fetch all record documents
+  const getAllRecDocs = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/record-docs`);
+      setRecDocs(response.data);
+    } catch (error) {
+      console.error('Error fetching record docs', error);
+    }
+  };
+
+  // Fetch all accounts
+  const getAllAccounts = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/accounts`);
+      setAccounts(response.data);
+    } catch (error) {
+      console.error('Error fetching accounts', error);
+    }
+  };
+
+  const isAdmin = (accounts) => {
+    return accounts.account_role == 'Admin';
+  };
+
+  const isOffice = (accounts) => {
+    return accounts.account_role == 'Office';
+  };
+
+  const isEmployee = (accounts) => {
+    return accounts.account_role == 'Admin';
+  };
+
   // Fetch all documents
   const getAllDocuments = async () => {
     try {
@@ -128,9 +174,10 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
 
   // Check if a document is pending based on any field being empty
   const isPending = (document) => {
-      return Object.values(document).some((field) => 
-          document.status !== 'Rejected' && (field === '' || field === null)
-      );
+    return Object.values(document).some(
+      (field) =>
+        document.status !== 'Rejected' && (field === '' || field === null)
+    );
   };
 
   const pendingDocuments = documents.filter(isPending);
@@ -150,13 +197,31 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
     setRejectedCount(rejected);
   };
 
+  const accountChecker = () => {
+    const admin = accounts.filter(isAdmin).length;
+    const office = accounts.filter(isOffice).length;
+    const employee = accounts.filter(isEmployee).length;
+    setAdminCounts(admin);
+    setOfficeCount(office);
+    setEmployeeCount(employee);
+  };
+
+  const recDocumentChecker = () => {
+    const overallCounts = recDocs.length;
+    setRecDocsCount(overallCounts);
+  };
+
   useEffect(() => {
     getAllDocuments();
+    getAllAccounts();
+    getAllRecDocs();
     getAuditLogs();
   }, []);
 
   useEffect(() => {
     documentChecker();
+    accountChecker();
+    recDocumentChecker();
   }, [documents]);
 
   const [auditLogs, setAuditLogs] = useState([]);
@@ -183,7 +248,14 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
     return date.toLocaleDateString('en-US', options);
   };
 
-  const userLoginRole = (normalAccount?.role == 'Admin') ? 'Administrator' : 'Employee'; 
+  const userLoginRole =
+    normalAccount?.role == 'Admin'
+      ? 'Administrator'
+      : normalAccount?.role == 'Employee'
+      ? 'Employee'
+      : normalAccount?.role == 'Office'
+      ? 'Office'
+      : 'Unknown';
 
   return (
     <>
@@ -203,47 +275,113 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
           <Link to="/dashboard">
             <li className={activeMenuItem === 1 ? 'active' : ''}>
               <a href="#" onClick={() => handleMenuItemClick(0)}>
-                <i className="bx bx-category"></i>
+                <i className="bx bx-home"></i>
                 <span className="text">Dasboard</span>
               </a>
             </li>
           </Link>
-          <Link to="/document">
-            <li className={activeMenuItem === 1 ? 'active' : ''}>
-              <a href="#" onClick={() => handleMenuItemClick(0)}>
-                <i className="bx bx-file"></i>
-                <span className="text">Documents</span>
-              </a>
-            </li>
-          </Link>
-          <Link to="/rejected-docs">
-            <li className={activeMenuItem === 1 ? 'active' : ''}>
-              <a href="#" onClick={() => handleMenuItemClick(0)}>
-                <i className="bx bx-task-x"></i>
-                <span className="text">Rejected</span>
-              </a>
-            </li>
-          </Link>
-          { userLoginRole === 'Administrator' && (
-              <>
-                <Link to="/registry">
-                  <li className={activeMenuItem === 1 ? 'active' : ''}>
-                    <a href="#" onClick={() => handleMenuItemClick(0)}>
-                      <i className="bx bx-registered"></i>
-                      <span className="text">Registry</span>
-                    </a>
-                  </li>
-                </Link>
-                <Link to="/register">
-                  <li className={activeMenuItem === 1 ? 'active' : ''}>
-                    <a href="#" onClick={() => handleMenuItemClick(0)}>
-                      <i className="bx bx-user"></i>
-                      <span className="text">Add Employees</span>
-                    </a>
-                  </li>
-                </Link>
-              </>
-            )}
+          {userLoginRole === 'Employee' && (
+            <>
+              <Link to="/record-documents">
+                <li className={activeMenuItem === 1 ? 'active' : ''}>
+                  <a href="#" onClick={() => handleMenuItemClick(0)}>
+                    <i className="bx bx-file"></i>
+                    <span className="text">Record Docs</span>
+                  </a>
+                </li>
+              </Link>
+              <Link to="/document-types">
+                <li className={activeMenuItem === 1 ? 'active' : ''}>
+                  <a href="#" onClick={() => handleMenuItemClick(0)}>
+                    <i className="bx bx-category"></i>
+                    <span className="text">Types</span>
+                  </a>
+                </li>
+              </Link>
+              <Link to="/outbox">
+                <li className={activeMenuItem === 1 ? 'active' : ''}>
+                  <a href="#" onClick={() => handleMenuItemClick(0)}>
+                    <i className="bx bx-box"></i>
+                    <span className="text">Outbox</span>
+                  </a>
+                </li>
+              </Link>
+            </>
+          )}
+          {userLoginRole === 'Office' && (
+            <>
+              <li
+                onClick={handleDropdownSidebar}
+                className={activeMenuItem === 1 ? 'active' : ''}
+              >
+                <a href="#" onClick={() => handleMenuItemClick(0)}>
+                  <i className="bx bx-mail-send"></i>
+                  <span className="text">Incoming</span>
+                </a>
+              </li>
+              {isSideDropDownOpen && (
+                <div className="custom-dropdown-content">
+                  <Link to="/incoming-documents">
+                    <li className={activeMenuItem === 2 ? 'custom-active' : ''}>
+                      <i className="bx bx-mail-send"></i>
+                      <span className="text">Receive</span>
+                    </li>
+                  </Link>
+                  <Link to="/incoming-documents/pending">
+                    <li className={activeMenuItem === 3 ? 'custom-active' : ''}>
+                      <i className="bx bx-mail-send"></i>
+                      <span className="text">Pending</span>
+                    </li>
+                  </Link>
+                </div>
+              )}
+              <Link to="/archive-documents">
+                <li className={activeMenuItem === 1 ? 'active' : ''}>
+                  <a href="#" onClick={() => handleMenuItemClick(0)}>
+                    <i className="bx bx-archive"></i>
+                    <span className="text">Archive</span>
+                  </a>
+                </li>
+              </Link>
+            </>
+          )}
+          {userLoginRole === 'Administrator' && (
+            <>
+              <Link to="/account">
+                <li className={activeMenuItem === 1 ? 'active' : ''}>
+                  <a href="#" onClick={() => handleMenuItemClick(0)}>
+                    <i className="bx bx-user"></i>
+                    <span className="text">Accounts</span>
+                  </a>
+                </li>
+              </Link>
+              <hr />
+              <Link to="/registry">
+                <li className={activeMenuItem === 1 ? 'active' : ''}>
+                  <a href="#" onClick={() => handleMenuItemClick(0)}>
+                    <i className="bx bx-registered"></i>
+                    <span className="text">Registry</span>
+                  </a>
+                </li>
+              </Link>
+              <Link to="/document">
+                <li className={activeMenuItem === 1 ? 'active' : ''}>
+                  <a href="#" onClick={() => handleMenuItemClick(0)}>
+                    <i className="bx bx-file"></i>
+                    <span className="text">Documents</span>
+                  </a>
+                </li>
+              </Link>
+              <Link to="/rejected-docs">
+                <li className={activeMenuItem === 1 ? 'active' : ''}>
+                  <a href="#" onClick={() => handleMenuItemClick(0)}>
+                    <i className="bx bx-task-x"></i>
+                    <span className="text">Rejected</span>
+                  </a>
+                </li>
+              </Link>
+            </>
+          )}
         </ul>
       </section>
       {/* SIDEBAR */}
@@ -253,9 +391,7 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
         <nav>
           <i className="bx bx-menu" onClick={handleToggleSidebar}></i>
           <form action="#">
-            <div className="form-input">
-              
-            </div>
+            <div className="form-input"></div>
           </form>
           <Link to="/notification">
             <div className="notification-container">
@@ -311,8 +447,46 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
         {/* MAIN */}
         <main>
           {/* Overview Section */}
-          <div className='welcome-msg'>
+          <div className="welcome-msg">
             <h1>Hello, {userLoginRole} </h1>
+          </div>
+          <div className="overview-section">
+            <div className="completed-task">
+              <div className="icon-completed-task">
+                <i className="bx bxs-user"></i>
+              </div>
+              <div className="text-completed-task">
+                <h1>Admin</h1>
+                <h2>{adminCount}</h2>
+              </div>
+            </div>
+            <div className="pending-task">
+              <div className="icon-pending-task">
+                <i className="bx bxs-user"></i>
+              </div>
+              <div className="text-pending-task">
+                <h1>Office</h1>
+                <h2>{officeCount}</h2>
+              </div>
+            </div>
+            <div className="rejected-task">
+              <div className="icon-rejected-task">
+                <i className="bx bxs-user"></i>
+              </div>
+              <div className="text-rejected-task">
+                <h1>Employee</h1>
+                <h2>{employeeCount}</h2>
+              </div>
+            </div>
+            <div className="completed-task">
+              <div className="icon-completed-task">
+                <i className="bx bx-file"></i>
+              </div>
+              <div className="text-completed-task">
+                <h1>Documents</h1>
+                <h2>{recDocsCount}</h2>
+              </div>
+            </div>
           </div>
           <div className="overview-section">
             <div className="completed-task">

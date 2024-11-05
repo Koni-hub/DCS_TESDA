@@ -7,13 +7,15 @@ import logo from '../../assets/logo/logo.png';
 import { API_URL } from '../../config.js';
 
 const Register = (normalAccount, googleAccount) => {
-
   const [role, setRole] = useState(null);
 
   const navigate = useNavigate();
 
   console.log('here is a passed data from app routes', googleAccount);
-  console.log('here is a passed normal data from app routes GG', normalAccount.normalAccount.role);
+  console.log(
+    'here is a passed normal data from app routes GG',
+    normalAccount.normalAccount.role
+  );
 
   // Fetch data from json webtoken local storage = function
   useEffect(() => {
@@ -29,7 +31,7 @@ const Register = (normalAccount, googleAccount) => {
       try {
         const createdBy = normalAccount.normalAccount.role;
         setRole(createdBy);
-        console.log('Role:',  normalAccount.normalAccount.role);
+        console.log('Role:', normalAccount.normalAccount.role);
       } catch (error) {
         if (error.response) {
           console.error('Error response:', error.response);
@@ -44,7 +46,6 @@ const Register = (normalAccount, googleAccount) => {
     getUsernameForData();
   }, [normalAccount]);
 
-
   useEffect(() => {
     console.log('Select Role: ', role);
     if (role && role !== 'Admin' && role === 'System') {
@@ -53,7 +54,6 @@ const Register = (normalAccount, googleAccount) => {
       console.log('Role:', role || 'not defined yet');
     }
   }, [role, navigate]);
-
 
   const [verifyPassword, setVerifyPassword] = useState('');
 
@@ -65,6 +65,8 @@ const Register = (normalAccount, googleAccount) => {
     account_email: '',
     account_password: '',
     account_contactNo: '',
+    account_status: '',
+    account_role: '',
     isAccountVerified: false,
   });
 
@@ -83,15 +85,29 @@ const Register = (normalAccount, googleAccount) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  console.log('Account Status', formData.account_status);
+
   const validateInputs = () => {
-    const { account_username, account_email, account_password, account_firstName, account_lastName, account_contactNo } = formData;
+    const {
+      account_username,
+      account_email,
+      account_password,
+      account_firstName,
+      account_lastName,
+      account_contactNo,
+      account_status,
+      account_role,
+    } = formData;
 
     // Username validation: Must be numeric and at most 8 characters
     if (!/^\d{1,8}$/.test(account_username)) {
-      toast.error('Username must be numeric and exactly 8 characters long.', toastConfig);
+      toast.error(
+        'Username must be numeric and exactly 8 characters long.',
+        toastConfig
+      );
       return;
     }
-    
+
     // Email validation (valid format)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(account_email)) {
@@ -118,10 +134,25 @@ const Register = (normalAccount, googleAccount) => {
       return false;
     }
 
+    // Select status (must not be empty)
+    if (!account_status) {
+      toast.error('Status must be not empty');
+      return false;
+    }
+
+    // Select Account role (must not be empty)
+    if (!account_role) {
+      toast.error('Role must be not empty');
+      return false;
+    }
+
     // Password validation (max length, at least one special character, at least one uppercase letter)
     const passwordRegex = /^(?=.*[!@#$%^&*])(?=.*[A-Z]).{1,16}$/;
     if (!passwordRegex.test(account_password)) {
-      toast.error('Password must be 16 characters or less, include at least one uppercase letter and one special character.', toastConfig);
+      toast.error(
+        'Password must be 16 characters or less, include at least one uppercase letter and one special character.',
+        toastConfig
+      );
       return false;
     }
 
@@ -141,7 +172,23 @@ const Register = (normalAccount, googleAccount) => {
     }
 
     try {
+      const userName =
+        normalAccount?.username || googleAccount.profile.emails[0].value;
+      const fullName = normalAccount.fullname || null;
+
       const response = await axios.post(`${API_URL}/register`, formData);
+      // Create Audit Log
+      const auditLogData = {
+        userName,
+        fullName,
+        action: `Created account by username ${userName}`,
+      };
+
+      await axios.post(`${API_URL}/audit-logs`, auditLogData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       toast.success('Successfully registered user', toastConfig);
       setTimeout(() => {
         navigate('/');
@@ -181,6 +228,9 @@ const Register = (normalAccount, googleAccount) => {
   return (
     <>
       <div className="container-register-form">
+        <Link id="back-btn" to={'/account'}>
+          ← Go back
+        </Link>
         <div className="register-form">
           <div className="signup">
             <div className="content">
@@ -200,7 +250,7 @@ const Register = (normalAccount, googleAccount) => {
                     value={formData.account_username}
                     onChange={handleChange}
                   />{' '}
-                  <i className="no-event">Employee ID </i>
+                  <i className="no-event">ID </i>
                 </div>
 
                 <div className="inputBox">
@@ -285,6 +335,39 @@ const Register = (normalAccount, googleAccount) => {
                       onClick={togglePassword2}
                     ></i>
                   </span>
+                </div>
+
+                <div className="inputBox">
+                  <select
+                    name="account_status"
+                    id="account_status"
+                    required
+                    value={formData.account_status}
+                    onChange={handleChange}
+                  >
+                    <option disabled value="">
+                      Select status
+                    </option>
+                    <option value="active">Active</option>
+                    <option value="closed">Closed</option>
+                  </select>
+                </div>
+
+                <div className="inputBox">
+                  <select
+                    name="account_role"
+                    id="account_role"
+                    required
+                    value={formData.account_role}
+                    onChange={handleChange}
+                  >
+                    <option disabled value="">
+                      Select Role
+                    </option>
+                    <option value="Admin">Admin</option>
+                    <option value="Office">Office</option>
+                    <option value="Employee">Employee</option>
+                  </select>
                 </div>
 
                 <div className="inputBox">

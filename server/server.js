@@ -1,17 +1,25 @@
-import express from 'express';
+import express from "express";
 import database from "./config/dbConfig.js";
-import cors from 'cors';
-import AccountRoutes from './routes/accountRoutes.js';
-import DocumentRoutes from './routes/documentRoutes.js';
-import RejectDocumentsRoutes from './routes/rejectDocumentsRoutes.js';
-import RegistryRoutes from './routes/registryRoutes.js';
-import AuditLog from './routes/auditRoutes.js';
+import cors from "cors";
+import AccountRoutes from "./routes/accountRoutes.js";
+import DocumentRoutes from "./routes/documentRoutes.js";
+import RejectDocumentsRoutes from "./routes/rejectDocumentsRoutes.js";
+import RegistryRoutes from "./routes/registryRoutes.js";
+import AuditLog from "./routes/auditRoutes.js";
+import Office from "./routes/officeRoutes.js";
+import DocumentTypes from "./routes/documentTypesRoutes.js";
+import RecordDocument from "./routes/recordDocumentRoutes.js";
 import session from "express-session";
+import fileUpload from "express-fileupload";
+import Recipient from "./routes/recipientRoutes.js";
+
+// Associations
+import "./model/associations.js";
 
 // Setup Accounts
-import AuthRoutes from './routes/authGoogle.js';
-import passportSetup from './passport.js';
-import "dotenv/config"
+import AuthRoutes from "./routes/authGoogle.js";
+import passportSetup from "./passport.js";
+import "dotenv/config";
 
 const app = express();
 
@@ -20,44 +28,57 @@ const app = express();
 const port = 5000;
 
 try {
-    await database.authenticate();
-    console.log("Successfully Connected to the database");
-    console.log
+  await database.authenticate();
+  console.log("Successfully Connected to the database");
+  console.log;
 } catch (error) {
-    console.log("Failed to connect!", error);
+  console.log("Failed to connect!", error);
 }
 
-app.use(session({
-    name: 'session',
-    keys: ['DocumentControllerSystem'],
-    secret: 'documentsystem',
+app.use(
+  session({
+    name: "session",
+    keys: ["DocumentControllerSystem"],
+    secret: "documentsystem",
     maxAge: 24 * 60 * 60 * 1000,
     cookie: { secure: false },
     resave: false,
-    saveUninitialized: false
-}));
+    saveUninitialized: false,
+  })
+);
 
 app.use(passportSetup.initialize());
 app.use(passportSetup.session());
+app.use(express.static("public"));
+app.use(fileUpload({ createParentPath: true }));
 
 // Middleware setup
-app.use(cors({
-    origin: ["http://localhost:5173", "https://documentcontrollersystem.onrender.com"],
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://documentcontrollersystem.onrender.com",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    credentials: true
-}));
+    credentials: true,
+  })
+);
 app.use(express.json());
 
-app.use('/', AccountRoutes);
-app.use('/documents', DocumentRoutes);
-app.use('/rejected-documents', RejectDocumentsRoutes);
-app.use('/registry', RegistryRoutes);
-app.use('/audit-logs', AuditLog);
-app.use('/auth', AuthRoutes);
+app.use("/", AccountRoutes);
+app.use("/documents", DocumentRoutes);
+app.use("/rejected-documents", RejectDocumentsRoutes);
+app.use("/registry", RegistryRoutes);
+app.use("/audit-logs", AuditLog);
+app.use("/auth", AuthRoutes);
+app.use("/offices", Office);
+app.use("/document-types", DocumentTypes);
+app.use("/record-docs", RecordDocument);
+app.use("/recipients", Recipient);
 
 // Check Health
-app.get('/health', (_req, res) => res.status(200).send("OK"));
+app.get("/health", (_req, res) => res.status(200).send("OK"));
 
 app.listen(port, () => {
-    console.log(`Server listening on ${port}`);
+  console.log(`Server listening on ${port}`);
 });

@@ -1,4 +1,4 @@
-/* eslint-disable react/no-unescaped-entities */
+ 
 import './Login.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';

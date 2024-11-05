@@ -232,7 +232,14 @@ const RejectedDocuments = ({ normalAccount, googleAccount }) => {
     }
   };
   
-  const userLoginRole = (normalAccount?.role == 'Admin') ? 'Administrator' : 'Employee';
+  const userLoginRole = 
+    (normalAccount?.role == 'Admin') 
+    ? 'Administrator' 
+    : (normalAccount?.role == 'Employee')
+    ? 'Employee' 
+    : (normalAccount?.role == 'Office')
+    ? 'Office' 
+    : 'Unknown';
 
   return (
     <>
@@ -273,6 +280,34 @@ const RejectedDocuments = ({ normalAccount, googleAccount }) => {
               </a>
             </li>
           </Link>
+          {userLoginRole === 'Office' && (
+            <>
+              <Link to="/incoming-documents">
+                  <li className={activeMenuItem === 1 ? 'active' : ''}>
+                    <a href="#" onClick={() => handleMenuItemClick(0)}>
+                      <i className="bx bx-mail-send"></i>
+                      <span className="text">Incoming</span>
+                    </a>
+                  </li>
+                </Link>
+                <Link to="/">
+                  <li className={activeMenuItem === 1 ? 'active' : ''}>
+                    <a href="#" onClick={() => handleMenuItemClick(0)}>
+                      <i className="bx bx-box"></i>
+                      <span className="text">Outbox</span>
+                    </a>
+                  </li>
+                </Link>
+                <Link to="/">
+                  <li className={activeMenuItem === 1 ? 'active' : ''}>
+                    <a href="#" onClick={() => handleMenuItemClick(0)}>
+                      <i className="bx bx-archive"></i>
+                      <span className="text">Archive</span>
+                    </a>
+                  </li>
+                </Link>
+            </>
+          )}
           { userLoginRole === 'Administrator' && (
             <>
               <Link to="/registry">
@@ -283,14 +318,38 @@ const RejectedDocuments = ({ normalAccount, googleAccount }) => {
                   </a>
                 </li>
               </Link>
-              <Link to="/register">
+              <Link to="/account">
                 <li className={activeMenuItem === 1 ? 'active' : ''}>
                   <a href="#" onClick={() => handleMenuItemClick(0)}>
                     <i className="bx bx-user"></i>
-                    <span className="text">Add Employees</span>
+                    <span className="text">Accounts</span>
                   </a>
                 </li>
               </Link>
+              <Link to="/offices">
+                  <li className={activeMenuItem === 1 ? 'active' : ''}>
+                    <a href="#" onClick={() => handleMenuItemClick(0)}>
+                      <i className="bx bx-building-house"></i>
+                      <span className="text">Offices</span>
+                    </a>
+                  </li>
+                </Link>
+                <Link to="/document-types">
+                  <li className={activeMenuItem === 1 ? 'active' : ''}>
+                    <a href="#" onClick={() => handleMenuItemClick(0)}>
+                      <i className="bx bx-file-blank"></i>
+                      <span className="text">Document Types</span>
+                    </a>
+                  </li>
+                </Link>
+                <Link to="/record-documents">
+                  <li className={activeMenuItem === 1 ? 'active' : ''}>
+                    <a href="#" onClick={() => handleMenuItemClick(0)}>
+                      <i className="bx bx-file"></i>
+                      <span className="text">Documents</span>
+                    </a>
+                  </li>
+                </Link>
             </>
           )}
         </ul>

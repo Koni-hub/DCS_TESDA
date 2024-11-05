@@ -15,22 +15,22 @@ export const getAllAccounts = async (req, res) => {
 
 export const getAccountById = async (req, res) => {
   try {
-      const response = await Accounts.findOne({
-          where: {
-            account_email: req.params.account_email
-          }
-      });
+    const response = await Accounts.findOne({
+      where: {
+        account_email: req.params.account_email,
+      },
+    });
 
-      if (!response) {
-          return res.status(404).json({ msg: "Account Email not found" });
-      }
+    if (!response) {
+      return res.status(404).json({ msg: "Account Email not found" });
+    }
 
-      res.json(response);
+    res.json(response);
   } catch (error) {
-      console.log(error.message);
-      res.status(500).json({ msg: "Internal Server Error" });
+    console.log(error.message);
+    res.status(500).json({ msg: "Internal Server Error" });
   }
-}
+};
 
 export const registerAccount = async (req, res) => {
   try {
@@ -42,7 +42,9 @@ export const registerAccount = async (req, res) => {
       account_password,
       account_email,
       account_contactNo,
+      account_status,
       isAccountVerified,
+      account_role,
     } = req.body;
 
     // Check if the username already exists
@@ -64,7 +66,6 @@ export const registerAccount = async (req, res) => {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(account_password, saltRounds);
 
-    // Create user in VersatilyDB "accounts table"
     const user = await Accounts.create({
       account_username: account_username,
       account_firstName: account_firstName,
@@ -72,13 +73,92 @@ export const registerAccount = async (req, res) => {
       account_pass: hashedPassword,
       account_email: account_email,
       account_contactNo: account_contactNo,
+      account_status: account_status,
       isAccountVerified: isAccountVerified,
+      account_role: account_role,
       createdBy: "System",
     });
     res.status(201).json({ message: "User registered successfully", user });
   } catch (error) {
     console.error("Error registering user:", error);
     res.status(500).json({ message: "Internal server error", error });
+  }
+};
+
+export const editAccount = async (req, res) => {
+  try {
+    const { account_id } = req.params; // Get account ID from request parameters
+    const {
+      account_username,
+      account_firstName,
+      account_lastName,
+      account_password,
+      account_email,
+      account_contactNo,
+      account_status,
+      isAccountVerified,
+      account_role,
+    } = req.body;
+
+    // Find the existing account
+    const account = await Accounts.findByPk(account_id);
+    if (!account) {
+      return res.status(404).json({ message: "Account not found" });
+    }
+
+    // Check if the new username already exists (excluding current account)
+    if (account_username && account_username !== account.account_username) {
+      const existingUser = await Accounts.findOne({
+        where: { account_username, account_id: { [Op.ne]: account_id } },
+      });
+      if (existingUser) {
+        return res.status(400).json({ message: "Username already exists" });
+      }
+    }
+
+    // Check if the new email already exists (excluding current account)
+    if (account_email && account_email !== account.account_email) {
+      const existingEmail = await Accounts.findOne({
+        where: { account_email, account_id: { [Op.ne]: account_id } },
+      });
+      if (existingEmail) {
+        return res.status(400).json({ message: "Email already exists" });
+      }
+    }
+
+    // Hash the new password if provided
+    let updatedPassword = account.account_pass; // Keep the current password by default
+    if (account_password) {
+      const saltRounds = 10;
+      updatedPassword = await bcrypt.hash(account_password, saltRounds);
+    }
+
+    // Update the account with the new information
+    await account.update({
+      account_username: account_username || account.account_username,
+      account_firstName: account_firstName || account.account_firstName,
+      account_lastName: account_lastName || account.account_lastName,
+      account_pass: updatedPassword,
+      account_email: account_email || account.account_email,
+      account_contactNo: account_contactNo || account.account_contactNo,
+      account_status:
+        account_status !== undefined ? account_status : account.account_status,
+      isAccountVerified:
+        isAccountVerified !== undefined
+          ? isAccountVerified
+          : account.isAccountVerified,
+      account_role:
+        account_role !== undefined ? account_role : account.account_role,
+    });
+
+    return res
+      .status(200)
+      .json({ message: "Account updated successfully", account });
+  } catch (error) {
+    console.error("Error updating account:", error);
+    return res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
   }
 };
 
@@ -122,7 +202,7 @@ export const loginAccount = async (req, res) => {
         email: user.account_email,
         username: user.account_username,
         fullname: user.account_firstName + " " + user.account_lastName,
-        role: user.createdBy
+        role: user.account_role,
       },
       secretKey,
       { expiresIn: "24h" }
@@ -131,13 +211,17 @@ export const loginAccount = async (req, res) => {
     // If everything is okay, send a success response with JWT token
     res
       .status(200)
-      .json({ message: "Login successful", user: user, token: token, role: user.createdBy });
+      .json({
+        message: "Login successful",
+        user: user,
+        token: token,
+        role: user.account_role,
+      });
   } catch (error) {
     console.error("Error logging in:", error);
     res.status(500).json({ message: "Internal server error", error });
   }
 };
-
 
 export const updateAccount = async (req, res) => {
   try {
@@ -153,17 +237,23 @@ export const updateAccount = async (req, res) => {
     }
 
     // Check if current password matches
-    if (currentPassword && !(await bcrypt.compare(currentPassword, account.account_pass))) {
+    if (
+      currentPassword &&
+      !(await bcrypt.compare(currentPassword, account.account_pass))
+    ) {
       return res.status(400).json({ message: "Current password is incorrect" });
     }
 
     // Check if the username already exists and is not the current account's username
-    if (updateFields.account_username && updateFields.account_username !== account.account_username) {
+    if (
+      updateFields.account_username &&
+      updateFields.account_username !== account.account_username
+    ) {
       const existingUser = await Accounts.findOne({
         where: {
           account_username: updateFields.account_username,
-          account_email: { [Sequelize.Op.ne]: updateFields.account_email }
-        }
+          account_email: { [Sequelize.Op.ne]: updateFields.account_email },
+        },
       });
       if (existingUser) {
         return res.status(400).json({ message: "Username already exists" });
@@ -186,22 +276,38 @@ export const updateAccount = async (req, res) => {
   }
 };
 
-export const findGoogleAccount = async(req, res) => {
+export const findGoogleAccount = async (req, res) => {
   try {
     const { email } = req.body;
-    
+
     // Adjust the query to use the correct field name
     const account = await Accounts.findOne({
-      where: { account_email: email } // Updated field name
+      where: { account_email: email }, // Updated field name
     });
 
     if (account) {
       res.json(account.createdBy);
     } else {
-      res.status(404).json({ message: 'No account found with the provided email.' });
+      res
+        .status(404)
+        .json({ message: "No account found with the provided email." });
     }
   } catch (error) {
-    console.error('Error finding account:', error); // Log the full error object
-    res.status(500).json({ message: 'Server error', error: error.message }); 
+    console.error("Error finding account:", error); // Log the full error object
+    res.status(500).json({ message: "Server error", error: error.message });
   }
-}
+};
+
+// get account by its Office role
+export const findOfficeAccount = async (req, res) => {
+  try {
+    const officeAccounts = await Accounts.findAll({
+      where: { account_role: "Office" },
+    });
+
+    res.json(officeAccounts);
+  } catch (error) {
+    console.error("Error finding account:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};

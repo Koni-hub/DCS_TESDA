@@ -1,9 +1,12 @@
-import {getAllAuditLogs, createAuditLog} from '../controller/auditController.js';
-import express from 'express';
+import {
+  getAllAuditLogs,
+  createAuditLog,
+} from "../controller/auditController.js";
+import express from "express";
 
 const router = express.Router();
 
-router.get('/', getAllAuditLogs);
-router.post('/', createAuditLog);
+router.get("/", getAllAuditLogs);
+router.post("/", createAuditLog);
 
-export default router;  
+export default router;

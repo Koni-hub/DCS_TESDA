@@ -11,9 +11,12 @@ function ProtectedRoutes() {
   console.log('Role:', role);
 
   // Check if the user is logged in and has a valid role
-  const isAuthorized = isLoggedIn && token && (role === 'Admin' || role === 'System');
+  const isAuthorized =
+    isLoggedIn &&
+    token &&
+    (role === 'Admin' || role === 'Employee' || role === 'Office');
 
   return isAuthorized ? <Outlet /> : <Navigate to="/" />;
 }
 
-export default ProtectedRoutes; 
+export default ProtectedRoutes;
