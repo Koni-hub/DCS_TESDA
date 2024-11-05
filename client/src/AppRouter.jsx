@@ -11,6 +11,14 @@ import ViewDocument from './pages/ViewDocuments/ViewDocument.jsx';
 import Profile from './pages/Profile/Profile.jsx';
 import RejectedDocuments from './pages/RejectedDocument/RejectedDocuments.jsx';
 import Registry from './pages/Registry/Registry.jsx';
+import Office from './pages/Office/Office.jsx';
+import Account from './pages/Account/Account.jsx';
+import DocumentTypes from './pages/DocumentTypes/DocumentTypes.jsx';
+import RecordDocument from './pages/RecordDocument/RecordDocument.jsx';
+import IncomingDocuments from './pages/IncomingDocuments/IncomingDocuments.jsx';
+import PendingDocuments from './pages/PendingDocuments/PendingDocuments.jsx';
+import ArchiveDocs from './pages/ArchiveDocs/ArchiveDocs.jsx';
+import OutboxDocs from './pages/OutboxDocs/OutboxDocs.jsx';
 
 // Auth Pages
 import Login from './pages/Login/Login.jsx';
@@ -23,7 +31,10 @@ import Forbidden from './pages/Unauthorize/Forbidden.jsx';
 import { API_URL } from './config.js';
 
 function AppRoutes() {
-  const [accounts, setAccounts] = useState({ normalAccount: null, googleAccount: null });
+  const [accounts, setAccounts] = useState({
+    normalAccount: null,
+    googleAccount: null,
+  });
   const [loading, setLoading] = useState(true);
 
   async function getGoogleInfo() {
@@ -36,15 +47,18 @@ function AppRoutes() {
           'Content-Type': 'application/json',
         },
       });
-  
+
       if (response.status === 200) {
-        console.log('A data of the google has been authorized fetch', response.status);
+        console.log(
+          'A data of the google has been authorized fetch',
+          response.status
+        );
         const data = await response.json();
         return data.user;
-      } if (response.status === 401) {
-        console.log('Unauthorized Data fetch yet', response.status);
       }
-      else {
+      if (response.status === 401) {
+        console.log('Unauthorized Data fetch yet', response.status);
+      } else {
         console.error('Failed to fetch google data:', response.status);
         return null;
       }
@@ -106,36 +120,148 @@ function AppRoutes() {
         {/* Protected Routes */}
         <Route element={<ProtectedRoutes />}>
           <Route
-            path='/register'
-            element={<Register normalAccount={accounts.normalAccount} googleAccount={accounts.googleAccount}/>}
+            path="/register"
+            element={
+              <Register
+                normalAccount={accounts.normalAccount}
+                googleAccount={accounts.googleAccount}
+              />
+            }
           />
           <Route
             path="/dashboard"
-            element={<Dashboard normalAccount={accounts.normalAccount} googleAccount={accounts.googleAccount} />}
+            element={
+              <Dashboard
+                normalAccount={accounts.normalAccount}
+                googleAccount={accounts.googleAccount}
+              />
+            }
+          />
+          <Route
+            path="/account"
+            element={
+              <Account
+                normalAccount={accounts.normalAccount}
+                googleAccount={accounts.googleAccount}
+              />
+            }
+          />
+          <Route
+            path="/offices"
+            element={
+              <Office
+                normalAccount={accounts.normalAccount}
+                googleAccount={accounts.googleAccount}
+              />
+            }
+          />
+          <Route
+            path="/incoming-documents"
+            element={
+              <IncomingDocuments
+                normalAccount={accounts.normalAccount}
+                googleAccount={accounts.googleAccount}
+              />
+            }
+          />
+          <Route
+            path="/incoming-documents/pending"
+            element={
+              <PendingDocuments
+                normalAccount={accounts.normalAccount}
+                googleAccount={accounts.googleAccount}
+              />
+            }
+          />
+          <Route
+            path="/outbox"
+            element={
+              <OutboxDocs
+                normalAccount={accounts.normalAccount}
+                googleAccount={accounts.googleAccount}
+              />
+            }
+          />
+          <Route
+            path="/archive-documents"
+            element={
+              <ArchiveDocs
+                normalAccount={accounts.normalAccount}
+                googleAccount={accounts.googleAccount}
+              />
+            }
+          />
+          <Route
+            path="/document-types"
+            element={
+              <DocumentTypes
+                normalAccount={accounts.normalAccount}
+                googleAccount={accounts.googleAccount}
+              />
+            }
+          />
+          <Route
+            path="/record-documents"
+            element={
+              <RecordDocument
+                normalAccount={accounts.normalAccount}
+                googleAccount={accounts.googleAccount}
+              />
+            }
           />
           <Route
             path="/document"
-            element={<Document normalAccount={accounts.normalAccount} googleAccount={accounts.googleAccount} />}
+            element={
+              <Document
+                normalAccount={accounts.normalAccount}
+                googleAccount={accounts.googleAccount}
+              />
+            }
           />
           <Route
             path="/registry"
-            element={<Registry normalAccount={accounts.normalAccount} googleAccount={accounts.googleAccount} />}
+            element={
+              <Registry
+                normalAccount={accounts.normalAccount}
+                googleAccount={accounts.googleAccount}
+              />
+            }
           />
           <Route
             path="/rejected-docs"
-            element={<RejectedDocuments normalAccount={accounts.normalAccount} googleAccount={accounts.googleAccount} />}
+            element={
+              <RejectedDocuments
+                normalAccount={accounts.normalAccount}
+                googleAccount={accounts.googleAccount}
+              />
+            }
           />
           <Route
             path="/viewDocument/:No"
-            element={<ViewDocument normalAccount={accounts.normalAccount} googleAccount={accounts.googleAccount} />}
+            element={
+              <ViewDocument
+                normalAccount={accounts.normalAccount}
+                googleAccount={accounts.googleAccount}
+              />
+            }
           />
           <Route
             path="/notification"
-            element={<Notification normalAccount={accounts.normalAccount} googleAccount={accounts.googleAccount} />}
+            element={
+              <Notification
+                normalAccount={accounts.normalAccount}
+                googleAccount={accounts.googleAccount}
+              />
+            }
           />
           <Route
             path="/profile"
-            element={<Profile normalAccount={accounts.normalAccount} googleAccount={accounts.googleAccount} />}
+            element={
+              <Profile
+                normalAccount={accounts.normalAccount}
+                googleAccount={accounts.googleAccount}
+              />
+            }
           />
           <Route path="/forbidden" element={<Forbidden />} />
           <Route path="*" element={<NotFound />} />
