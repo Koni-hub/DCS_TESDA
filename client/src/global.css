@@ -82,6 +82,7 @@ li {
   margin-top: 10px;
 }
 #sidebar .side-menu li {
+  text-align: center;
   height: 48px;
   background: transparent;
   margin-left: 6px;
@@ -305,4 +306,27 @@ li {
 
 .rotate {
   transform: rotate(180deg);
+}
+
+/* Custom dropdown */
+.custom-dropdown-content {
+  display: none; /* You can remove this line now */
+}
+
+.custom-dropdown-content {
+  display: block; /* Show the dropdown when isOpen is true in the component */
+}
+
+.custom-active {
+  font-weight: bold;
+  color: #007bff;
+}
+
+.custom-dropdown-content li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.custom-dropdown-content li:hover {
+  background-color: #f0f0f0;
 }
