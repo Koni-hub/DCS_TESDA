@@ -1,148 +1,169 @@
 .container-register-form {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    min-height: 100vh;
-    max-height: 100%;
-    margin: 0 auto;
-    background: 
-        linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-        url('../../assets/logo/background-img.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-  
-  .register-form .signup {
-    width: 550px;
-    z-index: 1000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 40px;
-  }
-  
-  .register-form .signup .content {
-    position: relative;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 40px;
-  }
-  
-  .register-form .signup .content h2 {
-    font-size: 2em;
-    color: var(--light);
-  }
-  
-  .register-form .signup .content .form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-  }
-  
-  .register-form .signup .content .form .inputBox {
-    position: relative;
-    width: 100%;
-  }
-  
-  .register-form .signup .content .form .inputBox input {
-    position: relative;
-    width: 100%;
-    background: var(--input-background);
-    border: none;
-    outline: none;
-    padding: 25px 10px 7.5px;
-    border-radius: 4px;
-    color: #000;
-    font-weight: 500;
-    font-size: 1em;
-  }
-  
-  .register-form .signup .content .form .inputBox i {
-    position: absolute;
-    left: 0;
-    padding: 15px 10px;
-    font-style: normal;
-    color: #000;
-    transition: 0.5s;
-  }
-  
-  .register-form .signup .content .form .inputBox .no-event {
-    pointer-events: none;
-  }
-  
-  .register-form .signup .content .form .inputBox .show-password {
-    position: absolute;
-    right: 50px;
-    font-size: 25px;
-    font-style: normal;
-    color: #000;
-    transition: 0.5s;
-    cursor: pointer;
-  }
-  
-  .signup .content .form .inputBox input:focus ~ i,
-  .signup .content .form .inputBox input:valid ~ i {
-    transform: translateY(-7.5px);
-    font-size: 0.8em;
-    color: #000;
-  }
-  
-  .signup .content .form .inputBox input:focus,
-  .signup .content .form .inputBox input:valid {
-    border: 1px solid #cacaca;
-  }
-  
-  .signup .content .form .links {
-    position: relative;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .signup .content .form .links a {
-    color: var(--secondary);
-    text-decoration: none;
-    font-size: 14px;
-  }
-  
-  .signup .content .form .links a:nth-child(2) {
-    color: var(--secondary);
-    font-weight: 400;
-  }
-  
-  .signup .content .form .inputBox input[type="submit"] {
-    padding: 10px;
-    background: var(--secondary);
-    color: #f0f0f0;
-    font-weight: 600;
-    font-size: 1.35em;
-    letter-spacing: 0.05em;
-    cursor: pointer;
-  }
-  
-  input[type="submit"]:active {
-    opacity: 0.6;
-  }
-  
-  .links-register {
-    text-align: center;
-    font-size: 13px;
-    color: var(--secondary);
-  }
-  
-  .links-register a {
-    text-align: center;
-    font-size: 13px;
-    color: var(--secondary);
-  }
-  
-  .full-name-form {
-    display: flex;
-    gap: 20px;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  max-height: 100%;
+  margin: 0 auto;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url("../../assets/logo/background-img.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+#back-btn {
+  color: #f0f0f0;
+  font-size: 18px;
+  float: left;
+  position: absolute;
+  left: 50px;
+  top: 50px;
+  font-weight: 800;
+}
+
+.register-form .signup {
+  width: 550px;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.register-form .signup .content {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.register-form .signup .content h2 {
+  font-size: 2em;
+  color: var(--light);
+}
+
+.register-form .signup .content .form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.register-form .signup .content .form .inputBox {
+  position: relative;
+  width: 100%;
+}
+
+.register-form .signup .content .form .inputBox input {
+  position: relative;
+  width: 100%;
+  background: var(--input-background);
+  border: none;
+  outline: none;
+  padding: 25px 10px 7.5px;
+  border-radius: 4px;
+  color: #000;
+  font-weight: 500;
+  font-size: 1em;
+}
+
+.register-form .signup .content .form .inputBox select {
+  position: relative;
+  width: 100%;
+  background: var(--input-background);
+  border: none;
+  outline: none;
+  padding: 20px 10px 7.5px;
+  border-radius: 4px;
+  color: #000;
+  font-weight: 500;
+  font-size: 1em;
+}
+
+.register-form .signup .content .form .inputBox i {
+  position: absolute;
+  left: 0;
+  padding: 15px 10px;
+  font-style: normal;
+  color: #000;
+  transition: 0.5s;
+}
+
+.register-form .signup .content .form .inputBox .no-event {
+  pointer-events: none;
+}
+
+.register-form .signup .content .form .inputBox .show-password {
+  position: absolute;
+  right: 50px;
+  font-size: 25px;
+  font-style: normal;
+  color: #000;
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+.signup .content .form .inputBox input:focus ~ i,
+.signup .content .form .inputBox input:valid ~ i {
+  transform: translateY(-7.5px);
+  font-size: 0.8em;
+  color: #000;
+}
+
+.signup .content .form .inputBox input:focus,
+.signup .content .form .inputBox input:valid {
+  border: 1px solid #cacaca;
+}
+
+.signup .content .form .links {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.signup .content .form .links a {
+  color: var(--secondary);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.signup .content .form .links a:nth-child(2) {
+  color: var(--secondary);
+  font-weight: 400;
+}
+
+.signup .content .form .inputBox input[type="submit"] {
+  padding: 10px;
+  background: var(--secondary);
+  color: #f0f0f0;
+  font-weight: 600;
+  font-size: 1.35em;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
+input[type="submit"]:active {
+  opacity: 0.6;
+}
+
+.links-register {
+  text-align: center;
+  font-size: 13px;
+  color: var(--secondary);
+}
+
+.links-register a {
+  text-align: center;
+  font-size: 13px;
+  color: var(--secondary);
+}
+
+.full-name-form {
+  display: flex;
+  gap: 20px;
+}

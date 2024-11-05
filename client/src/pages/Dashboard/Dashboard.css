@@ -142,7 +142,7 @@
 /* Audit Section Styling */
 .audit-section {
   padding: 20px;
-  width: 100%; 
+  width: 100%;
   height: auto;
 }
 
@@ -160,8 +160,9 @@
   border-collapse: collapse;
 }
 
-.audit-section th, .audit-section td {
-  padding: 12px; 
+.audit-section th,
+.audit-section td {
+  padding: 12px;
   color: #333333;
 }
 
@@ -221,7 +222,6 @@
   padding: 10px 0;
   font-size: 20px;
 }
-
 
 .reminders .task_list li.uncomplete {
   border-left: 5px solid var(--danger);
