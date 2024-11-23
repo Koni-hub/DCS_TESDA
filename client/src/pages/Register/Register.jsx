@@ -173,7 +173,7 @@ const Register = (normalAccount, googleAccount) => {
 
     try {
       const userName =
-        normalAccount?.username || googleAccount.profile.emails[0].value;
+        normalAccount?.username;
       const fullName = normalAccount.fullname || null;
 
       const response = await axios.post(`${API_URL}/register`, formData);
