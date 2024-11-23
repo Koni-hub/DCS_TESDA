@@ -631,7 +631,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="6">No record documents found.</td>
+                      <td colSpan="4">No record documents found.</td>
                     </tr>
                   )}
                 </tbody>
