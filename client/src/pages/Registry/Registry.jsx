@@ -166,7 +166,7 @@ const Registry = ({ normalAccount, googleAccount }) => {
   const updateRegistry = async (e) => {
     e.preventDefault();
     const userName =
-      normalAccount?.username || googleAccount.profile.emails[0].value;
+      normalAccount?.username;
     console.log('Username: ', userName);
     const fullName = normalAccount.fullname || null;
 
@@ -215,7 +215,7 @@ const Registry = ({ normalAccount, googleAccount }) => {
   };
   const deleteRegistries = async (e, registryId) => {
     const userName =
-      normalAccount?.username || googleAccount.profile.emails[0].value;
+      normalAccount?.username;
     console.log('Username: ', userName);
     const fullName = normalAccount.fullname || null;
 
