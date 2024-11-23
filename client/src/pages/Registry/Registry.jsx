@@ -115,7 +115,7 @@ const Registry = ({ normalAccount, googleAccount }) => {
   const createRegistry = async (e) => {
     e.preventDefault();
     const userName =
-      normalAccount?.username || googleAccount.profile.emails[0].value;
+      normalAccount?.username
     console.log('Username: ', userName);
     const fullName = normalAccount.fullname || null;
 
