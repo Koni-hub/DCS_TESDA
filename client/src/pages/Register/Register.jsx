@@ -172,8 +172,8 @@ const Register = (normalAccount, googleAccount) => {
     }
 
     try {
-      const userName = normalAccount?.username;
-      const fullName = normalAccount.fullname || null;
+      const userName = normalAccount.normalAccount.username;
+      const fullName = normalAccount.normalAccount.fullname || null;
 
       const response = await axios.post(`${API_URL}/register`, formData);
       // Create Audit Log
