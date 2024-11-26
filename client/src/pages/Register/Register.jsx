@@ -348,7 +348,7 @@ const Register = (normalAccount, googleAccount) => {
                       Select status
                     </option>
                     <option value="active">Active</option>
-                    <option value="closed">Closed</option>
+                    <option value="closed">Inactive</option>
                   </select>
                 </div>
 
