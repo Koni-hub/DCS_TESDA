@@ -97,6 +97,12 @@ const Office = ({ normalAccount, googleAccount }) => {
     getUsernameForData();
   }, [normalAccount]);
 
+  const [isSideDropDownOpen, setSideDropDownOpen] = useState(false);
+
+  const handleDropdownSidebar = () => {
+    setSideDropDownOpen(!isSideDropDownOpen);
+  };
+
   // Role-based access control
   useEffect(() => {
     if (role && role !== 'Admin' && role !== 'System') {
@@ -383,45 +389,110 @@ const Office = ({ normalAccount, googleAccount }) => {
           <Link to="/dashboard">
             <li className={activeMenuItem === 1 ? 'active' : ''}>
               <a href="#" onClick={() => handleMenuItemClick(0)}>
-                <i className="bx bx-category"></i>
+                <i className="bx bx-home"></i>
                 <span className="text">Dashboard</span>
               </a>
             </li>
           </Link>
-          <Link to="/document">
-            <li className={activeMenuItem === 1 ? 'active' : ''}>
-              <a href="#" onClick={() => handleMenuItemClick(0)}>
-                <i className="bx bx-file"></i>
-                <span className="text">Documents</span>
-              </a>
-            </li>
-          </Link>
-          <Link to="/rejected-docs">
-            <li className={activeMenuItem === 1 ? 'active' : ''}>
-              <a href="#" onClick={() => handleMenuItemClick(0)}>
-                <i className="bx bx-task-x"></i>
-                <span className="text">Rejected</span>
-              </a>
-            </li>
-          </Link>
-          { userLoginRole === 'Administrator' && (
-              <>
-                <Link to="/registry">
-                  <li className={activeMenuItem === 1 ? 'active' : ''}>
-                    <a href="#" onClick={() => handleMenuItemClick(0)}>
-                      <i className="bx bx-registered"></i>
-                      <span className="text">Registry</span>
-                    </a>
-                  </li>
-                </Link>
-                <Link to="/account">
-                  <li className={activeMenuItem === 1 ? 'active' : ''}>
-                    <a href="#" onClick={() => handleMenuItemClick(0)}>
-                      <i className="bx bx-user"></i>
-                      <span className="text">Accounts</span>
-                    </a>
-                  </li>
-                </Link>
+          {userLoginRole === 'Employee' && (
+            <>
+              <Link to="/record-documents">
+                <li className={activeMenuItem === 1 ? 'active' : ''}>
+                  <a href="#" onClick={() => handleMenuItemClick(0)}>
+                    <i className="bx bx-file"></i>
+                    <span className="text">Record Docs</span>
+                  </a>
+                </li>
+              </Link>
+              <Link to="/document-types">
+                <li className={activeMenuItem === 1 ? 'active' : ''}>
+                  <a href="#" onClick={() => handleMenuItemClick(0)}>
+                    <i className="bx bx-category"></i>
+                    <span className="text">Types</span>
+                  </a>
+                </li>
+              </Link>
+              <Link to="/outbox">
+                <li className={activeMenuItem === 1 ? 'active' : ''}>
+                  <a href="#" onClick={() => handleMenuItemClick(0)}>
+                    <i className="bx bx-box"></i>
+                    <span className="text">Outbox</span>
+                  </a>
+                </li>
+              </Link>
+            </>
+          )}
+          {userLoginRole === 'Office' && (
+            <>
+              <li
+                onClick={handleDropdownSidebar}
+                className={activeMenuItem === 1 ? 'active' : ''}
+              >
+                <a href="#" onClick={() => handleMenuItemClick(0)}>
+                  <i className="bx bx-mail-send"></i>
+                  <span className="text">Incoming</span>
+                </a>
+              </li>
+              {isSideDropDownOpen && (
+                <div className="custom-dropdown-content">
+                  <Link to="/incoming-documents">
+                    <li className={activeMenuItem === 2 ? 'custom-active' : ''}>
+                      <i className="bx bx-mail-send"></i>
+                      <span className="text">Receive</span>
+                    </li>
+                  </Link>
+                  <Link to="/incoming-documents/pending">
+                    <li className={activeMenuItem === 3 ? 'custom-active' : ''}>
+                      <i className="bx bx-mail-send"></i>
+                      <span className="text">Pending</span>
+                    </li>
+                  </Link>
+                </div>
+              )}
+              <Link to="/archive-documents">
+                <li className={activeMenuItem === 1 ? 'active' : ''}>
+                  <a href="#" onClick={() => handleMenuItemClick(0)}>
+                    <i className="bx bx-archive"></i>
+                    <span className="text">Archive</span>
+                  </a>
+                </li>
+              </Link>
+            </>
+          )}
+          {userLoginRole === 'Administrator' && (
+            <>
+              <Link to="/account">
+                <li className={activeMenuItem === 1 ? 'active' : ''}>
+                  <a href="#" onClick={() => handleMenuItemClick(0)}>
+                    <i className="bx bx-user"></i>
+                    <span className="text">Accounts</span>
+                  </a>
+                </li>
+              </Link>
+              <Link to="/registry">
+                <li className={activeMenuItem === 1 ? 'active' : ''}>
+                  <a href="#" onClick={() => handleMenuItemClick(0)}>
+                    <i className="bx bx-registered"></i>
+                    <span className="text">Registry</span>
+                  </a>
+                </li>
+              </Link>
+              <Link to="/document">
+                <li className={activeMenuItem === 1 ? 'active' : ''}>
+                  <a href="#" onClick={() => handleMenuItemClick(0)}>
+                    <i className="bx bx-file"></i>
+                    <span className="text">Documents</span>
+                  </a>
+                </li>
+              </Link>
+              <Link to="/rejected-docs">
+                <li className={activeMenuItem === 1 ? 'active' : ''}>
+                  <a href="#" onClick={() => handleMenuItemClick(0)}>
+                    <i className="bx bx-task-x"></i>
+                    <span className="text">Archived</span>
+                  </a>
+                </li>
+              </Link>
                 <Link to="/offices">
                   <li className={activeMenuItem === 1 ? 'active' : ''}>
                     <a href="#" onClick={() => handleMenuItemClick(0)}>
@@ -446,8 +517,8 @@ const Office = ({ normalAccount, googleAccount }) => {
                     </a>
                   </li>
                 </Link>
-              </>
-            )}
+            </>
+          )}
         </ul>
       </section>
       {/* SIDEBAR */}
