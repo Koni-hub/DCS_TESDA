@@ -13,14 +13,14 @@ import rateLimit from "express-rate-limit";
 
 const router = express.Router();
 
-// Rate limiter for login attempts
-const loginAttemptLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 7, // Limit each emailOrUsername to 5 requests per windowMs
-  message: "Too many login attempts from this login, please try again later.",
-});
+// // Rate limiter for login attempts
+// const loginAttemptLimiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, // 15 minutes
+//   max: 7, // Limit each emailOrUsername to 5 requests per windowMs
+//   message: "Too many login attempts from this login, please try again later.",
+// });
 
-router.post("/login", loginAttemptLimiter, loginAccount);
+router.post("/login", loginAccount);
 router.post("/register", registerAccount);
 router.get("/accounts", getAllAccounts);
 router.patch("/account/:account_id", editAccount);
