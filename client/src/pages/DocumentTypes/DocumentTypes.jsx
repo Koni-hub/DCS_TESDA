@@ -363,7 +363,7 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
             <li className={activeMenuItem === 1 ? 'active' : ''}>
               <a href="#" onClick={() => handleMenuItemClick(0)}>
                 <i className="bx bx-home"></i>
-                <span className="text">Dasboard</span>
+                <span className="text">Dashboard</span>
               </a>
             </li>
           </Link>
@@ -442,7 +442,6 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
                   </a>
                 </li>
               </Link>
-              <hr />
               <Link to="/registry">
                 <li className={activeMenuItem === 1 ? 'active' : ''}>
                   <a href="#" onClick={() => handleMenuItemClick(0)}>

@@ -471,7 +471,7 @@ const Registry = ({ normalAccount, googleAccount }) => {
             <li className={activeMenuItem === 1 ? 'active' : ''}>
               <a href="#" onClick={() => handleMenuItemClick(0)}>
                 <i className="bx bx-category"></i>
-                <span className="text">Dasboard</span>
+                <span className="text">Dashboard</span>
               </a>
             </li>
           </Link>
