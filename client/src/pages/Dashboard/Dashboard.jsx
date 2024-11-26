@@ -379,14 +379,6 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
                   </a>
                 </li>
               </Link>
-              <Link to="/account">
-                  <li className={activeMenuItem === 1 ? 'active' : ''}>
-                    <a href="#" onClick={() => handleMenuItemClick(0)}>
-                      <i className="bx bx-user"></i>
-                      <span className="text">Accounts</span>
-                    </a>
-                  </li>
-                </Link>
                 <Link to="/offices">
                   <li className={activeMenuItem === 1 ? 'active' : ''}>
                     <a href="#" onClick={() => handleMenuItemClick(0)}>
