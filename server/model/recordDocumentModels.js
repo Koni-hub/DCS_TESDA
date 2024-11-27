@@ -9,38 +9,66 @@ const RecordDocument = database.define(
       autoIncrement: true,
       primaryKey: true,
     },
+    title: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     source: {
       type: DataTypes.ENUM("Internal", "External"),
-      allowNull: false,
+      allowNull: true,
+    },
+    origin: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     type: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
-    title: {
+    rdInstruction: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
-    description: {
+    controlNo: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
+    },
+    personConcern: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    dateCreated: {
+      type: DataTypes.DATEONLY,
+      allowNull: true,
+    },
+    dateReceived: {
+      type: DataTypes.DATEONLY,
+      allowNull: true,
+    },
+    dateCompleted: {
+      type: DataTypes.DATEONLY,
+      allowNull: true,
     },
     mode: {
       type: DataTypes.ENUM("Hard copy", "Soft copy"),
-      allowNull: false,
+      allowNull: true,
     },
     image: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     url: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     status: {
       type: DataTypes.ENUM("To Receive", "Pending", "Forwarded", "Archived"),
       defaultValue: "To Receive",
-      allowNull: false,
+      allowNull: true,
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
   },
   {
