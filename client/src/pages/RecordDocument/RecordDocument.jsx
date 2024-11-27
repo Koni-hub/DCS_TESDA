@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import './RecordDocument.css';
 import axios from 'axios';
 import { API_URL } from '../../config';
@@ -180,9 +181,18 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
       : 'Unknown';
 
   // useState
-  const [source, setSource] = useState('');
-  const [type, setType] = useState('');
   const [title, setTitle] = useState('');
+  const [source, setSource] = useState('');
+  const [origin, setOrigin] = useState('');
+  const [type, setType] = useState('');
+  const [rdInstruction, setrdInstruction] = useState('');
+  const [controlNo, setControlNo] = useState('');
+  const [personConcern, setPersonConcern] = useState('');
+  const [dateCreated, setDateCreated] = useState(
+    new Date().toISOString().split('T')[0]
+  );
+  const [dateReceived, setDateReceived] = useState(new Date());
+  const [dateCompleted, setDateCompleted] = useState(new Date());
   const [description, setDescription] = useState('');
   const [mode, setMode] = useState('');
   const [recipient, setRecipient] = useState([]);
@@ -211,44 +221,51 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
     progress: undefined,
     theme: 'light',
   };
+
+  // Save Record Document
   const saveRecDocument = async (e) => {
     e.preventDefault();
 
     // Log form values
     console.log('Form submitted with values:', {
-      source,
-      type,
       title,
-      description,
+      source,
+      origin,
+      type,
+      rdInstruction,
+      controlNo,
+      personConcern,
+      dateCreated,
+      dateReceived,
+      dateCompleted,
       mode,
       recipient,
       action,
       remarks,
-      file,
+      description
     });
 
     // Validate required fields
-    const requiredFields = {
+    const Fields = {
       title,
       source,
+      origin,
       type,
-      description,
+      rdInstruction,
+      controlNo,
+      personConcern,
+      dateCreated,
+      dateReceived,
+      dateCompleted,
       mode,
       recipient,
       action,
       remarks,
+      description
     };
-    const missingFields = Object.keys(requiredFields).filter(
-      (field) => !requiredFields[field]
-    );
-
-    if (missingFields.length > 0) {
-      toast.error('Please fill in all required fields', toastConfig);
-      return;
-    }
 
     const formData = new FormData();
-    Object.entries(requiredFields).forEach(([key, value]) => {
+    Object.entries(Fields).forEach(([key, value]) => {
       formData.append(key, value);
     });
 
@@ -294,18 +311,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
           window.location.reload();
         }, 2000);
 
-        // Reset fields
-        setSource('');
-        setType('');
-        setTitle('');
-        setDescription('');
-        setMode('');
-        setRecipient('');
-        setAction('');
-        setRemarks('');
-        setFile(null);
-        setPreview('');
-
         await getAllRecordDocument();
         resetFields();
         setModalCreate(false);
@@ -327,12 +332,18 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
       const formData = new FormData();
       formData.append('title', title);
       formData.append('source', source);
+      formData.append('origin', origin);
       formData.append('type', type);
-      formData.append('description', description);
+      formData.append('rdInstruction', rdInstruction);
+      formData.append('controlNo', controlNo);
+      formData.append('dateCreated', dateCreated);
+      formData.append('dateCompleted', dateCompleted);
+      formData.append('dateReceived', dateReceived);
       formData.append('mode', mode);
       formData.append('recipient', recipient);
       formData.append('action', action);
       formData.append('remarks', remarks);
+      formData.append('description', description);
 
       // Only append the file if it exists
       if (file) {
@@ -386,16 +397,70 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
   const resetFields = () => {
     setTitle('');
     setSource('');
+    setOrigin('');
     setType('');
-    setDescription('');
+    setrdInstruction('');
+    setControlNo('');
     setMode('');
     setRecipient('');
     setAction('');
     setRemarks('');
+    setDescription('');
     setPreview('');
     setFile(null);
     setRecordId(null);
   };
+
+  const optionsDocumentPersonConcern = [
+    'BARON JOSE L. LAGRAN',
+    'EVELYN M. LUNA',
+    'JULIETTE T. FELICIANO',
+    'ELLA NESS D. DE LARA',
+    'LIWAYWAY D. CALAGUAS',
+    'ROSE ANNE S. ZALDIVAR',
+    'HEIDIN P. MOHAMMAD AKIL',
+    'GENER D. NICOLAS JR.',
+    'OLIVIA D. ABAD',
+    'MARIA FRANCES C. CASTRO',
+    'GUIA MARIE V. FERNANDEZ',
+    'MARY JOYCE ANN C. DAVID',
+    'JACKELENE CLAIRE N. DE JESUS',
+    'ERICA FE D. HERNANDEZ',
+    'JOAINA C. TEODORO',
+    'GINA G. CABRERA',
+    'NICOLE ANGELA L. PINEDA',
+    'KATE D. FLORES',
+    'JOVITA M. NICDAO',
+  ];
+
+  const optionsDocumentOrigin = [
+    'Provincial Office - Aurora',
+    'Provincial Office - Bataan',
+    'Provincial Office - Bulacan',
+    'Provincial Office - Nueva Ecija',
+    'Provincial Office - Pampanga',
+    'Provincial Office - Tarlac',
+    'Provincial Office - Zambales',
+    'Provincial Training Center - Baler',
+    'Provincial Training Center - Orion',
+    'Regional Training Center - Mariveles',
+    'Provincial Training Center - Calumpit',
+    'Regional Training Center - Guiguinto',
+    'Korea-Philippines IT Training Center - Bulacan',
+    'Provincial Training Center - Nueva Ecija (Palayan)',
+    'Provincial Training Center - Guagua',
+    'Gonzalo Puyat School of Arts and Trades (GPSAT)',
+    'Provincial Training Center - Tarlac',
+    'Concepcion Vocational School (CVS)',
+    'Provincial Training Center - Iba'
+  ];
+
+  useEffect(() => {
+    const today = new Date().toISOString().split('T')[0];
+    today;
+    setDateCreated(today);
+    console.log('Document Date Created: ' + dateCreated);
+  }, []);
 
   return (
     <>
@@ -519,30 +584,30 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                   </a>
                 </li>
               </Link>
-                <Link to="/offices">
-                  <li className={activeMenuItem === 1 ? 'active' : ''}>
-                    <a href="#" onClick={() => handleMenuItemClick(0)}>
-                      <i className="bx bx-building-house"></i>
-                      <span className="text">Offices</span>
-                    </a>
-                  </li>
-                </Link>
-                <Link to="/document-types">
-                  <li className={activeMenuItem === 1 ? 'active' : ''}>
-                    <a href="#" onClick={() => handleMenuItemClick(0)}>
-                      <i className="bx bx-file-blank"></i>
-                      <span className="text">Document Types</span>
-                    </a>
-                  </li>
-                </Link>
-                <Link to="/record-documents">
-                  <li className={activeMenuItem === 1 ? 'active' : ''}>
-                    <a href="#" onClick={() => handleMenuItemClick(0)}>
-                      <i className="bx bx-file"></i>
-                      <span className="text">Documents</span>
-                    </a>
-                  </li>
-                </Link>
+              <Link to="/offices">
+                <li className={activeMenuItem === 1 ? 'active' : ''}>
+                  <a href="#" onClick={() => handleMenuItemClick(0)}>
+                    <i className="bx bx-building-house"></i>
+                    <span className="text">Offices</span>
+                  </a>
+                </li>
+              </Link>
+              <Link to="/document-types">
+                <li className={activeMenuItem === 1 ? 'active' : ''}>
+                  <a href="#" onClick={() => handleMenuItemClick(0)}>
+                    <i className="bx bx-file-blank"></i>
+                    <span className="text">Document Types</span>
+                  </a>
+                </li>
+              </Link>
+              <Link to="/record-documents">
+                <li className={activeMenuItem === 1 ? 'active' : ''}>
+                  <a href="#" onClick={() => handleMenuItemClick(0)}>
+                    <i className="bx bx-file"></i>
+                    <span className="text">Documents</span>
+                  </a>
+                </li>
+              </Link>
             </>
           )}
         </ul>
@@ -636,9 +701,16 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                   <tr>
                     <th>Title</th>
                     <th>Source</th>
+                    <th>Origin</th>
                     <th>Type</th>
-                    <th>Description</th>
+                    <th>R'D Instruction</th>
+                    <th>Control No</th>
+                    <th>Person Concerned</th>
+                    <th>Document Date Created</th>
+                    <th>Document Date Received</th>
+                    <th>Document Date Completed</th>
                     <th>Mode</th>
+                    <th>Description</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -647,14 +719,21 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                       <tr key={index}>
                         <td>{record_docs.title}</td>
                         <td>{record_docs.source}</td>
+                        <td>{record_docs.origin}</td>
                         <td>{record_docs.type}</td>
-                        <td>{record_docs.description}</td>
+                        <td>{record_docs.rdInstruction}</td>
+                        <td>{record_docs.controlNo}</td>
+                        <td>{record_docs.personConcern}</td>
+                        <td>{record_docs.dateCreated}</td>
+                        <td>{record_docs.dateReceived}</td>
+                        <td>{record_docs.dateCompleted}</td>
                         <td>{record_docs.mode}</td>
+                        <td>{record_docs.description}</td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="4">No record documents found.</td>
+                      <td colSpan="10">No record documents found.</td>
                     </tr>
                   )}
                 </tbody>
@@ -673,6 +752,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
             </span>
             <h2>Create Record Document</h2>
             <form className="form" onSubmit={saveRecDocument}>
+              {/* Title */}
               <input
                 type="text"
                 name="title"
@@ -681,6 +761,9 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 onChange={(e) => setTitle(e.target.value)}
                 required
               />
+              {/* END */}
+
+              {/* Source */}
               <select
                 name="source"
                 id="source"
@@ -694,6 +777,28 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 <option value="Internal">Internal</option>
                 <option value="External">External</option>
               </select>
+              {/* END */}
+
+              {/* Origin */}
+              <select
+                name="origin"
+                id="origin"
+                value={origin}
+                onChange={(e) => setOrigin(e.target.value)}
+                required
+              >
+                <option disabled value="">
+                  Select Origin
+                </option>
+                {optionsDocumentOrigin.map((option) => (
+                  <option key={option} value={option} >
+                    {option}
+                  </option>
+                ))}
+              </select>
+              {/* END */}
+
+              {/* Types */}
               <select
                 name="types"
                 id="types"
@@ -714,15 +819,80 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                   <option disabled>No document types found</option>
                 )}
               </select>
-              <textarea
-                className="input"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={4}
-                cols={70}
-                placeholder="Enter the description"
+              {/* END */}
+
+              {/* RD Instruction */}
+              <input
+                type="text"
+                name="rdInstruction"
+                placeholder="R'D Instruction"
+                value={rdInstruction}
+                onChange={(e) => setrdInstruction(e.target.value)}
                 required
               />
+
+              {/* END */}
+
+              {/* ControlNo */}
+              <input
+                type="text"
+                name="controlNo"
+                value={controlNo}
+                onChange={(e) => setControlNo(e.target.value)}
+                placeholder="Control No"
+              />
+
+              {/* END */}
+
+              {/* Person Concern */}
+              <select
+                name="personConcern"
+                id="personConcern"
+                value={personConcern}
+                onChange={(e) => setPersonConcern(e.target.value)}
+                required
+              >
+                <option disabled value="">
+                  Select Person
+                </option>
+                {optionsDocumentPersonConcern.map((option) => (
+                  <option key={option} value={option} >
+                    {option}
+                  </option>
+                ))}
+              </select>
+              {/* END */}
+
+              {/* Date Created */}
+              <input
+                name="date"
+                type="text"
+                value={dateCreated}
+                disabled
+              />
+
+              {/* END */}
+
+              {/* Date Received */}
+              <input
+                type="date"
+                name="dateReceived"
+                value={dateReceived}
+                onChange={(e) => setDateReceived(e.target.value)}
+              />
+
+              {/* END */}
+
+              {/* Date Completed */}
+              <input
+                name="dateCompleted"
+                type="date"
+                value={dateCompleted}
+                onChange={(e) => setDateCompleted(e.target.value)}
+              />
+              {/* END */}
+
+              {/* Mode */}
               <select
                 name="mode"
                 id="mode"
@@ -736,6 +906,10 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 <option value="Hard copy">Hard Copy</option>
                 <option value="Soft copy">Soft Copy</option>
               </select>
+
+              {/* END */}
+
+              {/* Recipient */}
               <select
                 name="recipient"
                 id="recipient"
@@ -762,6 +936,9 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                   <option disabled>No recipient found</option>
                 )}
               </select>
+              {/* END */}
+
+              {/* Action */}
               <select
                 type="text"
                 name="action"
@@ -785,6 +962,9 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 </option>
                 <option value="For information">For information</option>
               </select>
+              {/* END */}
+
+              {/* Remarks */}
               <input
                 type="text"
                 name="remarks"
@@ -793,7 +973,22 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 onChange={(e) => setRemarks(e.target.value)}
                 required
               />
-              <div className="product-image">
+              {/* END */}
+
+              {/* Description */}
+              <textarea
+                className="input"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={4}
+                cols={70}
+                placeholder="Enter the description"
+                required
+              />
+              {/* END */}
+
+              {/* Attachment */}
+              <div className="doc-image">
                 <label>Attachment</label>
                 <span>*</span> <br />
                 <input
@@ -815,6 +1010,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                   </div>
                 )}
               </div>
+              {/* END */}
               <button className="office-btn-submit" type="submit">
                 Create Record Document
               </button>
@@ -831,6 +1027,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
             </span>
             <h2>Edit Record Document</h2>
             <form className="form" onSubmit={editRecDocument}>
+              {/* Title */}
               <input
                 type="text"
                 name="title"
@@ -839,6 +1036,9 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 onChange={(e) => setTitle(e.target.value)}
                 required
               />
+              {/* END */}
+
+              {/* Source */}
               <select
                 name="source"
                 id="source"
@@ -852,6 +1052,28 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 <option value="Internal">Internal</option>
                 <option value="External">External</option>
               </select>
+              {/* END */}
+
+              {/* Origin */}
+              <select
+                name="origin"
+                id="origin"
+                value={origin}
+                onChange={(e) => setOrigin(e.target.value)}
+                required
+              >
+                <option disabled value="">
+                  Select Origin
+                </option>
+                {optionsDocumentOrigin.map((option) => (
+                  <option key={option} value={option} >
+                    {option}
+                  </option>
+                ))}
+              </select>
+              {/* END */}
+
+              {/* Types */}
               <select
                 name="types"
                 id="types"
@@ -872,15 +1094,80 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                   <option disabled>No document types found</option>
                 )}
               </select>
-              <textarea
-                className="input"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={4}
-                cols={70}
-                placeholder="Enter the description"
+              {/* END */}
+
+              {/* RD Instruction */}
+              <input
+                type="text"
+                name="rdInstruction"
+                placeholder="R'D Instruction"
+                value={rdInstruction}
+                onChange={(e) => setrdInstruction(e.target.value)}
                 required
               />
+
+              {/* END */}
+
+              {/* ControlNo */}
+              <input
+                type="text"
+                name="controlNo"
+                value={controlNo}
+                onChange={(e) => setControlNo(e.target.value)}
+                placeholder="Control No"
+              />
+
+              {/* END */}
+
+              {/* Person Concern */}
+              <select
+                name="personConcern"
+                id="personConcern"
+                value={personConcern}
+                onChange={(e) => setPersonConcern(e.target.value)}
+                required
+              >
+                <option disabled value="">
+                  Select Person
+                </option>
+                {optionsDocumentPersonConcern.map((option) => (
+                  <option key={option} value={option} >
+                    {option}
+                  </option>
+                ))}
+              </select>
+              {/* END */}
+
+              {/* Date Created */}
+              <input
+                name="date"
+                type="text"
+                value={dateCreated}
+                disabled
+              />
+
+              {/* END */}
+
+              {/* Date Received */}
+              <input
+                type="date"
+                name="dateReceived"
+                value={dateReceived}
+                onChange={(e) => setDateReceived(e.target.value)}
+              />
+
+              {/* END */}
+
+              {/* Date Completed */}
+              <input
+                name="dateCompleted"
+                type="date"
+                value={dateCompleted}
+                onChange={(e) => setDateCompleted(e.target.value)}
+              />
+              {/* END */}
+
+              {/* Mode */}
               <select
                 name="mode"
                 id="mode"
@@ -894,11 +1181,15 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 <option value="Hard copy">Hard Copy</option>
                 <option value="Soft copy">Soft Copy</option>
               </select>
+
+              {/* END */}
+
+              {/* Recipient */}
               <select
                 name="recipient"
                 id="recipient"
                 value={recipient}
-                onChange={(e) => setRecipient(e.target.value)}
+                onChange={handleRecipientChange}
                 required
                 multiple
               >
@@ -920,14 +1211,35 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                   <option disabled>No recipient found</option>
                 )}
               </select>
-              <input
+              {/* END */}
+
+              {/* Action */}
+              <select
                 type="text"
                 name="action"
                 placeholder="Action"
                 value={action}
                 onChange={(e) => setAction(e.target.value)}
                 required
-              />
+              >
+                <option disabled value="">
+                  Select Action
+                </option>
+                <option value="For approval/signature">
+                  For approval/signature
+                </option>
+                <option value="For comments">For comments</option>
+                <option value="For filing/archiving">
+                  For filing/archiving
+                </option>
+                <option value="For appropriate action">
+                  For appropriate action
+                </option>
+                <option value="For information">For information</option>
+              </select>
+              {/* END */}
+
+              {/* Remarks */}
               <input
                 type="text"
                 name="remarks"
@@ -936,14 +1248,29 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 onChange={(e) => setRemarks(e.target.value)}
                 required
               />
-              <div className="rec-docs-image">
+              {/* END */}
+
+              {/* Description */}
+              <textarea
+                className="input"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={4}
+                cols={70}
+                placeholder="Enter the description"
+                required
+              />
+              {/* END */}
+
+              {/* Attachment */}
+              <div className="doc-image">
                 <label>Attachment</label>
                 <span>*</span> <br />
                 <input
                   type="file"
                   className="attachment-input"
                   onChange={loadImage}
-                  accept="image/*"
+                  required
                 />
                 <span>Preview</span>
                 {preview && (
@@ -958,6 +1285,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                   </div>
                 )}
               </div>
+              {/* END */}
               <button className="office-btn-update" type="submit">
                 Update Record Document
               </button>

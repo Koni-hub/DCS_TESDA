@@ -201,7 +201,7 @@ select {
   outline: none;
 }
 
-.form .office-btn-submit {
+.form .docs-btn-submit {
   background-color: var(--submit-button);
   border: none;
   padding: 10px 20px;
@@ -209,7 +209,7 @@ select {
   font-size: 18px;
   border-radius: 10px;
 }
-.form .office-btn-update {
+.form .docs-btn-update {
   background-color: var(--update-button);
   border: none;
   padding: 10px 20px;
