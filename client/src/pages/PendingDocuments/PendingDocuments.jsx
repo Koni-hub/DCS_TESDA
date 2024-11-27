@@ -70,6 +70,7 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
   }, [role, navigate]);
 
   const officeId = normalAccount.username;
+  console.log('Office ID: ', officeId);
 
   useEffect(() => {
     const fetchPendingDocuments = async () => {
@@ -620,7 +621,11 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
                     </option>
                     {offices && offices.length > 0 ? (
                       offices.map((office, index) => (
-                        <option key={index} value={office.account_username}>
+                        <option
+                          key={index}
+                          value={office.account_username}
+                          disabled={office.account_username === officeId}
+                        >
                           {' ( ' +
                             office.account_username +
                             ' ) ' +
