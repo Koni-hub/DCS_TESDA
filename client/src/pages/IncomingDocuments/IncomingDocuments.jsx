@@ -8,6 +8,7 @@ import logo from '../../assets/logo/logo.png';
 import DOMPurify from 'dompurify';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Swal from 'sweetalert2'
 
 const IncomingDocuments = ({ normalAccount, googleAccount }) => {
   document.title = 'Incoming To Receive Documents';
@@ -111,12 +112,26 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
     }
   };
 
-  const handleDecline = async (id, reason) => {
+  const handleDecline = async (e, id) => {
     try {
+      const {value: reason, isConfirmed} = await Swal.fire({
+        title: 'Reason for declining',
+        input: 'text',
+        inputLabel: 'Reason',
+        showCancelButton: true,
+        inputValidator: (value) => {
+          if (!value) {
+            return 'You need to write something reasonable!';
+          }
+        }
+      });
+      if (!isConfirmed) {
+        return; // Do nothing if the user clicks "Cancel"
+      }
       const userName =
         normalAccount?.username || googleAccount.profile.emails[0].value;
       const fullName = normalAccount.fullname || null;
-      await axios.put(`${API_URL}/recipients/${id}/decline`, { reason });
+      await axios.put(`${API_URL}/recipients/${id}/decline`, reason);  
       // Create Audit Log
       const auditLogData = {
         userName,
@@ -465,10 +480,7 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
                           <button
                             className="btn-decline"
                             onClick={() =>
-                              handleDecline(
-                                doc.id,
-                                prompt('Reason for declining:')
-                              )
+                              handleDecline(doc.id)
                             }
                           >
                             Decline
