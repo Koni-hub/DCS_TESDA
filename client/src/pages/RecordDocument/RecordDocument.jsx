@@ -625,7 +625,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
             <div className="form-input">
               <input
                 type="search"
-                placeholder="Search office..."
+                placeholder="Search document by title..."
                 value={searchQuery}
                 onChange={handleSearchChange}
               />
@@ -1011,7 +1011,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 )}
               </div>
               {/* END */}
-              <button className="office-btn-submit" type="submit">
+              <button className="docs-btn-submit" type="submit">
                 Create Record Document
               </button>
             </form>
@@ -1286,7 +1286,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 )}
               </div>
               {/* END */}
-              <button className="office-btn-update" type="submit">
+              <button className="docs-btn-update" type="submit">
                 Update Record Document
               </button>
             </form>
