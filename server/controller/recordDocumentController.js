@@ -38,7 +38,7 @@ export const addRecordDocument = async (req, res) => {
     return res.status(400).json({ msg: "No File Uploaded" });
   }
 
-  const { source, type, title, description, mode, recipient, action, remarks } =
+  const { title, source, origin, type, rdInstruction, controlNo, personConcern, dateCreated, dateReceived, dateCompleted, description, mode, recipient, action, remarks } =
     req.body;
 
   console.log("Recipient:", recipient);
@@ -78,9 +78,16 @@ export const addRecordDocument = async (req, res) => {
     try {
       // Create the record document first
       const recordDocument = await RecordDocument.create({
-        source,
-        type,
         title,
+        source,
+        origin,
+        type,
+        rdInstruction,
+        controlNo,
+        personConcern,
+        dateCreated,
+        dateReceived,
+        dateCompleted,
         description,
         mode,
         image: fileName,
