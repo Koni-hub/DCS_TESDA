@@ -104,7 +104,7 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
       });
       setDocuments((docs) => docs.filter((doc) => doc.id !== id));
       toast.success(
-        'Successfully recieved documents, document set to pending status',
+        'Successfully received documents, document set to pending status',
         toastConfig
       );
     } catch (error) {
@@ -112,7 +112,8 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
     }
   };
 
-  const handleDecline = async (e, id) => {
+  const handleDecline = async (id) => {
+    console.log('ID', id);
     try {
       const {value: reason, isConfirmed} = await Swal.fire({
         title: 'Reason for declining',
@@ -479,9 +480,7 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
                           </button>
                           <button
                             className="btn-decline"
-                            onClick={() =>
-                              handleDecline(doc.id)
-                            }
+                            onClick={() => handleDecline(doc.id)}
                           >
                             Decline
                           </button>
