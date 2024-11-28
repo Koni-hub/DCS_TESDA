@@ -440,13 +440,37 @@ const ArchiveDocs = ({ normalAccount, googleAccount }) => {
                     height={250}
                   />
                   <p>
+                    <span>Source:</span> {viewDocs.source}
+                  </p>
+                  <p>
+                    <span>Origin:</span> {viewDocs.orign}
+                  </p>
+                  <p>
                     <span>Type:</span> {viewDocs.type}
+                  </p>
+                  <p>
+                    <span>Rd Instruction:</span> {viewDocs.rdInstruction}
+                  </p>
+                  <p>
+                    <span>Control No:</span> {viewDocs.controlNo}
+                  </p>
+                  <p>
+                    <span>Person Concern:</span> {viewDocs.personConcern}
+                  </p>
+                  <p>
+                    <span>Date Created:</span> {viewDocs.dateCreated}
+                  </p>
+                  <p>
+                    <span>Date Received:</span> {viewDocs.dateReceived}
+                  </p>
+                  <p>
+                    <span>Date Completed:</span> {viewDocs.dateCompleted}
                   </p>
                   <p>
                     <span>Mode:</span> {viewDocs.mode}
                   </p>
                   <p>
-                    <span>Source:</span> {viewDocs.source}
+                    <span>Status: {viewDocs.status}</span>
                   </p>
                   <textarea disabled value={viewDocs.description}></textarea>
                 </div>
