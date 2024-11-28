@@ -225,6 +225,10 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
   // Save Record Document
   const saveRecDocument = async (e) => {
     e.preventDefault();
+    const userName =
+        normalAccount?.username || googleAccount.profile.emails[0].value;
+      const fullName = normalAccount.fullname || null;
+      const senderEmail = normalAccount.email;
 
     // Log form values
     console.log('Form submitted with values:', {
@@ -242,7 +246,9 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
       recipient,
       action,
       remarks,
-      description
+      description,
+      userName,
+      senderEmail
     });
 
     // Validate required fields
@@ -261,7 +267,9 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
       recipient,
       action,
       remarks,
-      description
+      description,
+      userName,
+      senderEmail
     };
 
     const formData = new FormData();
@@ -279,9 +287,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
     });
 
     try {
-      const userName =
-        normalAccount?.username || googleAccount.profile.emails[0].value;
-      const fullName = normalAccount.fullname || null;
 
       console.log('Sending request to:', `${API_URL}/record-docs`);
       const response = await axios.post(`${API_URL}/record-docs`, formData, {
