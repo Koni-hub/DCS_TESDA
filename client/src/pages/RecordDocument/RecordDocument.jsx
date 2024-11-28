@@ -733,6 +733,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                     <th>Document Date Completed</th>
                     <th>Mode</th>
                     <th>Description</th>
+                    <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -751,6 +752,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                         <td>{record_docs.dateCompleted}</td>
                         <td>{record_docs.mode}</td>
                         <td>{record_docs.description}</td>
+                        <td>{record_docs.status}</td>
                       </tr>
                     ))
                   ) : (
