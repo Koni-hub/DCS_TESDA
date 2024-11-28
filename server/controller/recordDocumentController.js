@@ -38,8 +38,11 @@ export const addRecordDocument = async (req, res) => {
     return res.status(400).json({ msg: "No File Uploaded" });
   }
 
-  const { title, source, origin, type, rdInstruction, controlNo, personConcern, dateCreated, dateReceived, dateCompleted, description, mode, recipient, action, remarks } =
+  const { title, source, origin, type, rdInstruction, controlNo, personConcern, dateCreated, dateReceived, dateCompleted, description, mode, recipient, action, remarks, userName, senderEmail } =
     req.body;
+
+    console.log('Sender Name: ', userName);
+    console.log('Sender Email: ', senderEmail);
 
   console.log("Recipient:", recipient);
 
@@ -107,6 +110,8 @@ export const addRecordDocument = async (req, res) => {
         action: action,
         remarks: remarks,
         status: "To Receive",
+        senderName: userName,
+        senderEmail: senderEmail
       }));
 
       await Recipient.bulkCreate(recipientEntries);
