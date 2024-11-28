@@ -35,6 +35,14 @@ const Recipient = database.define(
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    senderName: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    senderEmail: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     status: {
       type: DataTypes.ENUM(
         "Archived",
