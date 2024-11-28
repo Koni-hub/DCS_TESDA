@@ -336,14 +336,6 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
                   </a>
                 </li>
               </Link>
-              <Link to="/document">
-                <li className={activeMenuItem === 1 ? 'active' : ''}>
-                  <a href="#" onClick={() => handleMenuItemClick(0)}>
-                    <i className="bx bx-file"></i>
-                    <span className="text">Documents</span>
-                  </a>
-                </li>
-              </Link>
               <Link to="/rejected-docs">
                 <li className={activeMenuItem === 1 ? 'active' : ''}>
                   <a href="#" onClick={() => handleMenuItemClick(0)}>
@@ -352,14 +344,6 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
                   </a>
                 </li>
               </Link>
-                <Link to="/offices">
-                  <li className={activeMenuItem === 1 ? 'active' : ''}>
-                    <a href="#" onClick={() => handleMenuItemClick(0)}>
-                      <i className="bx bx-building-house"></i>
-                      <span className="text">Offices</span>
-                    </a>
-                  </li>
-                </Link>
                 <Link to="/document-types">
                   <li className={activeMenuItem === 1 ? 'active' : ''}>
                     <a href="#" onClick={() => handleMenuItemClick(0)}>
@@ -376,6 +360,39 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
                     </a>
                   </li>
                 </Link>
+                <li
+                onClick={handleDropdownSidebar}
+                className={activeMenuItem === 1 ? 'active' : ''}
+              >
+                <a href="#" onClick={() => handleMenuItemClick(0)}>
+                  <i className="bx bx-mail-send"></i>
+                  <span className="text">Incoming</span>
+                </a>
+              </li>
+              {isSideDropDownOpen && (
+                <div className="custom-dropdown-content">
+                  <Link to="/incoming-documents">
+                    <li className={activeMenuItem === 2 ? 'custom-active' : ''}>
+                      <i className="bx bx-mail-send"></i>
+                      <span className="text">Receive</span>
+                    </li>
+                  </Link>
+                  <Link to="/incoming-documents/pending">
+                    <li className={activeMenuItem === 3 ? 'custom-active' : ''}>
+                      <i className="bx bx-mail-send"></i>
+                      <span className="text">Pending</span>
+                    </li>
+                  </Link>
+                </div>
+              )}
+              <Link to="/archive-documents">
+                <li className={activeMenuItem === 1 ? 'active' : ''}>
+                  <a href="#" onClick={() => handleMenuItemClick(0)}>
+                    <i className="bx bx-archive"></i>
+                    <span className="text">Archive</span>
+                  </a>
+                </li>
+              </Link>
             </>
           )}
         </ul>
@@ -458,6 +475,8 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
                     <th>Type</th>
                     <th>Status</th>
                     <th>Remarks</th>
+                    <th>Sender</th>
+                    <th>Email</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -471,6 +490,8 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
                         <td>{doc.document.type}</td>
                         <td>{doc.status}</td>
                         <td>{doc.remarks}</td>
+                        <td>{doc.senderName}</td>
+                        <td>{doc.senderEmail}</td>
                         <td className="btn-container">
                           <button
                             className="btn-receive"
