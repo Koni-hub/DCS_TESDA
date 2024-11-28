@@ -52,7 +52,7 @@ export const addRecordDocument = async (req, res) => {
   const fileSize = file.data.length;
   const ext = path.extname(file.name);
   const fileName = file.md5 + ext;
-  const allowedTypes = [".pdf", ".docx", ".png"];
+  const allowedTypes = [".pdf"];
 
   if (!allowedTypes.includes(ext.toLowerCase())) {
     return res.status(422).json({ msg: "Invalid Image Extension" });

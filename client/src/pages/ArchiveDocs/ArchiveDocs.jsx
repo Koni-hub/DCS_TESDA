@@ -436,10 +436,11 @@ const ArchiveDocs = ({ normalAccount, googleAccount }) => {
                   <iframe
                       src={viewDocs.url}
                       title={viewDocs.title}
-                      width={150}
-                      height={250}
+                      width={500}
+                      height={500}
                       style={{ border: 'none' }}
-                    ></iframe>
+                    >
+                  </iframe>
                   <p>
                     <span>Source:</span> {viewDocs.source}
                   </p>
