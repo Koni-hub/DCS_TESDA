@@ -476,14 +476,6 @@ const Account = ({ normalAccount, googleAccount }) => {
                   </a>
                 </li>
               </Link>
-              <Link to="/rejected-docs">
-                <li className={activeMenuItem === 1 ? 'active' : ''}>
-                  <a href="#" onClick={() => handleMenuItemClick(0)}>
-                    <i className="bx bx-task-x"></i>
-                    <span className="text">Archived</span>
-                  </a>
-                </li>
-              </Link>
                 <Link to="/document-types">
                   <li className={activeMenuItem === 1 ? 'active' : ''}>
                     <a href="#" onClick={() => handleMenuItemClick(0)}>
@@ -529,7 +521,7 @@ const Account = ({ normalAccount, googleAccount }) => {
                 <li className={activeMenuItem === 1 ? 'active' : ''}>
                   <a href="#" onClick={() => handleMenuItemClick(0)}>
                     <i className="bx bx-archive"></i>
-                    <span className="text">Archive</span>
+                    <span className="text">Archived</span>
                   </a>
                 </li>
               </Link>
