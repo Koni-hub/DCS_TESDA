@@ -488,66 +488,136 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
             </div>
           </div>
           {/* Overview Section */}
-          <div className="features-section">
-            <div className="audit-section">
-              <h2>Accounts Logs</h2>
-              <table>
-                <thead>
-                  <tr>
-                    <th>User</th>
-                    <th>Full Name</th>
-                    <th>Action</th>
-                    <th>Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {auditLogs.length > 0 ? (
-                    auditLogs.map((log) => (
-                      <tr key={log.id}>
-                        <td>{log.userName}</td>
-                        <td>{log.fullName}</td>
-                        <td>{log.action}</td>
-                        <td>{formatDate(log.timestamp)}</td>
+          {userLoginRole === 'Administrator' && (
+            <>
+              <div className="features-section">
+                <div className="audit-section">
+                  <h2>Audit Logs</h2>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>User</th>
+                        <th>Full Name</th>
+                        <th>Action</th>
+                        <th>Date</th>
                       </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="3">No Audit logs available</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-            <div className="reminder-section">
-              <div className="reminders">
-                <div className="header">
-                  <h2>Reminders</h2>
+                    </thead>
+                    <tbody>
+                      {auditLogs.length > 0 ? (
+                        auditLogs.map((log) => (
+                          <tr key={log.id}>
+                            <td>{log.userName}</td>
+                            <td>{log.fullName}</td>
+                            <td>{log.action}</td>
+                            <td>{formatDate(log.timestamp)}</td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="3">No Audit logs available</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
                 </div>
-                {pendingDocuments.length > 0 ? (
-                  <div className="card-list">
-                    {pendingDocuments.map((doc) => (
-                      <div key={doc.id} className="task_list">
-                        <li className="uncomplete">
-                          <div className="task_title">
-                            <div className="text-list">
-                              <h3 className="card-No">No: {doc.No}</h3>
-                              <br />
-                              <p className="card-title">
-                                Title:{' '}
-                                {doc.documentTitle ? doc.documentTitle : 'N/A'}
-                              </p>
-                            </div>
+                <div className="reminder-section">
+                  <div className="reminders">
+                    <div className="header">
+                      <h2>Reminders</h2>
+                    </div>
+                    {pendingDocuments.length > 0 ? (
+                      <div className="card-list">
+                        {pendingDocuments.map((doc) => (
+                          <div key={doc.id} className="task_list">
+                            <li className="uncomplete">
+                              <div className="task_title">
+                                <div className="text-list">
+                                  <h3 className="card-No">No: {doc.No}</h3>
+                                  <br />
+                                  <p className="card-title">
+                                    Title:{' '}
+                                    {doc.documentTitle ? doc.documentTitle : 'N/A'}
+                                  </p>
+                                </div>
+                              </div>
+                            </li>
                           </div>
-                        </li>
+                        ))}
                       </div>
-                    ))}
+                    ) : (
+                      <p>No pending tasks.</p>
+                    )}
                   </div>
-                ) : (
-                  <p>No pending tasks.</p>
-                )}
+                </div>
               </div>
-            </div>
-          </div>
+            </>
+          )}
+          {userLoginRole === 'Employee' && (
+            <>
+              <div className="features-section">
+                <div className="audit-section">
+                  <h2>Audit Logs</h2>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>User</th>
+                        <th>Full Name</th>
+                        <th>Action</th>
+                        <th>Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {auditLogs.length > 0 ? (
+                        auditLogs.map((log) => (
+                          <tr key={log.id}>
+                            <td>{log.userName}</td>
+                            <td>{log.fullName}</td>
+                            <td style={{ filter: log.action && log.action.includes('Created account') ? 'blur(5px)' : 'none' }}>
+                              {log.action && log.action.includes('Created account') ? 'cannot see this info' : log.action}
+                            </td>
+                            <td>{formatDate(log.timestamp)}</td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="3">No Audit logs available</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="reminder-section">
+                  <div className="reminders">
+                    <div className="header">
+                      <h2>Reminders</h2>
+                    </div>
+                    {pendingDocuments.length > 0 ? (
+                      <div className="card-list">
+                        {pendingDocuments.map((doc) => (
+                          <div key={doc.id} className="task_list">
+                            <li className="uncomplete">
+                              <div className="task_title">
+                                <div className="text-list">
+                                  <h3 className="card-No">No: {doc.No}</h3>
+                                  <br />
+                                  <p className="card-title">
+                                    Title:{' '}
+                                    {doc.documentTitle ? doc.documentTitle : 'N/A'}
+                                  </p>
+                                </div>
+                              </div>
+                            </li>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p>No pending tasks.</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
         </main>
         {/* MAIN */}
       </section>

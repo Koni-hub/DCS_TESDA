@@ -136,7 +136,9 @@
   box-shadow: rgba(149, 157, 165, 0.2) 0px 10px 24px;
   border: solid 1px rgb(252, 252, 252);
   color: var(--secondary);
-  overflow-x: auto;
+  overflow: auto;
+  overflow-y: scroll;
+  overflow-x: scroll;
 }
 
 /* Audit Section Styling */
