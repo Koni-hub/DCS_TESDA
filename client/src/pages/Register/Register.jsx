@@ -130,7 +130,7 @@ const Register = (normalAccount, googleAccount) => {
     // Phone Number validation (must be 10 digits)
     const phoneRegex = /^\d{11}$/; // Change this regex to match your requirements
     if (!account_contactNo || !phoneRegex.test(account_contactNo)) {
-      toast.error('Phone Number must be 11 digits.', toastConfig);
+      toast.error('Mobile Number must be 11 digits.', toastConfig);
       return false;
     }
 
@@ -147,7 +147,7 @@ const Register = (normalAccount, googleAccount) => {
     }
 
     // Password validation (max length, at least one special character, at least one uppercase letter)
-    const passwordRegex = /^(?=.*[!@#$%^&*])(?=.*[A-Z]).{1,16}$/;
+    const passwordRegex = /^(?=.*[!@#$%^&*])(?=.*[A-Z]).{16,}$/;
     if (!passwordRegex.test(account_password)) {
       toast.error(
         'Password must be 16 characters or less, include at least one uppercase letter and one special character.',
@@ -298,7 +298,7 @@ const Register = (normalAccount, googleAccount) => {
                     value={formData.account_contactNo}
                     onChange={handleChange}
                   />{' '}
-                  <i className="no-event">Phone Number </i>
+                  <i className="no-event">Mobile Number </i>
                 </div>
 
                 <div className="inputBox">
