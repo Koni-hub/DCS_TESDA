@@ -111,13 +111,10 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
   // -- END
 
   const [documents, setDocuments] = useState([]);
-  const [completedCount, setCompletedCount] = useState(0);
   const [pendingCount, setPendingCount] = useState(0);
-  const [rejectedCount, setRejectedCount] = useState(0);
 
   const [accounts, setAccounts] = useState([]);
   const [adminCount, setAdminCounts] = useState(0);
-  const [officeCount, setOfficeCount] = useState(0);
   const [employeeCount, setEmployeeCount] = useState(0);
 
   const [recDocs, setRecDocs] = useState([]);
@@ -147,10 +144,6 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
     return accounts.account_role == 'Admin';
   };
 
-  const isOffice = (accounts) => {
-    return accounts.account_role == 'Office';
-  };
-
   const isEmployee = (accounts) => {
     return accounts.account_role == 'Admin';
   };
@@ -165,13 +158,6 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
     }
   };
 
-  // Check if a document is completed based on all fields being non-empty
-  const isCompleted = (document) => {
-    return Object.values(document).every(
-      (field) => field !== '' && field !== null
-    );
-  };
-
   // Check if a document is pending based on any field being empty
   const isPending = (document) => {
     return Object.values(document).some(
@@ -182,27 +168,17 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
 
   const pendingDocuments = documents.filter(isPending);
 
-  // Check if a document is rejected based on your criteria
-  const isRejected = (document) => {
-    return document.status === 'Rejected';
-  };
 
   // Count completed, pending, and rejected documents
   const documentChecker = () => {
-    const completed = documents.filter(isCompleted).length;
     const pending = documents.filter(isPending).length;
-    const rejected = documents.filter(isRejected).length;
-    setCompletedCount(completed);
     setPendingCount(pending);
-    setRejectedCount(rejected);
   };
 
   const accountChecker = () => {
     const admin = accounts.filter(isAdmin).length;
-    const office = accounts.filter(isOffice).length;
     const employee = accounts.filter(isEmployee).length;
     setAdminCounts(admin);
-    setOfficeCount(office);
     setEmployeeCount(employee);
   };
 
@@ -492,15 +468,6 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
                 <h2>{adminCount}</h2>
               </div>
             </div>
-            <div className="pending-task">
-              <div className="icon-pending-task">
-                <i className="bx bxs-user"></i>
-              </div>
-              <div className="text-pending-task">
-                <h1>Office</h1>
-                <h2>{officeCount}</h2>
-              </div>
-            </div>
             <div className="rejected-task">
               <div className="icon-rejected-task">
                 <i className="bx bxs-user"></i>
@@ -517,35 +484,6 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
               <div className="text-completed-task">
                 <h1>Documents</h1>
                 <h2>{recDocsCount}</h2>
-              </div>
-            </div>
-          </div>
-          <div className="overview-section">
-            <div className="completed-task">
-              <div className="icon-completed-task">
-                <i className="bx bx-task"></i>
-              </div>
-              <div className="text-completed-task">
-                <h1>Completed Task</h1>
-                <h2>{completedCount}</h2>
-              </div>
-            </div>
-            <div className="pending-task">
-              <div className="icon-pending-task">
-                <i className="bx bx-loader-circle"></i>
-              </div>
-              <div className="text-pending-task">
-                <h1>Pending Task</h1>
-                <h2>{pendingCount}</h2>
-              </div>
-            </div>
-            <div className="rejected-task">
-              <div className="icon-rejected-task">
-                <i className="bx bxs-left-arrow-circle"></i>
-              </div>
-              <div className="text-rejected-task">
-                <h1>Rejected Task</h1>
-                <h2>{rejectedCount}</h2>
               </div>
             </div>
           </div>
