@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Op } from "sequelize";
 import Accounts from "../model/accountModels.js";
+import Office from "../model/officeModels.js";
 
 export const getAllAccounts = async (req, res) => {
   try {
@@ -199,6 +200,22 @@ export const loginAccount = async (req, res) => {
         .json({ message: "Invalid email/username and password" });
     }
 
+    const origin = user.origin;
+    console.log('Value of Office Department: ', origin);
+
+     // Find the no by name
+    const officeNo = await Office.findOne({
+      attributes: ['id'],
+      where: {
+        name: origin
+      }
+    });
+
+    // Check if officeNo exists
+    if (!officeNo) {
+      return res.status(401).json({ message: "No office department found" });
+    }
+
     // Generate JWT token
     const token = jwt.sign(
       {
@@ -207,7 +224,8 @@ export const loginAccount = async (req, res) => {
         username: user.account_username,
         fullname: user.account_firstName + " " + user.account_lastName,
         role: user.account_role,
-        account_status: user.account_status
+        account_status: user.account_status,
+        origin: officeNo.id
       },
       secretKey,
       { expiresIn: "24h" }
@@ -221,7 +239,8 @@ export const loginAccount = async (req, res) => {
         user: user,
         token: token,
         role: user.account_role,
-        account_status: user.account_status
+        account_status: user.account_status,
+        origin: officeNo.id
       });
   } catch (error) {
     console.error("Error logging in:", error);
