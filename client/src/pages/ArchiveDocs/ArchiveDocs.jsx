@@ -174,15 +174,7 @@ const ArchiveDocs = ({ normalAccount, googleAccount }) => {
                 <li className={activeMenuItem === 1 ? 'active' : ''}>
                   <a href="#" onClick={() => handleMenuItemClick(0)}>
                     <i className="bx bx-file"></i>
-                    <span className="text">Record Docs</span>
-                  </a>
-                </li>
-              </Link>
-              <Link to="/document-types">
-                <li className={activeMenuItem === 1 ? 'active' : ''}>
-                  <a href="#" onClick={() => handleMenuItemClick(0)}>
-                    <i className="bx bx-category"></i>
-                    <span className="text">Types</span>
+                    <span className="text">Documents</span>
                   </a>
                 </li>
               </Link>
@@ -194,10 +186,6 @@ const ArchiveDocs = ({ normalAccount, googleAccount }) => {
                   </a>
                 </li>
               </Link>
-            </>
-          )}
-          {userLoginRole === 'Office' && (
-            <>
               <li
                 onClick={handleDropdownSidebar}
                 className={activeMenuItem === 1 ? 'active' : ''}
@@ -227,7 +215,7 @@ const ArchiveDocs = ({ normalAccount, googleAccount }) => {
                 <li className={activeMenuItem === 1 ? 'active' : ''}>
                   <a href="#" onClick={() => handleMenuItemClick(0)}>
                     <i className="bx bx-archive"></i>
-                    <span className="text">Archive</span>
+                    <span className="text">Archived</span>
                   </a>
                 </li>
               </Link>
@@ -292,6 +280,14 @@ const ArchiveDocs = ({ normalAccount, googleAccount }) => {
                   </Link>
                 </div>
               )}
+              <Link to="/outbox">
+                <li className={activeMenuItem === 1 ? 'active' : ''}>
+                  <a href="#" onClick={() => handleMenuItemClick(0)}>
+                    <i className="bx bx-box"></i>
+                    <span className="text">Outbox</span>
+                  </a>
+                </li>
+              </Link>
               <Link to="/archive-documents">
                 <li className={activeMenuItem === 1 ? 'active' : ''}>
                   <a href="#" onClick={() => handleMenuItemClick(0)}>
