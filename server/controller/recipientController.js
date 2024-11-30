@@ -49,7 +49,7 @@ export const getIncomingDocs = async (req, res) => {
   }
 };
 
-export const getRecievedDoc = async (req, res) => {
+export const getReceivedDoc = async (req, res) => {
   const recipientId = req.params.id;
 
   try {

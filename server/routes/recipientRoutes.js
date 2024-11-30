@@ -1,7 +1,7 @@
 import {
   getAllRecipients,
   getIncomingDocs,
-  getRecievedDoc,
+  getReceivedDoc,
   getDeclineDoc,
   getPendingDoc,
   forwardDoc,
@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.get("/", getAllRecipients);
 router.get("/incoming", getIncomingDocs);
-router.put("/:id/receive", getRecievedDoc);
+router.put("/:id/receive", getReceivedDoc);
 router.put("/:id/decline", getDeclineDoc);
 router.get("/pending", getPendingDoc);
 router.post("/:id/forward", forwardDoc);

@@ -21,7 +21,7 @@ router.get("/login/success", (req, res) => {
     console.log("User Authenticated Successfully");
   } else {
     res.status(401).json({ error: "Unauthorized" });
-    console.log("User Unathorized");
+    console.log("User Unauthorized");
   }
 });
 
