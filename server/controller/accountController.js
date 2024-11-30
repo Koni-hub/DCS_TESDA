@@ -45,6 +45,7 @@ export const registerAccount = async (req, res) => {
       account_status,
       isAccountVerified,
       account_role,
+      origin
     } = req.body;
 
     // Check if the username already exists
@@ -76,6 +77,7 @@ export const registerAccount = async (req, res) => {
       account_status: account_status,
       isAccountVerified: isAccountVerified,
       account_role: account_role,
+      origin,
       createdBy: "System",
     });
     res.status(201).json({ message: "User registered successfully", user });
@@ -98,6 +100,7 @@ export const editAccount = async (req, res) => {
       account_status,
       isAccountVerified,
       account_role,
+      origin,
     } = req.body;
 
     // Find the existing account
@@ -149,6 +152,7 @@ export const editAccount = async (req, res) => {
           : account.isAccountVerified,
       account_role:
         account_role !== undefined ? account_role : account.account_role,
+      origin: origin
     });
 
     return res
