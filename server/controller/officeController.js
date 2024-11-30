@@ -32,14 +32,10 @@ export const getOfficeByID = async (req, res) => {
 // Add a new office
 export const addOffice = async (req, res) => {
   try {
-    const { name, email, address, phone, status } = req.body;
+    const { name } = req.body;
 
     const office = await Office.create({
-      name,
-      email,
-      address,
-      phone,
-      status,
+      name
     });
 
     return res
@@ -56,7 +52,7 @@ export const addOffice = async (req, res) => {
 export const editOffice = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, email, address, phone, status } = req.body;
+    const { name } = req.body;
 
     const office = await Office.findByPk(id);
 
@@ -65,11 +61,7 @@ export const editOffice = async (req, res) => {
     }
 
     await office.update({
-      name,
-      email,
-      address,
-      phone,
-      status,
+      name
     });
 
     return res
