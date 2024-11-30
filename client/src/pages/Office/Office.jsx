@@ -28,11 +28,7 @@ const Office = ({ normalAccount, googleAccount }) => {
 
   // Form data state
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    address: '',
-    phone: '',
-    status: '',
+    name: ''
   });
 
   // Toast configuration
@@ -207,36 +203,11 @@ const Office = ({ normalAccount, googleAccount }) => {
   // Form validation
   const validateInputs = () => {
     const { 
-      name,
-      email,
-      address,
-      phone,
-      status
+      name
     } = formData;
 
     if (!name || name.length > 30) {
       toast.error('Name must not be empty and less than 20 characters', toastConfig);
-      return false;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      toast.error('Please enter a valid email address', toastConfig);
-      return false;
-    }
-
-    if (!address || address.length > 30) {
-      toast.error('Address must not be empty and less than 30 characters', toastConfig);
-      return false;
-    }
-    
-    if (!phone || !/^\d{11}$/.test(phone)) {
-      toast.error('Phone Number must be exactly 11 digits', toastConfig);
-      return false;
-    }
-    
-    if (!status) {
-      toast.error('Please select an account status', toastConfig);
       return false;
     }
 
@@ -247,10 +218,6 @@ const Office = ({ normalAccount, googleAccount }) => {
   const resetFormData = () => {
     setFormData({
       name: '',
-      email: '',
-      address: '',
-      phone: '',
-      status: '',
     });
   };
 
@@ -263,10 +230,6 @@ const Office = ({ normalAccount, googleAccount }) => {
   
     const createPayload = {
       name: formData.name,
-      email: formData.email,
-      address: formData.address,
-      phone: formData.phone,
-      status: formData.status,
     };
   
     console.log('Payload being sent:', createPayload);
@@ -295,10 +258,6 @@ const Office = ({ normalAccount, googleAccount }) => {
         setModalCreate(false);
         setFormData({
           name: '',
-          email: '',
-          address: '',
-          phone: '',
-          status: '',
         });
         setTimeout(() => {
           window.location.reload();
@@ -473,6 +432,14 @@ const Office = ({ normalAccount, googleAccount }) => {
                     </a>
                   </li>
                 </Link>
+                <Link to="/offices">
+                  <li className={activeMenuItem === 1 ? 'active' : ''}>
+                    <a href="#" onClick={() => handleMenuItemClick(0)}>
+                      <i className="bx bx-buildings"></i>
+                      <span className="text">Offices</span>
+                    </a>
+                  </li>
+                </Link>
                 <Link to="/record-documents">
                   <li className={activeMenuItem === 1 ? 'active' : ''}>
                     <a href="#" onClick={() => handleMenuItemClick(0)}>
@@ -618,10 +585,6 @@ const Office = ({ normalAccount, googleAccount }) => {
                   <tr>
                     <th>No</th>
                     <th>Name</th>
-                    <th>Email</th>
-                    <th>Address</th>
-                    <th>Phone</th>
-                    <th>Status</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -631,10 +594,6 @@ const Office = ({ normalAccount, googleAccount }) => {
                       <tr key={index} >
                         <td>{office.id}</td>
                         <td>{office.name}</td>
-                        <td>{office.email}</td>
-                        <td>{office.address}</td>
-                        <td>{office.phone}</td>
-                        <td>{(office.status == 'active' ? 'Active' : 'Close')}</td>
                         <td className="action-icons">
                           <i
                             id="bx-edit"
@@ -647,7 +606,7 @@ const Office = ({ normalAccount, googleAccount }) => {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="6">No office found.</td>
+                      <td colSpan="2">No office found.</td>
                     </tr>
                   )}
                 </tbody>
@@ -673,41 +632,6 @@ const Office = ({ normalAccount, googleAccount }) => {
                 onChange={handleChange} 
                 required 
               />
-              <input 
-                type="email" 
-                name="email" 
-                placeholder="Office Email" 
-                value={formData.email} 
-                onChange={handleChange} 
-                required 
-              />
-              <input 
-                type="text" 
-                name="address" 
-                placeholder="Office Address" 
-                value={formData.address} 
-                onChange={handleChange} 
-                required 
-              />
-              <input 
-                type="tel" 
-                name="phone" 
-                placeholder="Office Phone" 
-                value={formData.phone} 
-                onChange={handleChange} 
-                required 
-              />
-              <select
-                id='select'
-                name="status" 
-                value={formData.status} 
-                onChange={handleChange} 
-                required
-              >
-                <option value="">Select Status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </select>
               <button className='office-btn-submit' type="submit">Create Office</button>
             </form>
           </div>
@@ -729,40 +653,6 @@ const Office = ({ normalAccount, googleAccount }) => {
                 onChange={handleChange} 
                 required 
               />
-              <input 
-                type="email" 
-                name="email" 
-                placeholder="Office Email" 
-                value={formData.email} 
-                onChange={handleChange} 
-                required 
-              />
-              <input 
-                type="text" 
-                name="address" 
-                placeholder="Office Address" 
-                value={formData.address} 
-                onChange={handleChange} 
-                required 
-              />
-              <input 
-                type="tel" 
-                name="phone" 
-                placeholder="Office Phone" 
-                value={formData.phone} 
-                onChange={handleChange} 
-                required 
-              />
-              <select 
-                name="status" 
-                value={formData.status} 
-                onChange={handleChange} 
-                required
-              >
-                <option value="">Select Status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </select>
               <button className='office-btn-update' type="submit">Update Office</button>
             </form>
           </div>
