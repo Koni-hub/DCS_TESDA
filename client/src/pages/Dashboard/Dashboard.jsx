@@ -11,6 +11,7 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
   document.title = 'Dashboard';
 
   const [isSideDropDownOpen, setSideDropDownOpen] = useState(false);
+  const [status, setStatus] = useState('');
 
   const handleDropdownSidebar = () => {
     setSideDropDownOpen(!isSideDropDownOpen);
@@ -22,6 +23,12 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
 
   console.log('here is a passed data from app routes', googleAccount);
   console.log('here is a passed normal data from app routes', normalAccount);
+
+  useEffect(() => {
+    const userStatus = normalAccount.account_status;
+    console.log('Use Effect Status: ', userStatus);
+    setStatus(userStatus)
+  }, [status, navigate]);
 
   // Fetch data from json webtoken local storage = state
   const [loggedInAccount, setLoggedInAccount] = useState(null);
@@ -97,6 +104,16 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
   };
 
   // -- END
+
+  // Check status
+  useEffect(() => {
+    console.log('Status: ', status);
+    if (status && status !== 'active' && status === 'closed') {
+      navigate('/inactive');
+    } else {
+      console.log('Status:', status || 'not defined yet');
+    }
+  }, [status, navigate]);
 
   // Logout
 

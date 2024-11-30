@@ -19,6 +19,7 @@ import IncomingDocuments from './pages/IncomingDocuments/IncomingDocuments.jsx';
 import PendingDocuments from './pages/PendingDocuments/PendingDocuments.jsx';
 import ArchiveDocs from './pages/ArchiveDocs/ArchiveDocs.jsx';
 import OutboxDocs from './pages/OutboxDocs/OutboxDocs.jsx';
+import Inactive from './pages/Inactive/Inactive.jsx';
 
 // Auth Pages
 import Login from './pages/Login/Login.jsx';
@@ -263,6 +264,7 @@ function AppRoutes() {
               />
             }
           />
+          <Route path="/inactive" element={<Inactive />} />
           <Route path="/forbidden" element={<Forbidden />} />
           <Route path="*" element={<NotFound />} />
         </Route>

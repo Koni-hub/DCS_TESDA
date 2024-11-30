@@ -203,6 +203,7 @@ export const loginAccount = async (req, res) => {
         username: user.account_username,
         fullname: user.account_firstName + " " + user.account_lastName,
         role: user.account_role,
+        account_status: user.account_status
       },
       secretKey,
       { expiresIn: "24h" }
@@ -216,6 +217,7 @@ export const loginAccount = async (req, res) => {
         user: user,
         token: token,
         role: user.account_role,
+        account_status: user.account_status
       });
   } catch (error) {
     console.error("Error logging in:", error);
