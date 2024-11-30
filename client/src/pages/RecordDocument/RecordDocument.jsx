@@ -35,6 +35,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
     try {
       const response = await axios.get(`${API_URL}/document-types`);
       setCategories(response.data);
+      console.log('Categories: ', categories)
     } catch (error) {
       console.log('Error fetching document types', error);
     }
@@ -42,7 +43,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
 
   const getAllOffice = async () => {
     try {
-      const response = await axios.get(`${API_URL}/accounts/offices`);
+      const response = await axios.get(`${API_URL}/offices`);
       setOffices(response.data);
       console.log('Employee (Office): ', offices);
     } catch (error) {
@@ -759,13 +760,8 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 </option>
                 {offices && offices.length > 0 ? (
                   offices.map((office, index) => (
-                    <option key={index} value={office.account_username}>
-                      {' ( ' +
-                        office.account_username +
-                        ' ) ' +
-                        office.account_firstName +
-                        ' ' +
-                        office.account_lastName}
+                    <option key={index} value={office.id}>
+                      {office.name}
                     </option>
                   ))
                 ) : (
