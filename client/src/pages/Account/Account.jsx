@@ -45,6 +45,7 @@ const Account = ({ normalAccount, googleAccount }) => {
     account_contactNo: '',
     account_status: '',
     account_role: '',
+    origin: '',
     isAccountVerified: false,
   });
 
@@ -205,8 +206,10 @@ const Account = ({ normalAccount, googleAccount }) => {
           currentPassword: '',
           account_status: response.data.account_status || '',
           account_role: response.data.account_role || '',
+          origin: response.data.origin || '',
         });
         setSelectedAccountID(response.data);
+        console.log('Data', response.data.origin);
       } catch (error) {
         console.error('Error fetching account:', error);
       }
@@ -259,7 +262,7 @@ const Account = ({ normalAccount, googleAccount }) => {
     }
 
     if (!account_contactNo || !/^\d{11}$/.test(account_contactNo)) {
-      toast.error('Phone Number must be exactly 11 digits', toastConfig);
+      toast.error('Mobile Number must be exactly 11 digits', toastConfig);
       return false;
     }
 
@@ -275,10 +278,10 @@ const Account = ({ normalAccount, googleAccount }) => {
     }
 
     if (account_password) {
-      const passwordRegex = /^(?=.*[!@#$%^&*])(?=.*[A-Z]).{8,16}$/;
+      const passwordRegex = /^(?=.*[!@#$%^&*])(?=.*[A-Z]).{16,}$/;
       if (!passwordRegex.test(account_password)) {
         toast.error(
-          'Password must be 8-16 characters with at least one uppercase letter and one special character',
+          'Password must be 16 characters with at least one uppercase letter and one special character',
           toastConfig
         );
         return false;
@@ -311,6 +314,7 @@ const Account = ({ normalAccount, googleAccount }) => {
       currentPassword: formData.currentPassword,
       account_status: formData.account_status,
       account_role: formData.account_role,
+      origin: formData.origin,
     };
 
     try {
@@ -350,6 +354,7 @@ const Account = ({ normalAccount, googleAccount }) => {
           currentPassword: '',
           account_status: '',
           account_role: '',
+          origin: '',
         });
         setVerifyPassword('');
       }
@@ -369,6 +374,28 @@ const Account = ({ normalAccount, googleAccount }) => {
       : normalAccount?.role == 'Office'
       ? 'Office'
       : 'Unknown';
+
+      const optionsDocumentOrigin = [
+        'Provincial Office - Aurora',
+        'Provincial Office - Bataan',
+        'Provincial Office - Bulacan',
+        'Provincial Office - Nueva Ecija',
+        'Provincial Office - Pampanga',
+        'Provincial Office - Tarlac',
+        'Provincial Office - Zambales',
+        'Provincial Training Center - Baler',
+        'Provincial Training Center - Orion',
+        'Regional Training Center - Mariveles',
+        'Provincial Training Center - Calumpit',
+        'Regional Training Center - Guiguinto',
+        'Korea-Philippines IT Training Center - Bulacan',
+        'Provincial Training Center - Nueva Ecija (Palayan)',
+        'Provincial Training Center - Guagua',
+        'Gonzalo Puyat School of Arts and Trades (GPSAT)',
+        'Provincial Training Center - Tarlac',
+        'Concepcion Vocational School (CVS)',
+        'Provincial Training Center - Iba'
+      ];
 
   return (
     <>
@@ -627,7 +654,7 @@ const Account = ({ normalAccount, googleAccount }) => {
                     <th>Email</th>
                     <th>Contact No</th>
                     <th>Status</th>
-                    <th>Verified</th>
+                    <th>Office</th>
                     <th>Role</th>
                     <th>Created By</th>
                     <th>Action</th>
@@ -650,9 +677,7 @@ const Account = ({ normalAccount, googleAccount }) => {
                             : 'Closed'}
                         </td>
                         <td>
-                          {account.isAccountVerified == 1
-                            ? 'Verified'
-                            : 'Unverified'}
+                          {account.origin}
                         </td>
                         <td>{account.account_role}</td>
                         <td>{account.createdBy}</td>
@@ -741,7 +766,7 @@ const Account = ({ normalAccount, googleAccount }) => {
                   value={formData.account_contactNo}
                   onChange={handleChange}
                 />{' '}
-                <i className="no-event">Phone Number </i>
+                <i className="no-event">Mobile Number </i>
               </div>
               <div className="inputBox">
                 <input
@@ -809,10 +834,26 @@ const Account = ({ normalAccount, googleAccount }) => {
                     Select Role
                   </option>
                   <option value="Admin">Admin</option>
-                  <option value="Office">Office</option>
                   <option value="Employee">Employee</option>
                 </select>
               </div>
+
+              <select
+                  name="origin"
+                  id="origin"
+                  value={formData.origin}
+                  onChange={handleChange}
+                  required
+                >
+                  <option disabled value="">
+                    Select Office
+                  </option>
+                  {optionsDocumentOrigin.map((option) => (
+                    <option key={option} value={option} >
+                      {option}
+                    </option>
+                  ))}
+                </select>
 
               <div id="btn-update" className="inputBox">
                 <input type="submit" value="Update" />
