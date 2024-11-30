@@ -308,7 +308,7 @@ export const findGoogleAccount = async (req, res) => {
 export const findOfficeAccount = async (req, res) => {
   try {
     const officeAccounts = await Accounts.findAll({
-      where: { account_role: "Office" },
+      where: { account_role: "Employee" },
     });
 
     res.json(officeAccounts);
