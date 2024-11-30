@@ -44,6 +44,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
     try {
       const response = await axios.get(`${API_URL}/accounts/offices`);
       setOffices(response.data);
+      console.log('Employee (Office): ', offices);
     } catch (error) {
       console.log('Error fetching offices', error);
     }
@@ -183,16 +184,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
   // useState
   const [title, setTitle] = useState('');
   const [source, setSource] = useState('');
-  const [origin, setOrigin] = useState('');
   const [type, setType] = useState('');
-  const [rdInstruction, setrdInstruction] = useState('');
-  const [controlNo, setControlNo] = useState('');
-  const [personConcern, setPersonConcern] = useState('');
-  const [dateCreated, setDateCreated] = useState(
-    new Date().toISOString().split('T')[0]
-  );
-  const [dateReceived, setDateReceived] = useState(new Date());
-  const [dateCompleted, setDateCompleted] = useState(new Date());
   const [description, setDescription] = useState('');
   const [mode, setMode] = useState('');
   const [recipient, setRecipient] = useState([]);
@@ -234,14 +226,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
     console.log('Form submitted with values:', {
       title,
       source,
-      origin,
       type,
-      rdInstruction,
-      controlNo,
-      personConcern,
-      dateCreated,
-      dateReceived,
-      dateCompleted,
       mode,
       recipient,
       action,
@@ -255,14 +240,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
     const Fields = {
       title,
       source,
-      origin,
       type,
-      rdInstruction,
-      controlNo,
-      personConcern,
-      dateCreated,
-      dateReceived,
-      dateCompleted,
       mode,
       recipient,
       action,
@@ -337,13 +315,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
       const formData = new FormData();
       formData.append('title', title);
       formData.append('source', source);
-      formData.append('origin', origin);
       formData.append('type', type);
-      formData.append('rdInstruction', rdInstruction);
-      formData.append('controlNo', controlNo);
-      formData.append('dateCreated', dateCreated);
-      formData.append('dateCompleted', dateCompleted);
-      formData.append('dateReceived', dateReceived);
       formData.append('mode', mode);
       formData.append('recipient', recipient);
       formData.append('action', action);
@@ -402,10 +374,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
   const resetFields = () => {
     setTitle('');
     setSource('');
-    setOrigin('');
     setType('');
-    setrdInstruction('');
-    setControlNo('');
     setMode('');
     setRecipient('');
     setAction('');
@@ -415,57 +384,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
     setFile(null);
     setRecordId(null);
   };
-
-  const optionsDocumentPersonConcern = [
-    'BARON JOSE L. LAGRAN',
-    'EVELYN M. LUNA',
-    'JULIETTE T. FELICIANO',
-    'ELLA NESS D. DE LARA',
-    'LIWAYWAY D. CALAGUAS',
-    'ROSE ANNE S. ZALDIVAR',
-    'HEIDIN P. MOHAMMAD AKIL',
-    'GENER D. NICOLAS JR.',
-    'OLIVIA D. ABAD',
-    'MARIA FRANCES C. CASTRO',
-    'GUIA MARIE V. FERNANDEZ',
-    'MARY JOYCE ANN C. DAVID',
-    'JACKELENE CLAIRE N. DE JESUS',
-    'ERICA FE D. HERNANDEZ',
-    'JOAINA C. TEODORO',
-    'GINA G. CABRERA',
-    'NICOLE ANGELA L. PINEDA',
-    'KATE D. FLORES',
-    'JOVITA M. NICDAO',
-  ];
-
-  const optionsDocumentOrigin = [
-    'Provincial Office - Aurora',
-    'Provincial Office - Bataan',
-    'Provincial Office - Bulacan',
-    'Provincial Office - Nueva Ecija',
-    'Provincial Office - Pampanga',
-    'Provincial Office - Tarlac',
-    'Provincial Office - Zambales',
-    'Provincial Training Center - Baler',
-    'Provincial Training Center - Orion',
-    'Regional Training Center - Mariveles',
-    'Provincial Training Center - Calumpit',
-    'Regional Training Center - Guiguinto',
-    'Korea-Philippines IT Training Center - Bulacan',
-    'Provincial Training Center - Nueva Ecija (Palayan)',
-    'Provincial Training Center - Guagua',
-    'Gonzalo Puyat School of Arts and Trades (GPSAT)',
-    'Provincial Training Center - Tarlac',
-    'Concepcion Vocational School (CVS)',
-    'Provincial Training Center - Iba'
-  ];
-
-  useEffect(() => {
-    const today = new Date().toISOString().split('T')[0];
-    today;
-    setDateCreated(today);
-    console.log('Document Date Created: ' + dateCreated);
-  }, []);
 
   return (
     <>
@@ -496,15 +414,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 <li className={activeMenuItem === 1 ? 'active' : ''}>
                   <a href="#" onClick={() => handleMenuItemClick(0)}>
                     <i className="bx bx-file"></i>
-                    <span className="text">Record Docs</span>
-                  </a>
-                </li>
-              </Link>
-              <Link to="/document-types">
-                <li className={activeMenuItem === 1 ? 'active' : ''}>
-                  <a href="#" onClick={() => handleMenuItemClick(0)}>
-                    <i className="bx bx-category"></i>
-                    <span className="text">Types</span>
+                    <span className="text">Documents</span>
                   </a>
                 </li>
               </Link>
@@ -516,10 +426,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                   </a>
                 </li>
               </Link>
-            </>
-          )}
-          {userLoginRole === 'Office' && (
-            <>
               <li
                 onClick={handleDropdownSidebar}
                 className={activeMenuItem === 1 ? 'active' : ''}
@@ -549,7 +455,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 <li className={activeMenuItem === 1 ? 'active' : ''}>
                   <a href="#" onClick={() => handleMenuItemClick(0)}>
                     <i className="bx bx-archive"></i>
-                    <span className="text">Archive</span>
+                    <span className="text">Archived</span>
                   </a>
                 </li>
               </Link>
@@ -614,6 +520,14 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                   </Link>
                 </div>
               )}
+              <Link to="/outbox">
+                <li className={activeMenuItem === 1 ? 'active' : ''}>
+                  <a href="#" onClick={() => handleMenuItemClick(0)}>
+                    <i className="bx bx-box"></i>
+                    <span className="text">Outbox</span>
+                  </a>
+                </li>
+              </Link>
               <Link to="/archive-documents">
                 <li className={activeMenuItem === 1 ? 'active' : ''}>
                   <a href="#" onClick={() => handleMenuItemClick(0)}>
@@ -713,16 +627,10 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
               <table>
                 <thead>
                   <tr>
+                    <th>No</th>
                     <th>Title</th>
                     <th>Source</th>
-                    <th>Origin</th>
                     <th>Type</th>
-                    <th>R'D Instruction</th>
-                    <th>Control No</th>
-                    <th>Person Concerned</th>
-                    <th>Document Date Created</th>
-                    <th>Document Date Received</th>
-                    <th>Document Date Completed</th>
                     <th>Mode</th>
                     <th>Description</th>
                     <th>Status</th>
@@ -732,16 +640,10 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                   {recordDocument.length > 0 ? (
                     recordDocument.map((record_docs, index) => (
                       <tr key={index}>
+                        <td>{record_docs.No}</td>
                         <td>{record_docs.title}</td>
                         <td>{record_docs.source}</td>
-                        <td>{record_docs.origin}</td>
                         <td>{record_docs.type}</td>
-                        <td>{record_docs.rdInstruction}</td>
-                        <td>{record_docs.controlNo}</td>
-                        <td>{record_docs.personConcern}</td>
-                        <td>{record_docs.dateCreated}</td>
-                        <td>{record_docs.dateReceived}</td>
-                        <td>{record_docs.dateCompleted}</td>
                         <td>{record_docs.mode}</td>
                         <td>{record_docs.description}</td>
                         <td>{record_docs.status}</td>
@@ -749,7 +651,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="10">No record documents found.</td>
+                      <td colSpan="5">No record documents found.</td>
                     </tr>
                   )}
                 </tbody>
@@ -766,7 +668,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
             <span className="close" onClick={() => setModalCreate(false)}>
               &times;
             </span>
-            <h2>Create Record Document</h2>
+            <h2>Create Document</h2>
             <form className="form" onSubmit={saveRecDocument}>
               {/* Title */}
               <input
@@ -795,25 +697,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
               </select>
               {/* END */}
 
-              {/* Origin */}
-              <select
-                name="origin"
-                id="origin"
-                value={origin}
-                onChange={(e) => setOrigin(e.target.value)}
-                required
-              >
-                <option disabled value="">
-                  Select Origin
-                </option>
-                {optionsDocumentOrigin.map((option) => (
-                  <option key={option} value={option} >
-                    {option}
-                  </option>
-                ))}
-              </select>
-              {/* END */}
-
               {/* Types */}
               <select
                 name="types"
@@ -835,77 +718,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                   <option disabled>No document types found</option>
                 )}
               </select>
-              {/* END */}
-
-              {/* RD Instruction */}
-              <input
-                type="text"
-                name="rdInstruction"
-                placeholder="R'D Instruction"
-                value={rdInstruction}
-                onChange={(e) => setrdInstruction(e.target.value)}
-                required
-              />
-
-              {/* END */}
-
-              {/* ControlNo */}
-              <input
-                type="text"
-                name="controlNo"
-                value={controlNo}
-                onChange={(e) => setControlNo(e.target.value)}
-                placeholder="Control No"
-              />
-
-              {/* END */}
-
-              {/* Person Concern */}
-              <select
-                name="personConcern"
-                id="personConcern"
-                value={personConcern}
-                onChange={(e) => setPersonConcern(e.target.value)}
-                required
-              >
-                <option disabled value="">
-                  Select Person
-                </option>
-                {optionsDocumentPersonConcern.map((option) => (
-                  <option key={option} value={option} >
-                    {option}
-                  </option>
-                ))}
-              </select>
-              {/* END */}
-
-              {/* Date Created */}
-              <input
-                name="date"
-                type="text"
-                value={dateCreated}
-                disabled
-              />
-
-              {/* END */}
-
-              {/* Date Received */}
-              <input
-                type="date"
-                name="dateReceived"
-                value={dateReceived}
-                onChange={(e) => setDateReceived(e.target.value)}
-              />
-
-              {/* END */}
-
-              {/* Date Completed */}
-              <input
-                name="dateCompleted"
-                type="date"
-                value={dateCompleted}
-                onChange={(e) => setDateCompleted(e.target.value)}
-              />
               {/* END */}
 
               {/* Mode */}
@@ -935,7 +747,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 multiple
               >
                 <option disabled value="">
-                  Select Recipient
+                  Forward To
                 </option>
                 {offices && offices.length > 0 ? (
                   offices.map((office, index) => (
@@ -1016,11 +828,11 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 <span>Preview</span>
                 {preview && (
                   <div className="image-preview">
-                    <img
+                    <embed
                       src={preview}
                       alt="Preview"
                       width={150}
-                      height={250}
+                      height={200}
                       className="preview-image"
                     />
                   </div>
@@ -1041,7 +853,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
             <span className="close" onClick={() => setModalUpdate(false)}>
               &times;
             </span>
-            <h2>Edit Record Document</h2>
+            <h2>Edit Document</h2>
             <form className="form" onSubmit={editRecDocument}>
               {/* Title */}
               <input
@@ -1070,25 +882,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
               </select>
               {/* END */}
 
-              {/* Origin */}
-              <select
-                name="origin"
-                id="origin"
-                value={origin}
-                onChange={(e) => setOrigin(e.target.value)}
-                required
-              >
-                <option disabled value="">
-                  Select Origin
-                </option>
-                {optionsDocumentOrigin.map((option) => (
-                  <option key={option} value={option} >
-                    {option}
-                  </option>
-                ))}
-              </select>
-              {/* END */}
-
               {/* Types */}
               <select
                 name="types"
@@ -1110,77 +903,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                   <option disabled>No document types found</option>
                 )}
               </select>
-              {/* END */}
-
-              {/* RD Instruction */}
-              <input
-                type="text"
-                name="rdInstruction"
-                placeholder="R'D Instruction"
-                value={rdInstruction}
-                onChange={(e) => setrdInstruction(e.target.value)}
-                required
-              />
-
-              {/* END */}
-
-              {/* ControlNo */}
-              <input
-                type="text"
-                name="controlNo"
-                value={controlNo}
-                onChange={(e) => setControlNo(e.target.value)}
-                placeholder="Control No"
-              />
-
-              {/* END */}
-
-              {/* Person Concern */}
-              <select
-                name="personConcern"
-                id="personConcern"
-                value={personConcern}
-                onChange={(e) => setPersonConcern(e.target.value)}
-                required
-              >
-                <option disabled value="">
-                  Select Person
-                </option>
-                {optionsDocumentPersonConcern.map((option) => (
-                  <option key={option} value={option} >
-                    {option}
-                  </option>
-                ))}
-              </select>
-              {/* END */}
-
-              {/* Date Created */}
-              <input
-                name="date"
-                type="text"
-                value={dateCreated}
-                disabled
-              />
-
-              {/* END */}
-
-              {/* Date Received */}
-              <input
-                type="date"
-                name="dateReceived"
-                value={dateReceived}
-                onChange={(e) => setDateReceived(e.target.value)}
-              />
-
-              {/* END */}
-
-              {/* Date Completed */}
-              <input
-                name="dateCompleted"
-                type="date"
-                value={dateCompleted}
-                onChange={(e) => setDateCompleted(e.target.value)}
-              />
               {/* END */}
 
               {/* Mode */}
