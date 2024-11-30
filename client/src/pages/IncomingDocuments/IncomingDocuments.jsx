@@ -69,8 +69,8 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
       navigate('/forbidden');
     }
   }, [role, navigate]);
-
-  const officeId = normalAccount.username;
+  
+  const officeId = normalAccount.origin;
 
   useEffect(() => {
     const fetchIncomingDocuments = async () => {
