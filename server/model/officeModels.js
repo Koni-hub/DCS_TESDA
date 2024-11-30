@@ -13,29 +13,6 @@ const Office = database.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        isEmail: true,
-      },
-    },
-    address: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    phone: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        isNumeric: true,
-        len: [10, 15],
-      },
-    },
-    status: {
-      type: DataTypes.ENUM("active", "close"),
-      allowNull: false,
-    },
   },
   {
     timestamps: true,
