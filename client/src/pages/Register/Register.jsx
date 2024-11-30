@@ -150,7 +150,7 @@ const Register = (normalAccount, googleAccount) => {
     const passwordRegex = /^(?=.*[!@#$%^&*])(?=.*[A-Z]).{16,}$/;
     if (!passwordRegex.test(account_password)) {
       toast.error(
-        'Password must be 16 characters or less, include at least one uppercase letter and one special character.',
+        'Password must be 16 characters minimum, include at least one uppercase letter and one special character.',
         toastConfig
       );
       return false;
@@ -367,7 +367,6 @@ const Register = (normalAccount, googleAccount) => {
                       Select Role
                     </option>
                     <option value="Admin">Admin</option>
-                    <option value="Office">Office</option>
                     <option value="Employee">Employee</option>
                   </select>
                 </div>
