@@ -31,6 +31,39 @@ export const getRecordDocumentByID = async (req, res) => {
   }
 };
 
+const generateUniqueNo = async () => {
+  const currentYear = new Date().getFullYear();
+  const currentMonth = String(new Date().getMonth() + 1).padStart(2, "0"); // Months are zero-based in JavaScript
+
+  // Find the last document in the table based on the No field
+  const lastDocument = await RecordDocument.findOne({
+    order: [["No", "DESC"]],
+  });
+
+  let newAI;
+
+  if (lastDocument) {
+    // Extract the AI part and increment it
+    const lastNoParts = lastDocument.No.split("-");
+    const lastAI = parseInt(lastNoParts[2], 10);
+    newAI = (lastAI + 1).toString().padStart(4, "0"); // Increment and pad with leading zeros
+  } else {
+    newAI = "001"; // Start with 0001 if the table is empty
+  }
+
+  const uniqueNo = `${currentYear}-${currentMonth}-${newAI}`;
+
+  // Check if No already exists to avoid duplicates
+  const existingDocument = await RecordDocument.findOne({
+    where: { No: uniqueNo },
+  });
+  if (existingDocument) {
+    return generateUniqueNo();
+  }
+
+  return uniqueNo;
+};
+
 // Add a new record document
 export const addRecordDocument = async (req, res) => {
   console.log("Log from backend body: ", req.body);
@@ -38,7 +71,7 @@ export const addRecordDocument = async (req, res) => {
     return res.status(400).json({ msg: "No File Uploaded" });
   }
 
-  const { title, source, origin, type, rdInstruction, controlNo, personConcern, dateCreated, dateReceived, dateCompleted, description, mode, recipient, action, remarks, userName, senderEmail } =
+  const { title, source, type, description, mode, recipient, action, remarks, userName, senderEmail } =
     req.body;
 
     console.log('Sender Name: ', userName);
@@ -47,6 +80,10 @@ export const addRecordDocument = async (req, res) => {
   console.log("Recipient:", recipient);
 
   const file = req.files.file;
+
+  const uniqueNo = await generateUniqueNo();
+
+  console.log('Unique ID: ', uniqueNo);
 
   // File details
   const fileSize = file.data.length;
@@ -81,16 +118,10 @@ export const addRecordDocument = async (req, res) => {
     try {
       // Create the record document first
       const recordDocument = await RecordDocument.create({
+        No: uniqueNo,
         title,
         source,
-        origin,
         type,
-        rdInstruction,
-        controlNo,
-        personConcern,
-        dateCreated,
-        dateReceived,
-        dateCompleted,
         description,
         mode,
         image: fileName,
@@ -267,7 +298,7 @@ export const getAllToReceiveDocs = async (req, res) => {
 };
 
 // Edit Record Document if status is only "To Receive"
-export const editToRecieveDocs = async (req, res) => {
+export const editToReceiveDocs = async (req, res) => {
   try {
     const recordDocument = await RecordDocument.findOne({
       where: { id: req.params.id },
