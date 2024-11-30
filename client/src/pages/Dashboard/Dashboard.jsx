@@ -162,7 +162,7 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
   };
 
   const isEmployee = (accounts) => {
-    return accounts.account_role == 'Admin';
+    return accounts.account_role == 'Employee';
   };
 
   // Fetch all documents
