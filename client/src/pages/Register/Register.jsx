@@ -394,7 +394,7 @@ const Register = (normalAccount, googleAccount) => {
                 <select
                   name="origin"
                   id="origin"
-                  value={origin}
+                  value={formData.origin}
                   onChange={handleChange}
                   required
                 >
