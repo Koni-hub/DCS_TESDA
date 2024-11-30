@@ -616,11 +616,11 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
         {/* MAIN */}
         <main>
           <div className="record-docs-section">
-            <h1>Record Document Table</h1>
+            <h1>Document Table</h1>
             <hr className="record-docs-break-line" />
             <Link to="#" onClick={toggleModalCreate}>
               <button className="add-record-docs-btn">
-                Add Record Documents <i className="bx bx-plus"></i>
+                Add Documents <i className="bx bx-plus"></i>
               </button>
             </Link>
             <div className="record-docs-table">
@@ -706,7 +706,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 required
               >
                 <option disabled value="">
-                  Select Type
+                  Type of document
                 </option>
                 {categories && categories.length > 0 ? (
                   categories.map((category, index) => (
