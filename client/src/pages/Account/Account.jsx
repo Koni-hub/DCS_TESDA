@@ -499,6 +499,14 @@ const Account = ({ normalAccount, googleAccount }) => {
                     </a>
                   </li>
                 </Link>
+                <Link to="/offices">
+                  <li className={activeMenuItem === 1 ? 'active' : ''}>
+                    <a href="#" onClick={() => handleMenuItemClick(0)}>
+                      <i className="bx bx-buildings"></i>
+                      <span className="text">Offices</span>
+                    </a>
+                  </li>
+                </Link>
                 <Link to="/record-documents">
                   <li className={activeMenuItem === 1 ? 'active' : ''}>
                     <a href="#" onClick={() => handleMenuItemClick(0)}>
