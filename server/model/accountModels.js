@@ -49,6 +49,10 @@ const Accounts = database.define(
       type: DataTypes.ENUM("Admin", "Employee", "Office"),
       allowNull: false,
     },
+    origin: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     createdBy: {
       type: DataTypes.STRING,
       allowNull: false,
