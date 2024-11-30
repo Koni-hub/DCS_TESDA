@@ -69,7 +69,7 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
     }
   }, [role, navigate]);
 
-  const officeId = normalAccount.username;
+  const officeId = normalAccount.origin;
   console.log('Office ID: ', officeId);
 
   useEffect(() => {
@@ -115,7 +115,7 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
 
   const getAllOffice = async () => {
     try {
-      const response = await axios.get(`${API_URL}/accounts/offices`);
+      const response = await axios.get(`${API_URL}/offices`);
       setOffices(response.data);
     } catch (error) {
       console.log('Error fetching offices', error);
@@ -660,17 +660,10 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
                     </option>
                     {offices && offices.length > 0 ? (
                       offices.map((office, index) => (
-                        <option
-                          key={index}
-                          value={office.account_username}
-                          disabled={office.account_username === officeId}
+                        <option key={index} value={office.id}
+                          disabled={office.id === officeId}
                         >
-                          {' ( ' +
-                            office.account_username +
-                            ' ) ' +
-                            office.account_firstName +
-                            ' ' +
-                            office.account_lastName}
+                          {office.name}
                         </option>
                       ))
                     ) : (
