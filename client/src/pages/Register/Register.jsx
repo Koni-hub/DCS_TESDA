@@ -271,9 +271,6 @@ const Register = (normalAccount, googleAccount) => {
                     required
                     value={formData.account_username}
                     onChange={handleChange}
-                    onInput={(e) => {
-                      e.target.value = e.target.value.replace(/[^0-9]/g, '');
-                    }}
                   />{' '}
                   <i className="no-event">ID </i>
                 </div>
