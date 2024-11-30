@@ -9,6 +9,10 @@ const RecordDocument = database.define(
       autoIncrement: true,
       primaryKey: true,
     },
+    No: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     title: {
       type: DataTypes.STRING,
       allowNull: true
@@ -17,36 +21,8 @@ const RecordDocument = database.define(
       type: DataTypes.ENUM("Internal", "External"),
       allowNull: true,
     },
-    origin: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
     type: {
       type: DataTypes.STRING,
-      allowNull: true,
-    },
-    rdInstruction: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    controlNo: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    personConcern: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    dateCreated: {
-      type: DataTypes.DATEONLY,
-      allowNull: true,
-    },
-    dateReceived: {
-      type: DataTypes.DATEONLY,
-      allowNull: true,
-    },
-    dateCompleted: {
-      type: DataTypes.DATEONLY,
       allowNull: true,
     },
     mode: {
