@@ -433,7 +433,7 @@ const ArchiveDocs = ({ normalAccount, googleAccount }) => {
                     <span>Source:</span> {viewDocs.source}
                   </p>
                   <p>
-                    <span>Origin:</span> {viewDocs.orign}
+                    <span>Origin:</span> {viewDocs.origin}
                   </p>
                   <p>
                     <span>Type:</span> {viewDocs.type}
