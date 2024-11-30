@@ -48,7 +48,7 @@ const generateUniqueNo = async () => {
     const lastAI = parseInt(lastNoParts[2], 10);
     newAI = (lastAI + 1).toString().padStart(4, "0"); // Increment and pad with leading zeros
   } else {
-    newAI = "001"; // Start with 0001 if the table is empty
+    newAI = "0001"; // Start with 0001 if the table is empty
   }
 
   const uniqueNo = `${currentYear}-${currentMonth}-${newAI}`;
