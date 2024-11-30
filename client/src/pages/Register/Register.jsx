@@ -67,6 +67,7 @@ const Register = (normalAccount, googleAccount) => {
     account_contactNo: '',
     account_status: '',
     account_role: '',
+    origin: '',
     isAccountVerified: false,
   });
 
@@ -224,6 +225,28 @@ const Register = (normalAccount, googleAccount) => {
     setPasswordVisible2(!passwordVisible2);
   };
 
+  const optionsDocumentOrigin = [
+    'Provincial Office - Aurora',
+    'Provincial Office - Bataan',
+    'Provincial Office - Bulacan',
+    'Provincial Office - Nueva Ecija',
+    'Provincial Office - Pampanga',
+    'Provincial Office - Tarlac',
+    'Provincial Office - Zambales',
+    'Provincial Training Center - Baler',
+    'Provincial Training Center - Orion',
+    'Regional Training Center - Mariveles',
+    'Provincial Training Center - Calumpit',
+    'Regional Training Center - Guiguinto',
+    'Korea-Philippines IT Training Center - Bulacan',
+    'Provincial Training Center - Nueva Ecija (Palayan)',
+    'Provincial Training Center - Guagua',
+    'Gonzalo Puyat School of Arts and Trades (GPSAT)',
+    'Provincial Training Center - Tarlac',
+    'Concepcion Vocational School (CVS)',
+    'Provincial Training Center - Iba'
+  ];
+
   return (
     <>
       <div className="container-register-form">
@@ -370,6 +393,23 @@ const Register = (normalAccount, googleAccount) => {
                     <option value="Employee">Employee</option>
                   </select>
                 </div>
+
+                <select
+                  name="origin"
+                  id="origin"
+                  value={origin}
+                  onChange={handleChange}
+                  required
+                >
+                  <option disabled value="">
+                    Select Office
+                  </option>
+                  {optionsDocumentOrigin.map((option) => (
+                    <option key={option} value={option} >
+                      {option}
+                    </option>
+                  ))}
+                </select>
 
                 <div className="inputBox">
                   <input type="submit" value="Register" />
