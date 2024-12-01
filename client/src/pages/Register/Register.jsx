@@ -17,6 +17,23 @@ const Register = (normalAccount, googleAccount) => {
     normalAccount.normalAccount.role
   );
 
+  const [offices, setOffices] = useState([]);
+
+  const getAllOffice = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/offices`);
+      setOffices(response.data);
+    } catch (error) {
+      console.log('Error fetching offices', error);
+    }
+  };
+
+  console.log('Fetch Office', offices);
+
+  useEffect(() => {
+    getAllOffice();
+  }, []);
+
   // Fetch data from json webtoken local storage = function
   useEffect(() => {
     const getUsernameForData = async () => {
@@ -225,28 +242,6 @@ const Register = (normalAccount, googleAccount) => {
     setPasswordVisible2(!passwordVisible2);
   };
 
-  const optionsDocumentOrigin = [
-    'Provincial Office - Aurora',
-    'Provincial Office - Bataan',
-    'Provincial Office - Bulacan',
-    'Provincial Office - Nueva Ecija',
-    'Provincial Office - Pampanga',
-    'Provincial Office - Tarlac',
-    'Provincial Office - Zambales',
-    'Provincial Training Center - Baler',
-    'Provincial Training Center - Orion',
-    'Regional Training Center - Mariveles',
-    'Provincial Training Center - Calumpit',
-    'Regional Training Center - Guiguinto',
-    'Korea-Philippines IT Training Center - Bulacan',
-    'Provincial Training Center - Nueva Ecija (Palayan)',
-    'Provincial Training Center - Guagua',
-    'Gonzalo Puyat School of Arts and Trades (GPSAT)',
-    'Provincial Training Center - Tarlac',
-    'Concepcion Vocational School (CVS)',
-    'Provincial Training Center - Iba'
-  ];
-
   return (
     <>
       <div className="container-register-form">
@@ -401,11 +396,15 @@ const Register = (normalAccount, googleAccount) => {
                   <option disabled value="">
                     Select Office
                   </option>
-                  {optionsDocumentOrigin.map((option) => (
-                    <option key={option} value={option} >
-                      {option}
-                    </option>
-                  ))}
+                  {offices && offices.length > 0 ? (
+                    offices.map((office, index) => (
+                      <option key={index} value={office.name} >
+                        {office.name}
+                      </option>
+                    ))
+                  ): (
+                    <option disabled>No office found</option>
+                  )}
                 </select>
 
                 <div className="inputBox">
