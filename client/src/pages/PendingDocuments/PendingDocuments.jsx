@@ -129,6 +129,9 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
   // handle forward
   const handleForward = async (e) => {
     e.preventDefault();
+    const userName =
+    normalAccount?.username || googleAccount.profile.emails[0].value;
+  const senderEmail = normalAccount.email;
 
     if (!recipient || !action || !remarks) {
       toast.warning('Please fill the empty fields');
@@ -146,6 +149,8 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
       recipient: uniqueRecipients,
       action,
       remarks,
+      userName,
+      senderEmail
     };
 
     try {

@@ -106,7 +106,10 @@ export const getPendingDoc = async (req, res) => {
 export const forwardDoc = async (req, res) => {
   console.log("Log from backend body: ", req.body);
   const recipientDocId = req.params.id;
-  const { recipient, action, remarks } = req.body;
+  const { recipient, action, remarks, userName, senderEmail } = req.body;
+  
+  console.log('Sender Name: ', userName);
+  console.log('Sender Email: ', senderEmail);
 
   try {
     console.log("Recipient:", recipient);
@@ -123,6 +126,8 @@ export const forwardDoc = async (req, res) => {
       action: action,
       remarks: remarks,
       status: "To Receive",
+      senderName: userName,
+      senderEmail: senderEmail
     }));
 
     await Recipient.bulkCreate(recipientEntries);
