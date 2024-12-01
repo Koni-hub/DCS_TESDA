@@ -672,7 +672,7 @@ const Account = ({ normalAccount, googleAccount }) => {
                         <td>
                           {account.account_status == 'active'
                             ? 'Active'
-                            : 'Closed'}
+                            : 'Inactive'}
                         </td>
                         <td>
                           {account.origin}
