@@ -187,10 +187,6 @@ const Office = ({ normalAccount, googleAccount }) => {
         setSelectedOfficeID(response.data);
         setFormData({
           name: response.data.name || '',
-          email: response.data.email || '',
-          address: response.data.address || '',
-          phone: response.data.phone || '',
-          status: response.data.status || '',
         });
         setModalUpdate(true)
       } catch (error) {
@@ -206,8 +202,8 @@ const Office = ({ normalAccount, googleAccount }) => {
       name
     } = formData;
 
-    if (!name || name.length > 30) {
-      toast.error('Name must not be empty and less than 20 characters', toastConfig);
+    if (!name) {
+      toast.error('Name must not be empty', toastConfig);
       return false;
     }
 
