@@ -19,6 +19,23 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSideDropDownOpen, setSideDropDownOpen] = useState(false);
 
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState('');
+
+  // Function to load the selected image
+  const loadImage = (e) => {
+    const image = e.target.files[0];
+    console.log('Selected Image:', image);
+    if (image) {
+      setFile(image);
+      const previewUrl = URL.createObjectURL(image);
+      console.log('Preview URL:', previewUrl);
+      setPreview(previewUrl);
+    }  else {
+      console.error('No file selected');
+    }
+  };
+
   const handleDropdownSidebar = () => {
     setSideDropDownOpen(!isSideDropDownOpen);
   };
@@ -92,6 +109,8 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
     setRecipient([]);
     setAction('');
     setRemarks('');
+    setFile(null);
+    setPreview('');
   };
 
   const toggleModalSend = (id) => {
@@ -129,60 +148,73 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
   // handle forward
   const handleForward = async (e) => {
     e.preventDefault();
-    const userName =
-    normalAccount?.username || googleAccount.profile.emails[0].value;
-  const senderEmail = normalAccount.email;
-
-    if (!recipient || !action || !remarks) {
-      toast.warning('Please fill the empty fields');
+  
+    if (!recipient || recipient.length === 0) {
+      toast.warning('Please select a recipient');
+      return;
     }
-
-    console.log('Recipient Data Array: ', recipient);
-    console.log('Action: ', action);
-    console.log('Remark: ', remarks);
-
-    const uniqueRecipients = [
-      ...new Set(recipient.map((id) => parseInt(id, 10))),
-    ];
-
-    const payload = {
-      recipient: uniqueRecipients,
-      action,
-      remarks,
-      userName,
-      senderEmail
-    };
-
+    if (!action) {
+      toast.warning('Please select an action');
+      return;
+    }
+    if (!remarks) {
+      toast.warning('Please add remarks');
+      return;
+    }
+  
+    const userName = normalAccount?.username || googleAccount.profile.emails[0].value;
+    const senderEmail = normalAccount.email;
+    const fullName = normalAccount.fullname || null;
+  
+    const formData = new FormData();
+    
+    const uniqueRecipients = [...new Set(recipient.map((id) => parseInt(id, 10)))];
+    
+    formData.append('recipient', uniqueRecipients.join(','));
+    formData.append('action', action);
+    formData.append('remarks', remarks);
+    formData.append('userName', userName);
+    formData.append('senderEmail', senderEmail);
+  
+    if (file) {
+      formData.append('file', file);
+    }
+  
     try {
-      const userName =
-        normalAccount?.username || googleAccount.profile.emails[0].value;
-      const fullName = normalAccount.fullname || null;
-
-      const response = await axios.post(
+      await axios.post(
         `${API_URL}/recipients/${currentDocId}/forward`,
-        payload
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
       );
-      if (response.status !== 200) {
-        toast.error('Error forwarding document, try again');
-        return;
-      }
-      // Create Audit Log
+  
       const auditLogData = {
         userName,
         fullName,
-        action: `Forwarded document types by username ${userName}`,
+        action: `Forwarded document by username ${userName}`,
       };
-
+  
       await axios.post(`${API_URL}/audit-logs`, auditLogData, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
+  
       toast.success('Document forwarded successfully');
       closeModal();
     } catch (error) {
       console.error('Error forwarding document:', error);
-      toast.error('Error forwarding document');
+      
+      if (error.response) {
+        toast.error(error.response.data.message || 'Error forwarding document');
+      } else if (error.request) {
+        toast.error('No response received from server');
+      } else {
+        toast.error('Error preparing document forward request');
+      }
     }
   };
 
@@ -689,6 +721,30 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
                     onChange={(e) => setRemarks(e.target.value)}
                     required
                   />
+                  {/* Attachment */}
+                  <div className="doc-image">
+                    <label>Attachment</label>
+                    <span>*</span> <br />
+                    <input
+                      type="file"
+                      className="attachment-input"
+                      onChange={loadImage}
+                      required
+                    />
+                    <span>Preview</span>
+                    {preview && (
+                      <div className="image-preview">
+                        <embed
+                          src={preview}
+                          alt="Preview"
+                          width={150}
+                          height={250}
+                          className="preview-image"
+                        />
+                      </div>
+                    )}
+                  </div>
+                  {/* END */}
                   <button className="pending-doc-btn-send" type="submit">
                     Send
                   </button>
