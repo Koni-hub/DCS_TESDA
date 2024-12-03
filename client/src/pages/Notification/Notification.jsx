@@ -359,28 +359,6 @@ const Notification = ({ normalAccount, googleAccount }) => {
               <div className="header">
                 <h2>Notification</h2>
               </div>
-              {pendingDocuments.length > 0 ? (
-                <div className="card-list">
-                  {pendingDocuments.map((doc) => (
-                    <div key={doc.id} className="task_list">
-                      <li className="uncomplete">
-                        <div className="task_title">
-                          <div className="text-list">
-                            <h3 className="card-No">No: {doc.No}</h3>
-                            <br />
-                            <p className="card-title">
-                              Title:{' '}
-                              {doc.documentTitle ? doc.documentTitle : 'N/A'}
-                            </p>
-                          </div>
-                        </div>
-                      </li>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p>No pending tasks.</p>
-              )}
             </div>
           </div>
         </main>
