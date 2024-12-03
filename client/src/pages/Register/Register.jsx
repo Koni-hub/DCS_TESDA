@@ -82,7 +82,6 @@ const Register = (normalAccount, googleAccount) => {
     account_email: '',
     account_password: '',
     account_contactNo: '',
-    account_status: '',
     account_role: '',
     origin: '',
     isAccountVerified: false,
@@ -113,14 +112,13 @@ const Register = (normalAccount, googleAccount) => {
       account_firstName,
       account_lastName,
       account_contactNo,
-      account_status,
       account_role,
     } = formData;
 
     // Username validation: Must be numeric and at most 8 characters
     if (!/^\d{1,8}$/.test(account_username)) {
       toast.error(
-        'Username must be numeric and exactly 8 characters long.',
+        'Employee ID must be numeric and exactly 8 characters long.',
         toastConfig
       );
       return;
@@ -149,12 +147,6 @@ const Register = (normalAccount, googleAccount) => {
     const phoneRegex = /^\d{11}$/; // Change this regex to match your requirements
     if (!account_contactNo || !phoneRegex.test(account_contactNo)) {
       toast.error('Mobile Number must be 11 digits.', toastConfig);
-      return false;
-    }
-
-    // Select status (must not be empty)
-    if (!account_status) {
-      toast.error('Status must be not empty');
       return false;
     }
 
@@ -267,7 +259,7 @@ const Register = (normalAccount, googleAccount) => {
                     value={formData.account_username}
                     onChange={handleChange}
                   />{' '}
-                  <i className="no-event">ID </i>
+                  <i className="no-event">Employee ID </i>
                 </div>
 
                 <div className="inputBox">
@@ -352,23 +344,7 @@ const Register = (normalAccount, googleAccount) => {
                       onClick={togglePassword2}
                     ></i>
                   </span>
-                </div>
-
-                <div className="inputBox">
-                  <select
-                    name="account_status"
-                    id="account_status"
-                    required
-                    value={formData.account_status}
-                    onChange={handleChange}
-                  >
-                    <option disabled value="">
-                      Select status
-                    </option>
-                    <option value="active">Active</option>
-                    <option value="closed">Inactive</option>
-                  </select>
-                </div>
+                </div>  
 
                 <div className="inputBox">
                   <select
