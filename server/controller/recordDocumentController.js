@@ -92,14 +92,14 @@ export const addRecordDocument = async (req, res) => {
   const allowedTypes = [".pdf"];
 
   if (!allowedTypes.includes(ext.toLowerCase())) {
-    return res.status(422).json({ msg: "Invalid Image Extension" });
+    return res.status(422).json({ msg: "Invalid PDF Extension" });
   }
 
   if (fileSize > 5000000) {
-    return res.status(422).json({ msg: "Image must be less than 5MB" });
+    return res.status(422).json({ msg: "PDF must be less than 5MB" });
   }
 
-  // Absolute path to save images
+  // Absolute path to save PDF
   const uploadDir = path.join(process.cwd(), "public/recordDocuments/");
 
   if (!fs.existsSync(uploadDir)) {
@@ -205,14 +205,14 @@ export const editRecordDocument = async (req, res) => {
       const fileSize = file.data.length;
       const ext = path.extname(file.name);
       const newFileName = file.md5 + ext;
-      const allowedTypes = [".png", ".jpg", ".jpeg"];
+      const allowedTypes = [".pdf"];
 
       if (!allowedTypes.includes(ext.toLowerCase())) {
         return res.status(422).json({ msg: "Invalid Image Extension" });
       }
 
       if (fileSize > 5000000) {
-        return res.status(422).json({ msg: "Image must be less than 5MB" });
+        return res.status(422).json({ msg: "PDF must be less than 5MB" });
       }
 
       const uploadDir = path.join(process.cwd(), "public/recordDocuments/");
