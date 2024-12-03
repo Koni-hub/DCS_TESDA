@@ -815,7 +815,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
               </div>
               {/* END */}
               <button className="docs-btn-submit" type="submit">
-                Create Record Document
+                Create Document
               </button>
             </form>
           </div>
@@ -1000,7 +1000,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
               </div>
               {/* END */}
               <button className="docs-btn-update" type="submit">
-                Update Record Document
+                Update Document
               </button>
             </form>
           </div>
