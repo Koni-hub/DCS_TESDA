@@ -538,6 +538,8 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
                     <th>Status</th>
                     <th>Remarks</th>
                     <th>Actions</th>
+                    <th>Sender</th>
+                    <th>Email</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -550,6 +552,8 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
                         <td>{doc.document.type}</td>
                         <td>{doc.status}</td>
                         <td>{doc.remarks}</td>
+                        <td>{doc.senderName}</td>
+                        <td>{doc.senderEmail}</td>
                         <td className="btn-container">
                           <button
                             className="btn-forward"
