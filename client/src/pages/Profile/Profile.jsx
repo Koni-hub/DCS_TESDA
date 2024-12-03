@@ -14,7 +14,6 @@ const Profile = ({ normalAccount, googleAccount }) => {
     account_firstName: '',
     account_lastName: '',
     account_contactNo: '',
-    account_email: '',
     currentPassword: '',
     newPassword: '',
   });
@@ -56,7 +55,6 @@ const Profile = ({ normalAccount, googleAccount }) => {
           account_firstName: response.data.account_firstName || '',
           account_lastName: response.data.account_lastName || '',
           account_contactNo: response.data.account_contactNo || '',
-          account_email: response.data.account_email || '',
           currentPassword: '',
           newPassword: '',
         });
@@ -246,30 +244,6 @@ const Profile = ({ normalAccount, googleAccount }) => {
                         onChange={handleChange}
                       />
                       <i>Phone Number</i>
-                    </div>
-
-                    <div className="edit-save-account">
-                      <button type="submit">Save</button>
-                    </div>
-                  </div>
-
-                  <h3>
-                    Email <i id="info" className="bx bx-info-circle"></i>
-                  </h3>
-
-                  <div className="account-form-field">
-                    <div className="account-inputBox">
-                      <input
-                        type="email"
-                        name="account_email"
-                        required
-                        value={
-                          formData.account_email ||
-                          googleAccount?.profile.emails[0].value
-                        }
-                        onChange={handleChange}
-                      />
-                      <i>Email </i>
                     </div>
 
                     <div className="edit-save-account">
