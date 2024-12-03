@@ -43,9 +43,9 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
   const validateInputs = () => {
     const { name } = formData;
 
-    if (!name || name.length > 30) {
+    if (!name) {
       toast.error(
-        'Name must not be empty and less than 20 characters',
+        'Name must not be empty',
         toastConfig
       );
       return false;
@@ -568,7 +568,7 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
                 <thead>
                   <tr>
                     <th>No</th>
-                    <th>Name</th>
+                    <th>Office Name</th>
                     <th>Action</th>
                   </tr>
                 </thead>
