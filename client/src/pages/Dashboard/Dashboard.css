@@ -130,7 +130,7 @@
 
 .features-section .audit-section {
   padding: 20px;
-  width: 75%;
+  width: 100%;
   height: 600px;
   border-radius: 15px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 10px 24px;
@@ -172,86 +172,8 @@
   border-bottom: #7a7979 solid 2px;
   background: none;
   color: #333333;
-  text-align: left;
 }
 
 .audit-section tr:nth-child(even) {
   background-color: #f4f4f4;
-}
-
-.features-section .reminder-section {
-  padding: 20px;
-  width: 50%;
-  height: 600px;
-  border-radius: 15px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 10px 24px;
-  border: solid 1px rgb(252, 252, 252);
-  color: var(--secondary);
-}
-
-.reminder-section {
-  overflow-x: auto;
-}
-
-.reminders .task_list {
-  width: 100%;
-  overflow-x: auto;
-}
-
-.reminders .task_list li {
-  width: 100%;
-  margin-bottom: 16px;
-  background-color: var(--grey);
-  padding: 14px 10px;
-  border-radius: 05px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.reminders .task_list li .task_title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.reminders h2 {
-  padding: 0 0 10px 0;
-  font-size: 25px;
-}
-
-.text-list #reminder-edit-btn {
-  padding: 10px 0;
-  font-size: 20px;
-}
-
-.reminders .task_list li.uncomplete {
-  border-left: 5px solid var(--danger);
-}
-
-/* Notification Badge */
-.notification-container {
-  position: relative;
-  display: inline-block;
-}
-
-.notification-container i {
-  position: relative;
-  right: 25px;
-  font-size: 24px;
-}
-
-.notification-count {
-  position: absolute;
-  top: -10px;
-  right: -1px;
-  background: var(--secondary);
-  color: white;
-  border-radius: 50%;
-  padding: 3px 6px;
-  font-size: 12px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
