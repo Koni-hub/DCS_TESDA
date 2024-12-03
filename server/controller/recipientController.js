@@ -2,6 +2,8 @@ import database from "../config/dbConfig.js";
 import Recipient from "../model/recipientModels.js";
 import Document from "../model/recordDocumentModels.js";
 import { Op, where } from "sequelize";
+import path from "path";
+import fs from "fs";
 
 export const getAllRecipients = async (req, res) => {
   try {
@@ -112,14 +114,56 @@ export const forwardDoc = async (req, res) => {
   console.log('Sender Email: ', senderEmail);
 
   try {
-    console.log("Recipient:", recipient);
+    const existingDocument = await Document.findByPk(recipientDocId);
+    
+    if (!existingDocument) {
+      return res.status(404).json({ msg: "Document not found" });
+    }
 
-    // Remove duplicate recipients by creating a Set from the recipient array
+    let fileName = existingDocument.image;
+
+    if (req.files && req.files.file) {
+      const file = req.files.file;
+
+      const fileSize = file.data.length;
+      const ext = path.extname(file.name);
+      const newFileName = file.md5 + ext;
+      const allowedTypes = [".pdf"];
+
+      if (!allowedTypes.includes(ext.toLowerCase())) {
+        return res.status(422).json({ msg: "Invalid PDF Extension" });
+      }
+
+      if (fileSize > 5000000) {
+        return res.status(422).json({ msg: "PDF must be less than 5MB" });
+      }
+
+      const uploadDir = path.join(process.cwd(), "public/recordDocuments/");
+
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+
+      await file.mv(path.join(uploadDir, newFileName));
+      fileName = newFileName;
+    }
+
+    const recipients = Array.isArray(recipient) 
+      ? recipient 
+      : [recipient];
+
     const uniqueRecipients = [
-      ...new Set(recipient.map((id) => parseInt(id, 10))),
+      ...new Set(recipients.map((id) => parseInt(id, 10))),
     ];
 
-    // Forward document to unique recipients
+    await existingDocument.update({
+      image: fileName,
+      url: fileName
+        ? `${process.env.ORIGIN}recordDocuments/${fileName}`
+        : existingDocument.url,
+      status: 'Forwarded'
+    });
+
     const recipientEntries = uniqueRecipients.map((recipientId) => ({
       document_id: recipientDocId,
       office_id: recipientId,
@@ -131,9 +175,18 @@ export const forwardDoc = async (req, res) => {
     }));
 
     await Recipient.bulkCreate(recipientEntries);
-    res.json({ message: "Document forwarded." });
+    
+    res.json({ 
+      message: "Document forwarded successfully.",
+      documentId: recipientDocId,
+      recipients: uniqueRecipients
+    });
   } catch (error) {
-    res.status(500).json({ error: "Error forwarding document", error });
+    console.error("Error forwarding document:", error);
+    res.status(500).json({ 
+      error: "Error forwarding document", 
+      details: error.message 
+    });
   }
 };
 
