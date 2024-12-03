@@ -617,7 +617,7 @@ const Account = ({ normalAccount, googleAccount }) => {
                 <thead>
                   <tr>
                     <th>No</th>
-                    <th>Username</th>
+                    <th>ID</th>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Password</th>
