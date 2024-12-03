@@ -484,7 +484,6 @@ const Document = ({ normalAccount, googleAccount }) => {
     }
   };
 
-  const [pendingCount, setPendingCount] = useState(0);
   const [, setCompletedCount] = useState(0);
   const [, setRejectedCount] = useState(0);
 
@@ -553,7 +552,6 @@ const Document = ({ normalAccount, googleAccount }) => {
     // Update counts
     const pendingCount = pendingDocuments.filter(Boolean).length;
     console.log('Pending count:', pendingCount);
-    setPendingCount(pendingCount);
 
     const completedCount = completedDocuments.filter(Boolean).length;
     console.log('Completed count:', completedCount);
@@ -861,14 +859,6 @@ const Document = ({ normalAccount, googleAccount }) => {
               </button>
             </div>
           </form>
-          <Link to="/notification">
-            <div className="notification-container">
-              <i className="bx bx-bell"></i>
-              {pendingCount > 0 && (
-                <span className="notification-count">{pendingCount}</span>
-              )}
-            </div>
-          </Link>
           <div className="container-logut-drop-down" onClick={toggleDropdown}>
             <div className="profile-name">
               <div className="profile-content-icon">

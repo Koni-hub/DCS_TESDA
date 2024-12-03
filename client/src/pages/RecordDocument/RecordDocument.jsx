@@ -20,7 +20,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
   const [role, setRole] = useState(null);
   const [loggedInAccount, setLoggedInAccount] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [pendingCount, setPendingCount] = useState(0);
   const [categories, setCategories] = useState([]);
   const [offices, setOffices] = useState([]);
   const [isSideDropDownOpen, setSideDropDownOpen] = useState(false);
@@ -57,15 +56,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
       setRecordDocuments(response.data);
     } catch (error) {
       console.log('Error fetching record documents', error);
-    }
-  };
-
-  const getAllDocuments = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/documents`);
-      await documentChecker(response.data);
-    } catch (error) {
-      console.error('Error fetching documents:', error);
     }
   };
 
@@ -114,16 +104,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
     }
   };
 
-  // Document checker functions
-  const documentChecker = async (documents) => {
-    const pendingDocs = documents.filter(
-      (doc) =>
-        doc.status !== 'Archive' &&
-        Object.values(doc).some((field) => field === '' || field === null)
-    );
-    setPendingCount(pendingDocs.length);
-  };
-
   // User authentication and role management
   useEffect(() => {
     const getUsernameForData = async () => {
@@ -156,7 +136,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
   // Initial data loading
   useEffect(() => {
     getAllRecordDocument();
-    getAllDocuments();
     getAllTypes();
     getAllOffice();
   }, []);
@@ -571,14 +550,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
               </button>
             </div>
           </form>
-          <Link to="/notification">
-            <div className="notification-container">
-              <i className="bx bx-bell"></i>
-              {pendingCount > 0 && (
-                <span className="notification-count">{pendingCount}</span>
-              )}
-            </div>
-          </Link>
           <div className="container-logut-drop-down" onClick={toggleDropdown}>
             <div className="profile-name">
               <div className="profile-content-icon">

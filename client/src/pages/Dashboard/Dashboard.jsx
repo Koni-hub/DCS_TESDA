@@ -128,8 +128,6 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
   // -- END
 
   const [documents, setDocuments] = useState([]);
-  const [pendingCount, setPendingCount] = useState(0);
-
   const [accounts, setAccounts] = useState([]);
   const [adminCount, setAdminCounts] = useState(0);
   const [employeeCount, setEmployeeCount] = useState(0);
@@ -175,23 +173,6 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
     }
   };
 
-  // Check if a document is pending based on any field being empty
-  const isPending = (document) => {
-    return Object.values(document).some(
-      (field) =>
-        document.status !== 'Rejected' && (field === '' || field === null)
-    );
-  };
-
-  const pendingDocuments = documents.filter(isPending);
-
-
-  // Count completed, pending, and rejected documents
-  const documentChecker = () => {
-    const pending = documents.filter(isPending).length;
-    setPendingCount(pending);
-  };
-
   const accountChecker = () => {
     const admin = accounts.filter(isAdmin).length;
     const employee = accounts.filter(isEmployee).length;
@@ -212,7 +193,6 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
   }, []);
 
   useEffect(() => {
-    documentChecker();
     accountChecker();
     recDocumentChecker();
   }, [documents]);
@@ -422,14 +402,6 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
           <form action="#">
             <div className="form-input"></div>
           </form>
-          <Link to="/notification">
-            <div className="notification-container">
-              <i className="bx bx-bell"></i>
-              {pendingCount > 0 && (
-                <span className="notification-count">{pendingCount}</span>
-              )}
-            </div>
-          </Link>
           <div className="container-logut-drop-down" onClick={toggleDropdown}>
             <div className="profile-name">
               <div className="profile-content-icon">
@@ -541,35 +513,6 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
                     </tbody>
                   </table>
                 </div>
-                <div className="reminder-section">
-                  <div className="reminders">
-                    <div className="header">
-                      <h2>Reminders</h2>
-                    </div>
-                    {pendingDocuments.length > 0 ? (
-                      <div className="card-list">
-                        {pendingDocuments.map((doc) => (
-                          <div key={doc.id} className="task_list">
-                            <li className="uncomplete">
-                              <div className="task_title">
-                                <div className="text-list">
-                                  <h3 className="card-No">No: {doc.No}</h3>
-                                  <br />
-                                  <p className="card-title">
-                                    Title:{' '}
-                                    {doc.documentTitle ? doc.documentTitle : 'N/A'}
-                                  </p>
-                                </div>
-                              </div>
-                            </li>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p>No pending tasks.</p>
-                    )}
-                  </div>
-                </div>
               </div>
             </>
           )}
@@ -606,35 +549,6 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
                       )}
                     </tbody>
                   </table>
-                </div>
-                <div className="reminder-section">
-                  <div className="reminders">
-                    <div className="header">
-                      <h2>Reminders</h2>
-                    </div>
-                    {pendingDocuments.length > 0 ? (
-                      <div className="card-list">
-                        {pendingDocuments.map((doc) => (
-                          <div key={doc.id} className="task_list">
-                            <li className="uncomplete">
-                              <div className="task_title">
-                                <div className="text-list">
-                                  <h3 className="card-No">No: {doc.No}</h3>
-                                  <br />
-                                  <p className="card-title">
-                                    Title:{' '}
-                                    {doc.documentTitle ? doc.documentTitle : 'N/A'}
-                                  </p>
-                                </div>
-                              </div>
-                            </li>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p>No pending tasks.</p>
-                    )}
-                  </div>
                 </div>
               </div>
             </>

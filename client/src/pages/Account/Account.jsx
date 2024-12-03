@@ -24,7 +24,6 @@ const Account = ({ normalAccount, googleAccount }) => {
   const [loggedInAccount, setLoggedInAccount] = useState(null);
   const [activeMenuItem, setActiveMenuItem] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [pendingCount, setPendingCount] = useState(0);
   const [verifyPassword, setVerifyPassword] = useState('');
   const [passwordVisible1, setPasswordVisible1] = useState(false);
   const [passwordVisible2, setPasswordVisible2] = useState(false);
@@ -71,24 +70,6 @@ const Account = ({ normalAccount, googleAccount }) => {
     }
   };
 
-  const getAllDocuments = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/documents`);
-      await documentChecker(response.data);
-    } catch (error) {
-      console.error('Error fetching documents:', error);
-    }
-  };
-
-  // Document checker functions
-  const documentChecker = async (documents) => {
-    const pendingDocs = documents.filter(
-      (doc) =>
-        doc.status !== 'Archive' &&
-        Object.values(doc).some((field) => field === '' || field === null)
-    );
-    setPendingCount(pendingDocs.length);
-  };
 
   // User authentication and role management
   useEffect(() => {
@@ -122,7 +103,6 @@ const Account = ({ normalAccount, googleAccount }) => {
   // Initial data loading
   useEffect(() => {
     getAllAccounts();
-    getAllDocuments();
   }, []);
 
   // Event handlers
@@ -577,14 +557,6 @@ const Account = ({ normalAccount, googleAccount }) => {
               </button>
             </div>
           </form>
-          <Link to="/notification">
-            <div className="notification-container">
-              <i className="bx bx-bell"></i>
-              {pendingCount > 0 && (
-                <span className="notification-count">{pendingCount}</span>
-              )}
-            </div>
-          </Link>
           <div className="container-logut-drop-down" onClick={toggleDropdown}>
             <div className="profile-name">
               <div className="profile-content-icon">

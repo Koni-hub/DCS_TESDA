@@ -396,7 +396,6 @@ const Registry = ({ normalAccount, googleAccount }) => {
   };
   // -- END
 
-  const [pendingCount, setPendingCount] = useState(0);
 
   const isPending = async (documentId, document) => {
       if (document.status !== 'Rejected' && Object.values(document).some(field => field === '' || field === null)) {
@@ -417,7 +416,6 @@ const Registry = ({ normalAccount, googleAccount }) => {
     // Update counts
     const pendingCount = pendingDocuments.filter(Boolean).length;
     console.log('Pending count:', pendingCount);
-    setPendingCount(pendingCount);
   };
 
   // Trigger the document check on load or document updates
@@ -643,14 +641,6 @@ const Registry = ({ normalAccount, googleAccount }) => {
               </button>
             </div>
           </form>
-          <Link to="/notification">
-            <div className="notification-container">
-              <i className="bx bx-bell"></i>
-              {pendingCount > 0 && (
-                <span className="notification-count">{pendingCount}</span>
-              )}
-            </div>
-          </Link>
           <div className="container-logut-drop-down" onClick={toggleDropdown}>
             <div className="profile-name">
               <div className="profile-content-icon">

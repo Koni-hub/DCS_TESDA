@@ -122,43 +122,6 @@ const Notification = ({ normalAccount, googleAccount }) => {
 
   // -- END
 
-  const [documents, setDocuments] = useState([]);
-  const [pendingCount, setPendingCount] = useState(0);
-
-  // Fetch all documents
-  const getAllDocuments = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/documents`);
-      setDocuments(response.data);
-    } catch (error) {
-      console.error('Error fetching documents', error);
-    }
-  };
-
-  // Check if a document is pending based on any field being empty
-  const isPending = (document) => {
-      return Object.values(document).some((field) => 
-          document.status !== 'Rejected' && (field === '' || field === null)
-      );
-  };
-
-
-  const pendingDocuments = documents.filter(isPending);
-
-  // Count completed, pending, and rejected documents
-  const documentChecker = () => {
-    const pending = documents.filter(isPending).length;
-    setPendingCount(pending);
-  };
-
-  useEffect(() => {
-    getAllDocuments();
-  }, []);
-
-  useEffect(() => {
-    documentChecker();
-  }, [documents]);
-
   const userLoginRole = 
   (normalAccount?.role == 'Admin') 
   ? 'Administrator' 
@@ -346,9 +309,6 @@ const Notification = ({ normalAccount, googleAccount }) => {
           </form>
           <div className="notification-container">
             <i className="bx bx-bell"></i>
-            {pendingCount > 0 && (
-              <span className="notification-count">{pendingCount}</span>
-            )}
           </div>
           <div className="container-logut-drop-down" onClick={toggleDropdown}>
             <div className="profile-name">

@@ -13,7 +13,6 @@ import DOMPurify from 'dompurify';
 const DocumentTypes = ({ normalAccount, googleAccount }) => {
   const [activeMenuItem, setActiveMenuItem] = useState(0);
   const [documentTypes, setDocumentTypes] = useState([]);
-  const [pendingCount, setPendingCount] = useState(0);
   const [loggedInAccount, setLoggedInAccount] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [role, setRole] = useState(null);
@@ -108,7 +107,6 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
   // Initial data loading
   useEffect(() => {
     getAllDocumentTypes();
-    getAllDocuments();
   }, []);
 
   const getAllDocumentTypes = async () => {
@@ -117,15 +115,6 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
       setDocumentTypes(response.data);
     } catch (error) {
       console.log('Error fetching document types');
-    }
-  };
-
-  const getAllDocuments = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/documents`);
-      await documentChecker(response.data);
-    } catch (error) {
-      console.error('Error fetching documents:', error);
     }
   };
 
@@ -177,16 +166,6 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
   };
 
   // -- END
-
-  // Document checker functions
-  const documentChecker = async (documents) => {
-    const pendingDocs = documents.filter(
-      (doc) =>
-        doc.status !== 'Archive' &&
-        Object.values(doc).some((field) => field === '' || field === null)
-    );
-    setPendingCount(pendingDocs.length);
-  };
 
   // Search functionality
   const handleSearchSubmit = (event) => {
@@ -529,14 +508,6 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
               </button>
             </div>
           </form>
-          <Link to="/notification">
-            <div className="notification-container">
-              <i className="bx bx-bell"></i>
-              {pendingCount > 0 && (
-                <span className="notification-count">{pendingCount}</span>
-              )}
-            </div>
-          </Link>
           <div className="container-logut-drop-down" onClick={toggleDropdown}>
             <div className="profile-name">
               <div className="profile-content-icon">
