@@ -517,7 +517,7 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
                   <table>
                     <thead>
                       <tr>
-                        <th>User</th>
+                        <th>UserID</th>
                         <th>Full Name</th>
                         <th>Action</th>
                         <th>Date</th>
