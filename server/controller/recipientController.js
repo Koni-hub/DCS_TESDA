@@ -107,17 +107,43 @@ export const getPendingDoc = async (req, res) => {
 
 export const forwardDoc = async (req, res) => {
   console.log("Log from backend body: ", req.body);
-  const recipientDocId = req.params.id;
-  const { recipient, action, remarks, userName, senderEmail } = req.body;
+  const documentId = req.params.id;
+  const { recipient, action, remarks, userName, senderEmail, recipientDocId } = req.body;
   
   console.log('Sender Name: ', userName);
   console.log('Sender Email: ', senderEmail);
+  console.log('Recipient ID: ', recipientDocId);
+  console.log('Document ID: ', documentId);
 
   try {
-    const existingDocument = await Document.findByPk(recipientDocId);
-    
+    console.log('Searching for Recipient with ID:', recipientDocId);
+    const existingRecipient = await Recipient.findByPk(recipientDocId);
+
+    if (!existingRecipient) {
+      console.error('Recipient not found:', recipientDocId);
+      return res.status(404).json({ msg: "Recipient not found" });
+    }
+
+    console.log('Searching for Document with ID:', documentId);
+    const existingDocument = await Document.findByPk(documentId);
+
     if (!existingDocument) {
+      console.error('Document not found:', documentId);
       return res.status(404).json({ msg: "Document not found" });
+    }
+
+    // Validate input data
+    if (!recipient) {
+      console.error('No recipient provided');
+      return res.status(400).json({ msg: "Recipient is required" });
+    }
+    if (!action) {
+      console.error('No action provided');
+      return res.status(400).json({ msg: "Action is required" });
+    }
+    if (!remarks) {
+      console.error('No remarks provided');
+      return res.status(400).json({ msg: "Remarks are required" });
     }
 
     let fileName = existingDocument.image;
@@ -165,7 +191,7 @@ export const forwardDoc = async (req, res) => {
     });
 
     const recipientEntries = uniqueRecipients.map((recipientId) => ({
-      document_id: recipientDocId,
+      document_id: documentId,
       office_id: recipientId,
       action: action,
       remarks: remarks,
@@ -178,7 +204,7 @@ export const forwardDoc = async (req, res) => {
     
     res.json({ 
       message: "Document forwarded successfully.",
-      documentId: recipientDocId,
+      documentId: documentId,
       recipients: uniqueRecipients
     });
   } catch (error) {

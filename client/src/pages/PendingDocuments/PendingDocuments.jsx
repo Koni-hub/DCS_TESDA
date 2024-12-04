@@ -102,6 +102,7 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
 
   const [modalSend, setModalSend] = useState(false);
   const [currentDocId, setCurrentDocId] = useState('');
+  const [recipientId, setRecipientId] = useState('');
 
   const closeModal = () => {
     setModalSend(false);
@@ -109,12 +110,14 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
     setRecipient([]);
     setAction('');
     setRemarks('');
+    setRecipientId('')
     setFile(null);
     setPreview('');
   };
 
-  const toggleModalSend = (id) => {
-    setCurrentDocId(id);
+  const toggleModalSend = (recipientId, documentId) => {
+    setRecipientId(recipientId)
+    setCurrentDocId(documentId);
     setModalSend(!modalSend);
   };
 
@@ -175,10 +178,14 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
     formData.append('remarks', remarks);
     formData.append('userName', userName);
     formData.append('senderEmail', senderEmail);
+    formData.append('recipientDocId', recipientId);
   
     if (file) {
       formData.append('file', file);
     }
+
+    console.log('Current ID:', currentDocId);
+    console.log('Recipient ID: ', recipientId);
   
     try {
       await axios.post(
@@ -204,6 +211,7 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
       });
   
       toast.success('Document forwarded successfully');
+      window.location.reload();
       closeModal();
     } catch (error) {
       console.error('Error forwarding document:', error);
@@ -563,6 +571,7 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
               <table>
                 <thead>
                   <tr>
+                    <th>ID</th>
                     <th>Title</th>
                     <th>Description</th>
                     <th>Source</th>
@@ -578,6 +587,7 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
                   {documents.length > 0 ? (
                     documents.map((doc) => (
                       <tr key={doc.id}>
+                        <td>{doc.id}</td>
                         <td>{doc.document.title}</td>
                         <td>{doc.document.description}</td>
                         <td>{doc.document.source}</td>
@@ -589,7 +599,7 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
                         <td className="btn-container">
                           <button
                             className="btn-forward"
-                            onClick={() => toggleModalSend(doc.id)}
+                            onClick={() => toggleModalSend(doc.id, doc.document.id)}
                           >
                             Forward
                           </button>
