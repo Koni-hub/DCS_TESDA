@@ -222,7 +222,7 @@ const Office = ({ normalAccount, googleAccount }) => {
         const auditLogData = {
           userName,
           fullName,
-          action: `Created office by username ${userName}`,
+          action: `Created office by ID ${userName}`,
         };
 
         await axios.post(`${API_URL}/audit-logs`, auditLogData, {
@@ -274,7 +274,7 @@ const Office = ({ normalAccount, googleAccount }) => {
         const auditLogData = {
           userName,
           fullName,
-          action: `Updated office by username ${userName}`,
+          action: `Updated office by ID ${userName}`,
         };
 
         await axios.post(`${API_URL}/audit-logs`, auditLogData, {

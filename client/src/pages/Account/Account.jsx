@@ -312,7 +312,7 @@ const Account = ({ normalAccount, googleAccount }) => {
         const auditLogData = {
           userName,
           fullName,
-          action: `update account by username ${userName}`,
+          action: `update account by ID ${userName}`,
         };
 
         await axios.post(`${API_URL}/audit-logs`, auditLogData, {

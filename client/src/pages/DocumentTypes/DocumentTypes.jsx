@@ -216,7 +216,7 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
         const auditLogData = {
           userName,
           fullName,
-          action: `Created document types types by username ${userName}`,
+          action: `Created document types types by ID ${userName}`,
         };
 
         await axios.post(`${API_URL}/audit-logs`, auditLogData, {
@@ -291,7 +291,7 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
         const auditLogData = {
           userName,
           fullName,
-          action: `Updated document types by username ${userName}`,
+          action: `Updated document types by ID ${userName}`,
         };
 
         await axios.post(`${API_URL}/audit-logs`, auditLogData, {

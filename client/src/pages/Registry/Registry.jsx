@@ -145,7 +145,7 @@ const Registry = ({ normalAccount, googleAccount }) => {
       const auditLogData = {
         userName,
         fullName,
-        action: 'Successfully created registry',
+        action: `Successfully created registry by ID ${userName}`,
       };
 
       await axios.post(`${API_URL}/audit-logs`, auditLogData, {
@@ -196,7 +196,7 @@ const Registry = ({ normalAccount, googleAccount }) => {
       const auditLogData = {
         userName,
         fullName,
-        action: 'Successfully updated registry',
+        action: `Successfully updated registry ID ${userName}`,
       };
 
       await axios.post(`${API_URL}/audit-logs`, auditLogData, {
@@ -237,7 +237,7 @@ const Registry = ({ normalAccount, googleAccount }) => {
       const auditLogData = {
         userName,
         fullName,
-        action: 'Successfully updated registry',
+        action: `Successfully updated registry ID ${userName}`,
       };
 
       await axios.post(`${API_URL}/audit-logs`, auditLogData, {

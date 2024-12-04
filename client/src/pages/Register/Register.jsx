@@ -190,7 +190,7 @@ const Register = (normalAccount, googleAccount) => {
       const auditLogData = {
         userName,
         fullName,
-        action: `Created account by username ${userName}`,
+        action: `Created account by ID ${userName}`,
       };
 
       await axios.post(`${API_URL}/audit-logs`, auditLogData, {

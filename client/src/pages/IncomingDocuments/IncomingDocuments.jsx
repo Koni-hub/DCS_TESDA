@@ -94,7 +94,7 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
       const auditLogData = {
         userName,
         fullName,
-        action: `Received document by username ${userName}`,
+        action: `Received document by ID ${userName}`,
       };
 
       await axios.post(`${API_URL}/audit-logs`, auditLogData, {
@@ -137,7 +137,7 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
       const auditLogData = {
         userName,
         fullName,
-        action: `Declined document by username ${userName}`,
+        action: `Declined document by ID ${userName}`,
       };
       await axios.post(`${API_URL}/audit-logs`, auditLogData, {
         headers: {

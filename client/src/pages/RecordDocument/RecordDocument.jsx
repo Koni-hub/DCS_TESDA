@@ -257,7 +257,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
       const auditLogData = {
         userName,
         fullName,
-        action: `Created record document by username ${userName}`,
+        action: `Created record document by ID ${userName}`,
       };
 
       await axios.post(`${API_URL}/audit-logs`, auditLogData, {
@@ -321,7 +321,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
       const auditLogData = {
         userName,
         fullName,
-        action: `Updated record document by username ${userName}`,
+        action: `Updated record document by ID ${userName}`,
       };
 
       await axios.post(`${API_URL}/audit-logs`, auditLogData, {

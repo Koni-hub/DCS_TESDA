@@ -194,7 +194,7 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
       const auditLogData = {
         userName,
         fullName,
-        action: `Forwarded document by username ${userName}`,
+        action: `Forwarded document by ID ${userName}`,
       };
   
       await axios.post(`${API_URL}/audit-logs`, auditLogData, {
@@ -229,7 +229,7 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
       const auditLogData = {
         userName,
         fullName,
-        action: `Archived document types by username ${userName}`,
+        action: `Archived document types by ID ${userName}`,
       };
 
       await axios.post(`${API_URL}/audit-logs`, auditLogData, {
