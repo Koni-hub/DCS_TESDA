@@ -604,7 +604,7 @@ const OutboxDocs = ({ normalAccount, googleAccount }) => {
               <span className="close" onClick={() => setModalUpdate(false)}>
                 &times;
               </span>
-              <h2>Edit Record Document</h2>
+              <h2>Edit Document</h2>
               <form className="form" onSubmit={editRecDocument}>
                 <input
                   type="text"
@@ -692,7 +692,7 @@ const OutboxDocs = ({ normalAccount, googleAccount }) => {
                   )}
                 </div>
                 <button className="office-btn-update" type="submit">
-                  Update Record Document
+                  Update Document
                 </button>
               </form>
             </div>
