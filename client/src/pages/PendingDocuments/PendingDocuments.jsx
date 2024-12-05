@@ -203,6 +203,22 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
         fullName,
         action: `Forwarded document by ID ${userName}`,
       };
+
+      //  Create Doc Audit Log
+      const DocAuditLogData = {
+        document_id: currentDocId,
+        senderName: fullName,
+        receiver: recipient,
+        action: `ID ${userName} Forward document by forward to offices ${recipient}`,
+      }
+
+      console.log('Document Log Data', DocAuditLogData);
+
+      await axios.post(`${API_URL}/document_audits`, DocAuditLogData, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
   
       await axios.post(`${API_URL}/audit-logs`, auditLogData, {
         headers: {
