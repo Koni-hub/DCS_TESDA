@@ -17,12 +17,14 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [modalCreate, setModalCreate] = useState(false);
   const [modalUpdate, setModalUpdate] = useState(false);
+  const [modalView, setModalView] = useState(false);
   const [role, setRole] = useState(null);
   const [loggedInAccount, setLoggedInAccount] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [categories, setCategories] = useState([]);
   const [offices, setOffices] = useState([]);
   const [isSideDropDownOpen, setSideDropDownOpen] = useState(false);
+  const [viewDocs, setViewDocs] = useState([]);
 
   const handleDropdownSidebar = () => {
     setSideDropDownOpen(!isSideDropDownOpen);
@@ -260,10 +262,28 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
         action: `Created record document by ID ${userName}`,
       };
 
+      const documentId = response.data.recordDocument.id;
+
+      //  Create Doc Audit Log
+      const DocAuditLogData = {
+        document_id: documentId,
+        senderName: fullName,
+        receiver: recipient,
+        action: `Created record document by ID ${userName} and forward to offices ${recipient}`,
+      }
+
+      console.log('Document Log Data', DocAuditLogData);
+
       await axios.post(`${API_URL}/audit-logs`, auditLogData, {
         headers: {
           'Content-Type': 'application/json',
         },
+      });
+      
+      await axios.post(`${API_URL}/document_audits`, DocAuditLogData, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
       });
 
       console.log('Server response:', response);
@@ -363,6 +383,21 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
     setPreview('');
     setFile(null);
     setRecordId(null);
+  };
+
+  const handleToggleOpenDocsView = (docID) => {
+    console.log('modal ID:', docID);
+    setModalView(!modalView);
+    getViewDocsLog(docID);
+  }
+
+  const getViewDocsLog = async (docID) => {
+    try {
+      const response = await axios.get(`${API_URL}/document_audits/${docID}`);
+      setViewDocs(response.data);
+    } catch (error) {
+      console.log('Error fetching specific');
+    }
   };
 
   return (
@@ -614,6 +649,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                     <th>Mode</th>
                     <th>Description</th>
                     <th>Status</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -627,6 +663,14 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                         <td>{record_docs.mode}</td>
                         <td>{record_docs.description}</td>
                         <td>{record_docs.status}</td>
+                        <td>
+                          <button
+                            className="btn-view"
+                            onClick={() => handleToggleOpenDocsView(record_docs.id)}
+                          >
+                            View
+                          </button>
+                        </td>
                       </tr>
                     ))
                   ) : (
@@ -1005,6 +1049,49 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
             </form>
           </div>
         </div>
+      )}
+      {modalView && (
+        <div className="modal-office-lg">
+        <div className="overlay-lg" onClick={() => setModalView(false)}></div>
+        <div className="modal-content-office-lg">
+          <span className="close" onClick={() => setModalView(false)}>
+            &times;
+          </span>
+          <h1>View Document</h1>
+          <br />
+          {viewDocs.length > 0 ? (
+              <table>
+                <thead>
+                  <tr>
+                    <th>Sender Name</th>
+                    <th>Action</th>
+                    <th>Timestamp</th>
+                    <th>Receive By</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {viewDocs.map((doc, index) => (
+                    <tr key={index}>
+                      <td>{doc.senderName}</td>
+                      <td>{doc.action}</td>
+                      <td>{new Date(doc.timestamp).toLocaleString()}</td>
+                      <td>
+                        {doc.receiver.map((recipientId, i) => (
+                          <span key={i}>
+                            Recipient {recipientId}
+                            {i < doc.receiver.length - 1 && ', '}
+                          </span>
+                        ))}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p>No documents to display.</p>
+            )}
+        </div>
+      </div>
       )}
       <ToastContainer />
     </>
