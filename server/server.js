@@ -12,6 +12,7 @@ import RecordDocument from "./routes/recordDocumentRoutes.js";
 import session from "express-session";
 import fileUpload from "express-fileupload";
 import Recipient from "./routes/recipientRoutes.js";
+import DocAuditLogs from "./routes/DocumentAuditRoutes.js";
 
 // Associations
 import "./model/associations.js";
@@ -75,6 +76,7 @@ app.use("/offices", Office);
 app.use("/document-types", DocumentTypes);
 app.use("/record-docs", RecordDocument);
 app.use("/recipients", Recipient);
+app.use("/document_audits", DocAuditLogs);
 
 // Check Health
 app.get("/health", (_req, res) => res.status(200).send("OK"));
