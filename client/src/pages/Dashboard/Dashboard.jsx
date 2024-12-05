@@ -489,7 +489,7 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
                   <table>
                     <thead>
                       <tr>
-                        <th>UserID</th>
+                        <th>ID</th>
                         <th>Full Name</th>
                         <th>Action</th>
                         <th>Date</th>
@@ -524,7 +524,7 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
                   <table>
                     <thead>
                       <tr>
-                        <th>User</th>
+                        <th>ID</th>
                         <th>Full Name</th>
                         <th>Action</th>
                         <th>Date</th>
