@@ -1,5 +1,6 @@
 import Recipient from "./recipientModels.js";
 import RecordDocument from "./recordDocumentModels.js";
+import DocumentAuditLogs from "./documentAuditModels.js";
 
 // Define associations
 Recipient.belongsTo(RecordDocument, {
@@ -11,4 +12,9 @@ RecordDocument.hasMany(Recipient, {
   as: "recipients",
 });
 
-export { Recipient, RecordDocument };
+DocumentAuditLogs.belongsTo(RecordDocument, {
+  foreignKey: "document_id",
+  as: "document"
+});
+
+export { Recipient, RecordDocument, DocumentAuditLogs };
