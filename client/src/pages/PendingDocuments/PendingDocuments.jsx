@@ -244,24 +244,27 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
 
   // handle archive
   const handleArchive = async (id) => {
+    console.log('ID (Archived)', id);
     try {
-      const userName =
-        normalAccount?.username || googleAccount.profile.emails[0].value;
-      const fullName = normalAccount.fullname || null;
+      const userName = normalAccount?.username || googleAccount?.profile?.emails[0]?.value;
+      const fullName = normalAccount?.fullname || null;
+  
       await axios.put(`${API_URL}/recipients/${id}/archive`);
-      // Create Audit Log
+  
       const auditLogData = {
         userName,
         fullName,
-        action: `Archived document types by ID ${userName}`,
+        action: `Archived document with ID ${id}`,
       };
-
+  
       await axios.post(`${API_URL}/audit-logs`, auditLogData, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
+  
       setDocuments((docs) => docs.filter((doc) => doc.id !== id));
+  
       toast.success(
         'Document successfully archived, status set to "Archived".',
         toastConfig
@@ -269,7 +272,7 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
     } catch (error) {
       toast.error(
         `Error archiving document: ${
-          error.response?.data?.message || error.message
+          error.response?.data?.message || error.message || 'Unknown error'
         }`,
         toastConfig
       );
@@ -621,7 +624,7 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
                           </button>
                           <button
                             className="btn-archive"
-                            onClick={() => handleArchive(doc.id)}
+                            onClick={() => handleArchive(doc.document.id)}
                           >
                             Archive
                           </button>
