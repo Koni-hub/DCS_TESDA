@@ -262,6 +262,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
         action: `Created record document by ID ${userName}`,
       };
 
+      console.log('Document ID', response.data);
       const documentId = response.data.recordDocument.id;
 
       //  Create Doc Audit Log

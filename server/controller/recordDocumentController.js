@@ -151,6 +151,7 @@ export const addRecordDocument = async (req, res) => {
         .status(201)
         .json({
           msg: "Record Document Created Successfully and forwarded to recipients",
+          recordDocument: recordDocument
         });
     } catch (error) {
       console.error(error);
