@@ -220,16 +220,25 @@ export const archiveDoc = async (req, res) => {
   const documentId = req.params.id;
 
   try {
-    await Document.update(
+    const documentUpdate = await Document.update(
       { status: "Archived" },
       { where: { id: documentId } }
     );
-    await Recipient.update(
+    console.log("Document update result:", documentUpdate);
+
+    const recipientUpdate = await Recipient.update(
       { status: "Archived" },
       { where: { document_id: documentId, status: "Pending" } }
     );
-    res.json({ message: "Document and request has been archived." });
+    console.log("Recipient update result:", recipientUpdate);
+
+    if (documentUpdate[0] === 0 && recipientUpdate[0] === 0) {
+      return res.status(404).json({ error: "Document or recipient not found or already archived." });
+    }
+
+    res.json({ message: "Document and request have been archived." });
   } catch (error) {
+    console.error("Error archiving document:", error);
     res.status(500).json({ error: "Error archiving document", error });
   }
 };
