@@ -1,4 +1,6 @@
+import {Op, Sequelize } from "sequelize";
 import DocAuditLog from "../model/documentAuditModels.js";
+import Office from "../model/officeModels.js";
 
 export const getAllDocAuditLogs = async (req, res) => {
   try {
@@ -48,7 +50,29 @@ export const findDocLogsByID = async (req, res) => {
       return res.status(404).json({ error: "No logs found for this document." });
     }
 
-    res.status(200).json(logs);
+    const receiverIds = logs[0].receiver;
+    
+    const offices = await Office.findAll({
+      where: {
+        id: {
+          [Op.in]: receiverIds,
+        }
+      },
+      attributes: ['name', 'id'],
+    });
+
+    const result = logs.map(log => {
+      const officeNames = offices
+        .filter(office => receiverIds.includes(String(office.id)))
+        .map(office => office.name);
+
+      return {
+        ...log.toJSON(),
+        offices: officeNames,
+      };
+    });
+
+    res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
