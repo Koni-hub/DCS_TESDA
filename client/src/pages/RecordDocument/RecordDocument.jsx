@@ -1066,7 +1066,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                   <tr>
                     <th>Sender Name</th>
                     <th>Action</th>
-                    <th>Timestamp</th>
+                    <th>Date & Time</th>
                     <th>Receive By</th>
                   </tr>
                 </thead>
@@ -1077,9 +1077,10 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                       <td>{doc.action}</td>
                       <td>{new Date(doc.timestamp).toLocaleString()}</td>
                       <td>
-                        {doc.receiver.map((recipientId, i) => (
+                        {doc.offices.map((office, i) => (
                           <span key={i}>
-                            Recipient {recipientId}
+                            {office}
+                            <br />
                             {i < doc.receiver.length - 1 && ', '}
                           </span>
                         ))}
