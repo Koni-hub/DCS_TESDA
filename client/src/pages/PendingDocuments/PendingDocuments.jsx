@@ -9,7 +9,7 @@ import DOMPurify from 'dompurify';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const PendingDocuments = ({ normalAccount, googleAccount }) => {
+const PendingDocuments = ({ normalAccount }) => {
   document.title = 'Incoming Pending Document';
   const [documents, setDocuments] = useState([]);
   const [role, setRole] = useState(null);
@@ -22,14 +22,11 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState('');
 
-  // Function to load the selected image
   const loadImage = (e) => {
     const image = e.target.files[0];
-    console.log('Selected Image:', image);
     if (image) {
       setFile(image);
       const previewUrl = URL.createObjectURL(image);
-      console.log('Preview URL:', previewUrl);
       setPreview(previewUrl);
     }  else {
       console.error('No file selected');
@@ -42,7 +39,6 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
 
   const navigate = useNavigate();
 
-  // User authentication and role management
   useEffect(() => {
     const getUsernameForData = async () => {
       if (!normalAccount?.email) {
@@ -54,20 +50,15 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
         const response = await axios.get(
           `${API_URL}/account/${normalAccount.email}`
         );
-        console.log(normalAccount.username);
         setLoggedInAccount(response.data);
         setRole(response.data.createdBy);
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
     };
-
-    console.log('Account: ', loggedInAccount);
-
     getUsernameForData();
   }, [normalAccount]);
 
-  // Toast configuration
   const toastConfig = {
     position: 'top-right',
     autoClose: 5000,
@@ -79,7 +70,6 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
     theme: 'light',
   };
 
-  // Role-based access control
   useEffect(() => {
     if (role && role !== 'Admin' && role !== 'System') {
       navigate('/forbidden');
@@ -87,16 +77,15 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
   }, [role, navigate]);
 
   const officeId = normalAccount.origin;
-  console.log('Office ID: ', officeId);
+
+  const fetchPendingDocuments = async () => {
+    const response = await axios.get(
+      `${API_URL}/recipients/pending?officeId=${officeId}`
+    );
+    setDocuments(response.data);
+  };
 
   useEffect(() => {
-    const fetchPendingDocuments = async () => {
-      const response = await axios.get(
-        `${API_URL}/recipients/pending?officeId=${officeId}`
-      );
-      console.log('Pending Document:', response.data);
-      setDocuments(response.data);
-    };
     fetchPendingDocuments();
   }, [officeId]);
 
@@ -140,7 +129,7 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
       const response = await axios.get(`${API_URL}/offices`);
       setOffices(response.data);
     } catch (error) {
-      console.log('Error fetching offices', error);
+      console.error('Error fetching offices', error);
     }
   };
 
@@ -148,7 +137,6 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
     getAllOffice();
   }, []);
 
-  // handle forward
   const handleForward = async (e) => {
     e.preventDefault();
   
@@ -165,7 +153,7 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
       return;
     }
   
-    const userName = normalAccount?.username || googleAccount.profile.emails[0].value;
+    const userName = normalAccount?.username || '';
     const senderEmail = normalAccount.email;
     const fullName = normalAccount.fullname || null;
   
@@ -183,9 +171,6 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
     if (file) {
       formData.append('file', file);
     }
-
-    console.log('Current ID:', currentDocId);
-    console.log('Recipient ID: ', recipientId);
   
     try {
       await axios.post(
@@ -204,15 +189,12 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
         action: `Forwarded document by ID ${userName}`,
       };
 
-      //  Create Doc Audit Log
       const DocAuditLogData = {
         document_id: currentDocId,
         senderName: fullName,
         receiver: recipient,
         action: `ID ${userName} Forward document by forward to offices ${recipient}`,
       }
-
-      console.log('Document Log Data', DocAuditLogData);
 
       await axios.post(`${API_URL}/document_audits`, DocAuditLogData, {
         headers: {
@@ -242,11 +224,9 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
     }
   };
 
-  // handle archive
   const handleArchive = async (id) => {
-    console.log('ID (Archived)', id);
     try {
-      const userName = normalAccount?.username || googleAccount?.profile?.emails[0]?.value;
+      const userName = normalAccount?.username || '';
       const fullName = normalAccount?.fullname || null;
   
       await axios.put(`${API_URL}/recipients/${id}/archive`);
@@ -279,7 +259,6 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
     }
   };
 
-  // Event handlers
   const handleMenuItemClick = (index) => {
     setActiveMenuItem(index);
   };
@@ -289,7 +268,6 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
     sidebar.classList.toggle('hide');
   };
 
-  // Search functionality
   const handleSearchSubmit = (event) => {
     event.preventDefault();
     filterAccountList(searchQuery);
@@ -303,12 +281,12 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
 
   const filterAccountList = (query) => {
     if (!query.trim()) {
-      // getAllRecordDocument();
+      fetchPendingDocuments();
     } else {
-      // const filteredRecordDocs = recordDocument.filter(recdocs =>
-      //     recdocs.title.toLowerCase().includes(query.toLowerCase())
-      // );
-      // setRecordDocuments(filteredRecordDocs);
+      const filteredRecordDocs = documents.filter(recdocs =>
+          recdocs.document.title.toLowerCase().includes(query.toLowerCase())
+      );
+      setDocuments(filteredRecordDocs);
     }
   };
 
@@ -333,13 +311,10 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
     navigate('/');
   };
 
-  console.log('Document:', documents);
-
   const [openDocs, setOpenDocs] = useState(false);
   const [viewDocs, setViewDocs] = useState([]);
 
   const handleToggleOpenDocs = (docID) => {
-    console.log('modal ID:', docID);
     setOpenDocs(!openDocs);
     getViewDocs(docID);
   };
@@ -349,15 +324,12 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
       const response = await axios.get(`${API_URL}/record-docs/${docID}`);
       setViewDocs(response.data);
     } catch (error) {
-      console.log('Error fetching specific');
+      console.error('Error fetching specific');
     }
   };
 
-  console.log('Response ViewDocs: ', viewDocs);
-
   return (
     <>
-      {/* SIDEBAR */}
       <section id="sidebar">
         <Link to="https://e-tesda.gov.ph/">
           <a href="https://e-tesda.gov.ph/" className="brand">
@@ -518,7 +490,6 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
           )}
         </ul>
       </section>
-      {/* SIDEBAR */}
       <section id="content">
         <nav>
           <i className="bx bx-menu" onClick={handleToggleSidebar}></i>
@@ -542,23 +513,10 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
           <div className="container-logut-drop-down" onClick={toggleDropdown}>
             <div className="profile-name">
               <div className="profile-content-icon">
-                {googleAccount &&
-                googleAccount.profile &&
-                googleAccount.profile.photos &&
-                googleAccount.profile.photos.length > 0 ? (
-                  <img
-                    src={googleAccount.profile.photos[0].value}
-                    width={35}
-                    height={35}
-                  />
-                ) : (
-                  <i id="icon" className="bx bx-user"></i>
-                )}
+                <i id="icon" className="bx bx-user"></i>
               </div>
               <div className="profile-content-name">
-                {loggedInAccount?.account_username ||
-                  googleAccount?.profile?.displayName ||
-                  ''}
+                {loggedInAccount?.account_username ||''}
               </div>
               <div className="profile-content-drop-down-menu">
                 <i
@@ -580,8 +538,6 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
             )}
           </div>
         </nav>
-        {/* NAVBAR */}
-        {/* MAIN */}
         <main>
           <div className="incoming-docs-section">
             <h1>Pending Documents</h1>
@@ -750,7 +706,6 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
                     onChange={(e) => setRemarks(e.target.value)}
                     required
                   />
-                  {/* Attachment */}
                   <div className="doc-image">
                     <label>Attachment</label>
                     <span>*</span> <br />
@@ -782,7 +737,6 @@ const PendingDocuments = ({ normalAccount, googleAccount }) => {
             </div>
           </>
         )}
-        {/* MAIN */}
       </section>
       <ToastContainer />
     </>
