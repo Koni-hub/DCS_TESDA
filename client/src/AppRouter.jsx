@@ -83,7 +83,7 @@ function AppRoutes() {
       border: '5px solid #f3f3f3',
       borderTop: '5px solid #3498db',
       borderRadius: '50%',
-      animation: 'spin 1s linear infinite',
+      animation: 'spin 0.5s linear infinite',
       marginBottom: '20px',
     },
   };
