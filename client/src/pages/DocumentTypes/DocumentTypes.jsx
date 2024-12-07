@@ -1,4 +1,3 @@
-import './DocumentTypes.css';
 /* eslint-disable react/prop-types */
 import './DocumentTypes.css';
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,7 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DOMPurify from 'dompurify';
 
-const DocumentTypes = ({ normalAccount, googleAccount }) => {
+const DocumentTypes = ({ normalAccount }) => {
   const [activeMenuItem, setActiveMenuItem] = useState(0);
   const [documentTypes, setDocumentTypes] = useState([]);
   const [loggedInAccount, setLoggedInAccount] = useState(null);
@@ -25,20 +24,16 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
     setSideDropDownOpen(!isSideDropDownOpen);
   };
 
-  // Form data state
   const [formData, setFormData] = useState({
     name: '',
   });
 
-  // Form handling
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
   };
-
-  // Form validation
 
   const validateInputs = () => {
     const { name } = formData;
@@ -54,14 +49,12 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
     return true;
   };
 
-  // Reset form data
   const resetFormData = () => {
     setFormData({
       name: '',
     });
   };
 
-  // Toast configuration
   const toastConfig = {
     position: 'top-right',
     autoClose: 5000,
@@ -75,7 +68,6 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
 
   const navigate = useNavigate();
 
-  // User authentication and role management
   useEffect(() => {
     const getUsernameForData = async () => {
       if (!normalAccount?.email) {
@@ -97,14 +89,12 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
     getUsernameForData();
   }, [normalAccount]);
 
-  // Role-based access control
   useEffect(() => {
     if (role && role !== 'Admin' && role !== 'System') {
       navigate('/forbidden');
     }
   }, [role, navigate]);
 
-  // Initial data loading
   useEffect(() => {
     getAllDocumentTypes();
   }, []);
@@ -122,7 +112,6 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
     getAllDocumentTypes;
   }, []);
 
-  // Event handlers
   const handleMenuItemClick = (index) => {
     setActiveMenuItem(index);
   };
@@ -131,8 +120,6 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
     const sidebar = document.getElementById('sidebar');
     sidebar.classList.toggle('hide');
   };
-
-  // Toogle Profile Dropdown
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -153,10 +140,6 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  // -- END
-
-  // Logout
-
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.setItem('loggedIn', false);
@@ -165,9 +148,6 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
     navigate('/');
   };
 
-  // -- END
-
-  // Search functionality
   const handleSearchSubmit = (event) => {
     event.preventDefault();
     filterAccountList(searchQuery);
@@ -203,7 +183,7 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
 
     try {
       const userName =
-        normalAccount?.username || googleAccount.profile.emails[0].value;
+        normalAccount?.username || '';
       const fullName = normalAccount.fullname || null;
 
       const response = await axios.post(
@@ -245,7 +225,6 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
     }
   };
 
-  // Modal functions
   const toggleModalUpdate = async (id) => {
     if (id) {
       try {
@@ -263,7 +242,6 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
     setModalUpdate(!modalUpdate);
   };
 
-  // Form submission for updating
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
 
@@ -278,7 +256,7 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
 
     try {
       const userName =
-        normalAccount?.username || googleAccount.profile.emails[0].value;
+        normalAccount?.username || '';
       const fullName = normalAccount.fullname || null;
 
       const response = await axios.patch(
@@ -287,7 +265,6 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
       );
 
       if (response.data) {
-        // Create Audit Log
         const auditLogData = {
           userName,
           fullName,
@@ -325,7 +302,6 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
 
   return (
     <>
-      {/* SIDEBAR */}
       <section id="sidebar">
         <Link to="https://e-tesda.gov.ph/">
           <a href="https://e-tesda.gov.ph/" className="brand">
@@ -486,9 +462,7 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
           )}
         </ul>
       </section>
-      {/* SIDEBAR */}
       <section id="content">
-        {/* NAVBAR */}
         <nav>
           <i className="bx bx-menu" onClick={handleToggleSidebar}></i>
           <form
@@ -511,23 +485,10 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
           <div className="container-logut-drop-down" onClick={toggleDropdown}>
             <div className="profile-name">
               <div className="profile-content-icon">
-                {googleAccount &&
-                googleAccount.profile &&
-                googleAccount.profile.photos &&
-                googleAccount.profile.photos.length > 0 ? (
-                  <img
-                    src={googleAccount.profile.photos[0].value}
-                    width={35}
-                    height={35}
-                  />
-                ) : (
-                  <i id="icon" className="bx bx-user"></i>
-                )}
+                <i id="icon" className="bx bx-user"></i>
               </div>
               <div className="profile-content-name">
-                {loggedInAccount?.account_username ||
-                  googleAccount?.profile?.displayName ||
-                  ''}
+                {loggedInAccount?.account_username ||''}
               </div>
               <div className="profile-content-drop-down-menu">
                 <i
@@ -549,9 +510,6 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
             )}
           </div>
         </nav>
-        {/* NAVBAR */}
-
-        {/* MAIN */}
         <main>
           <div className="document-types-section">
             <div className="display-status-document-types">
@@ -598,7 +556,6 @@ const DocumentTypes = ({ normalAccount, googleAccount }) => {
             </div>
           </div>
         </main>
-        {/* MAIN */}
       </section>
       {modalCreate && (
         <div className="modal-document-types">
