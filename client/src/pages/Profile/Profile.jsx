@@ -8,7 +8,7 @@ import { API_URL } from '../../config.js';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const Profile = ({ normalAccount, googleAccount }) => {
+const Profile = ({ normalAccount }) => {
   const [loggedInAccount, setLoggedInAccount] = useState(null);
   const [formData, setFormData] = useState({
     account_firstName: '',
@@ -151,23 +151,10 @@ const Profile = ({ normalAccount, googleAccount }) => {
         <div className="container-logut-drop-down" onClick={toggleDropdown}>
           <div className="profile-name">
             <div className="profile-content-icon">
-              {googleAccount &&
-              googleAccount?.profile &&
-              googleAccount?.profile.photos &&
-              googleAccount?.profile.photos.length > 0 ? (
-                <img
-                  src={googleAccount?.profile.photos[0].value}
-                  width={35}
-                  height={35}
-                />
-              ) : (
-                <i id="icon" className="bx bx-user"></i>
-              )}
+              <i id="icon" className="bx bx-user"></i>
             </div>
             <div className="profile-content-name">
-              {loggedInAccount?.account_username ||
-                googleAccount?.profile?.displayName ||
-                ''}
+              {loggedInAccount?.account_username || ''}
             </div>
             <div className="profile-content-drop-down-menu">
               <i
@@ -205,8 +192,7 @@ const Profile = ({ normalAccount, googleAccount }) => {
                         name="account_firstName"
                         required
                         value={
-                          formData.account_firstName ||
-                          googleAccount?.profile.name.givenName
+                          formData.account_firstName || ''
                         }
                         onChange={handleChange}
                       />
@@ -219,8 +205,7 @@ const Profile = ({ normalAccount, googleAccount }) => {
                         name="account_lastName"
                         required
                         value={
-                          formData.account_lastName ||
-                          googleAccount?.profile.name.familyName
+                          formData.account_lastName || ''
                         }
                         onChange={handleChange}
                       />
