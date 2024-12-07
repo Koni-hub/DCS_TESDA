@@ -14,7 +14,6 @@ const Office = ({ normalAccount, googleAccount }) => {
 
   const navigate = useNavigate();
   
-  // State management
   const [offices, setOffices] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [modalCreate, setModalCreate] = useState(false);
@@ -25,12 +24,10 @@ const Office = ({ normalAccount, googleAccount }) => {
   const [activeMenuItem, setActiveMenuItem] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  // Form data state
   const [formData, setFormData] = useState({
     name: ''
   });
 
-  // Toast configuration
   const toastConfig = {
     position: 'top-right',
     autoClose: 5000,
@@ -42,7 +39,6 @@ const Office = ({ normalAccount, googleAccount }) => {
     theme: 'light',
   };
 
-  // API calls
   const getAllOffices = async () => {
     try {
       const response = await axios.get(`${API_URL}/offices`);
@@ -52,7 +48,6 @@ const Office = ({ normalAccount, googleAccount }) => {
     }
   };
 
-  // User authentication and role management
   useEffect(() => {
     const getUsernameForData = async () => {
       if (!normalAccount?.email) {
@@ -80,19 +75,16 @@ const Office = ({ normalAccount, googleAccount }) => {
     setSideDropDownOpen(!isSideDropDownOpen);
   };
 
-  // Role-based access control
   useEffect(() => {
     if (role && role !== 'Admin' && role !== 'System') {
       navigate('/forbidden');
     }
   }, [role, navigate]);
 
-  // Initial data loading
   useEffect(() => {
     getAllOffices();
   }, []);
 
-  // Event handlers
   const handleMenuItemClick = (index) => {
     setActiveMenuItem(index);
   };
@@ -127,7 +119,6 @@ const Office = ({ normalAccount, googleAccount }) => {
     navigate('/');
   };
 
-  // Search functionality
   const handleSearchSubmit = (event) => {
     event.preventDefault();
     filterAccountList(searchQuery);
@@ -150,7 +141,6 @@ const Office = ({ normalAccount, googleAccount }) => {
     }
   };
 
-  // Form handling
   const handleChange = (e) => {
     setFormData(prev => ({
       ...prev,
@@ -158,12 +148,10 @@ const Office = ({ normalAccount, googleAccount }) => {
     }));
   };
 
-  // Modal functions
   const toggleModalUpdate = async (id) => {
     if (id) {
       try {
         const response = await axios.get(`${API_URL}/offices/${id}`);
-        console.log('Selected Office Data', response.data);
         setSelectedOfficeID(response.data);
         setFormData({
           name: response.data.name || '',
@@ -176,7 +164,6 @@ const Office = ({ normalAccount, googleAccount }) => {
     setModalUpdate(!modalUpdate);
   };
 
-  // Form validation
   const validateInputs = () => {
     const { 
       name
@@ -190,7 +177,6 @@ const Office = ({ normalAccount, googleAccount }) => {
     return true;
   };
 
-  // Reset form data
   const resetFormData = () => {
     setFormData({
       name: '',
@@ -208,9 +194,6 @@ const Office = ({ normalAccount, googleAccount }) => {
       name: formData.name,
     };
   
-    console.log('Payload being sent:', createPayload);
-    console.log('API URL:', `${API_URL}/offices`);
-  
     try {
       const userName = normalAccount?.username || googleAccount.profile.emails[0].value;
       const fullName = normalAccount.fullname || null;
@@ -218,7 +201,6 @@ const Office = ({ normalAccount, googleAccount }) => {
       const response = await axios.post(`${API_URL}/offices`, createPayload);
   
       if (response.data) {
-        // Create Audit Log
         const auditLogData = {
           userName,
           fullName,
@@ -247,7 +229,6 @@ const Office = ({ normalAccount, googleAccount }) => {
   };
   
 
-  // Form submission for updating
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
     
@@ -270,7 +251,6 @@ const Office = ({ normalAccount, googleAccount }) => {
       );
 
       if (response.data) {
-        // Create Audit Log
         const auditLogData = {
           userName,
           fullName,
@@ -308,7 +288,6 @@ const Office = ({ normalAccount, googleAccount }) => {
 
   return (
     <>
-      {/* SIDEBAR */}
       <section id="sidebar">
         <Link to="https://e-tesda.gov.ph/">
           <a href="https://e-tesda.gov.ph/" className="brand">
@@ -469,10 +448,8 @@ const Office = ({ normalAccount, googleAccount }) => {
           )}
         </ul>
       </section>
-      {/* SIDEBAR */}
 
       <section id="content">
-        {/* NAVBAR */}
         <nav>
           <i className="bx bx-menu" onClick={handleToggleSidebar}></i>
           <form
@@ -533,9 +510,6 @@ const Office = ({ normalAccount, googleAccount }) => {
             )}
           </div>
         </nav>
-        {/* NAVBAR */}
-
-        {/* MAIN */}
         <main>
           <div className="office-section">
             <div className="display-status-office">
@@ -582,9 +556,7 @@ const Office = ({ normalAccount, googleAccount }) => {
             </div>
           </div>
         </main>
-        {/* MAIN */}
       </section>
-      {/* Create Office Modal */}
       {modalCreate && (
         <div className="modal-office">
           <div className="overlay"></div>
@@ -605,7 +577,6 @@ const Office = ({ normalAccount, googleAccount }) => {
           </div>
         </div>
       )}
-      {/* Update Office Modal */}
       {modalUpdate && (
         <div className="modal-office">
           <div className="overlay"></div>

@@ -43,33 +43,6 @@
     color: var(--light);
   }
   
-  /* Notification Badge */
-  .notification-container {
-    position: relative;
-    display: inline-block;
-  }
-  
-  .notification-container i {
-    position: relative;
-    right: 25px;
-    font-size: 24px;
-  }
-  
-  .notification-count {
-    position: absolute;
-    top: -10px;
-    right: -1px;
-    background: var(--secondary);
-    color: white;
-    border-radius: 50%;
-    padding: 3px 6px;
-    font-size: 12px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
   /* Table */
   .office-table {
       margin-top: 75px;
