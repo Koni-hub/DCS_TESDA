@@ -10,7 +10,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from 'sweetalert2'
 
-const IncomingDocuments = ({ normalAccount, googleAccount }) => {
+const IncomingDocuments = ({ normalAccount }) => {
   document.title = 'Incoming To Receive Documents';
   const [documents, setDocuments] = useState([]);
   const [role, setRole] = useState(null);
@@ -80,7 +80,7 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
   const handleReceive = async (id) => {
     try {
       const userName =
-        normalAccount?.username || googleAccount.profile.emails[0].value;
+        normalAccount?.username || '';
       const fullName = normalAccount.fullname || null;
 
       await axios.put(`${API_URL}/recipients/${id}/receive`);
@@ -122,7 +122,7 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
         return;
       }
       const userName =
-        normalAccount?.username || googleAccount.profile.emails[0].value;
+        normalAccount?.username || '';
       const fullName = normalAccount.fullname || null;
       await axios.put(`${API_URL}/recipients/${id}/decline`, reason);  
       const auditLogData = {
@@ -216,7 +216,6 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
 
   return (
     <>
-      {/* SIDEBAR */}
       <section id="sidebar">
         <Link to="https://e-tesda.gov.ph/">
           <a href="https://e-tesda.gov.ph/" className="brand">
@@ -377,7 +376,6 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
           )}
         </ul>
       </section>
-      {/* SIDEBAR */}
       <section id="content">
         <nav>
           <i className="bx bx-menu" onClick={handleToggleSidebar}></i>
@@ -401,23 +399,10 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
           <div className="container-logut-drop-down" onClick={toggleDropdown}>
             <div className="profile-name">
               <div className="profile-content-icon">
-                {googleAccount &&
-                googleAccount.profile &&
-                googleAccount.profile.photos &&
-                googleAccount.profile.photos.length > 0 ? (
-                  <img
-                    src={googleAccount.profile.photos[0].value}
-                    width={35}
-                    height={35}
-                  />
-                ) : (
-                  <i id="icon" className="bx bx-user"></i>
-                )}
+                <i id="icon" className="bx bx-user"></i>
               </div>
               <div className="profile-content-name">
-                {loggedInAccount?.account_username ||
-                  googleAccount?.profile?.displayName ||
-                  ''}
+                {loggedInAccount?.account_username ||''}
               </div>
               <div className="profile-content-drop-down-menu">
                 <i
@@ -439,8 +424,6 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
             )}
           </div>
         </nav>
-        {/* NAVBAR */}
-        {/* MAIN */}
         <main>
           <div className="incoming-docs-section">
             <h1>Incoming Documents</h1>
@@ -546,7 +529,6 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
             </div>
           </>
         )}
-        {/* MAIN */}
       </section>
       <ToastContainer />
     </>
