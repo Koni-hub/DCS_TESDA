@@ -9,7 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DOMPurify from 'dompurify';
 
-const Office = ({ normalAccount, googleAccount }) => {
+const Office = ({ normalAccount }) => {
   document.title = 'Office Management';
 
   const navigate = useNavigate();
@@ -195,7 +195,7 @@ const Office = ({ normalAccount, googleAccount }) => {
     };
   
     try {
-      const userName = normalAccount?.username || googleAccount.profile.emails[0].value;
+      const userName = normalAccount?.username || '';
       const fullName = normalAccount.fullname || null;
 
       const response = await axios.post(`${API_URL}/offices`, createPayload);
@@ -242,7 +242,7 @@ const Office = ({ normalAccount, googleAccount }) => {
     }
 
     try {
-      const userName = normalAccount?.username || googleAccount.profile.emails[0].value;
+      const userName = normalAccount?.username || '';
       const fullName = normalAccount.fullname || null;
       
       const response = await axios.patch(
@@ -472,23 +472,10 @@ const Office = ({ normalAccount, googleAccount }) => {
           <div className="container-logut-drop-down" onClick={toggleDropdown}>
             <div className="profile-name">
               <div className="profile-content-icon">
-                {googleAccount &&
-                googleAccount.profile &&
-                googleAccount.profile.photos &&
-                googleAccount.profile.photos.length > 0 ? (
-                  <img
-                    src={googleAccount.profile.photos[0].value}
-                    width={35}
-                    height={35}
-                  />
-                ) : (
-                  <i id="icon" className="bx bx-user"></i>
-                )}
+                <i id="icon" className="bx bx-user"></i>
               </div>
               <div className="profile-content-name">
-                {loggedInAccount?.account_username ||
-                  googleAccount?.profile?.displayName ||
-                  ''}
+                {loggedInAccount?.account_username ||''}
               </div>
               <div className="profile-content-drop-down-menu">
                 <i

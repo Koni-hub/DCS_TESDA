@@ -2,14 +2,10 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import * as jose from 'jose';
 
-// Pages
 import ProtectedRoutes from './utils/ProtectedRoutes.jsx';
 import Dashboard from './pages/Dashboard/Dashboard.jsx';
 import Document from './pages/Document/Document.jsx';
-import Notification from './pages/Notification/Notification.jsx';
-import ViewDocument from './pages/ViewDocuments/ViewDocument.jsx';
 import Profile from './pages/Profile/Profile.jsx';
-import RejectedDocuments from './pages/RejectedDocument/RejectedDocuments.jsx';
 import Registry from './pages/Registry/Registry.jsx';
 import Office from './pages/Office/Office.jsx';
 import Account from './pages/Account/Account.jsx';
@@ -19,17 +15,13 @@ import IncomingDocuments from './pages/IncomingDocuments/IncomingDocuments.jsx';
 import PendingDocuments from './pages/PendingDocuments/PendingDocuments.jsx';
 import ArchiveDocs from './pages/ArchiveDocs/ArchiveDocs.jsx';
 import OutboxDocs from './pages/OutboxDocs/OutboxDocs.jsx';
-import Inactive from './pages/Inactive/Inactive.jsx';
 
-// Auth Pages
 import Login from './pages/Login/Login.jsx';
 import Register from './pages/Register/Register.jsx';
 
-// Error Pages
 import NotFound from './pages/NotFound/NotFound.jsx';
 import Forbidden from './pages/Unauthorize/Forbidden.jsx';
-
-import { API_URL } from './config.js';
+import Inactive from './pages/Inactive/Inactive.jsx';
 
 function AppRoutes() {
   const [accounts, setAccounts] = useState({
@@ -38,54 +30,24 @@ function AppRoutes() {
   });
   const [loading, setLoading] = useState(true);
 
-  async function getGoogleInfo() {
-    try {
-      const response = await fetch(`${API_URL}/auth/login/success`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (response.status === 200) {
-        console.log(
-          'A data of the google has been authorized fetch',
-          response.status
-        );
-        const data = await response.json();
-        return data.user;
-      }
-      if (response.status === 401) {
-        console.log('Unauthorized Data fetch yet', response.status);
-      } else {
-        console.error('Failed to fetch google data:', response.status);
-        return null;
-      }
-    } catch (error) {
-      console.error('Error fetching google data:', error);
-      return null;
-    }
-  }
 
   const getNormalAccount = async () => {
     try {
       const storedTokenAccount = localStorage.getItem('token');
       if (!storedTokenAccount) {
-        console.log('Token not found in localStorage');
+        console.error('Token not found in localStorage');
         return null;
       }
 
       const decode = jose.decodeJwt(storedTokenAccount);
       if (!decode) {
-        console.log('Decoding JWT returned undefined');
+        console.error('Decoding JWT returned undefined');
         return null;
       }
 
       return decode;
     } catch (error) {
-      console.log('Error decoding JWT Token', error);
+      console.error('Error decoding JWT Token', error);
       return null;
     }
   };
@@ -94,31 +56,53 @@ function AppRoutes() {
     const fetchData = async () => {
       setLoading(true);
 
-      const googleData = await getGoogleInfo();
       const normalAccountData = await getNormalAccount();
 
       setAccounts({
-        googleAccount: googleData,
         normalAccount: normalAccountData,
       });
 
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500)
     };
 
     fetchData();
   }, []);
 
+  const styles = {
+    container: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100vh',
+    },
+    spinner: {
+      width: '50px',
+      height: '50px',
+      border: '5px solid #f3f3f3',
+      borderTop: '5px solid #3498db',
+      borderRadius: '50%',
+      animation: 'spin 1s linear infinite',
+      marginBottom: '20px',
+    },
+  };
+
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div style={styles.container}>
+        <div style={styles.spinner}></div>
+        <h1>Loading...</h1>
+      </div>
+    );
   }
 
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public Routes */}
         <Route path="/" element={<Login />} />
 
-        {/* Protected Routes */}
         <Route element={<ProtectedRoutes />}>
           <Route
             path="/register"
@@ -143,7 +127,6 @@ function AppRoutes() {
             element={
               <Account
                 normalAccount={accounts.normalAccount}
-                googleAccount={accounts.googleAccount}
               />
             }
           />
@@ -179,7 +162,6 @@ function AppRoutes() {
             element={
               <OutboxDocs
                 normalAccount={accounts.normalAccount}
-                googleAccount={accounts.googleAccount}
               />
             }
           />
@@ -188,7 +170,6 @@ function AppRoutes() {
             element={
               <ArchiveDocs
                 normalAccount={accounts.normalAccount}
-                googleAccount={accounts.googleAccount}
               />
             }
           />
@@ -223,33 +204,6 @@ function AppRoutes() {
             path="/registry"
             element={
               <Registry
-                normalAccount={accounts.normalAccount}
-                googleAccount={accounts.googleAccount}
-              />
-            }
-          />
-          <Route
-            path="/rejected-docs"
-            element={
-              <RejectedDocuments
-                normalAccount={accounts.normalAccount}
-                googleAccount={accounts.googleAccount}
-              />
-            }
-          />
-          <Route
-            path="/viewDocument/:No"
-            element={
-              <ViewDocument
-                normalAccount={accounts.normalAccount}
-                googleAccount={accounts.googleAccount}
-              />
-            }
-          />
-          <Route
-            path="/notification"
-            element={
-              <Notification
                 normalAccount={accounts.normalAccount}
                 googleAccount={accounts.googleAccount}
               />
