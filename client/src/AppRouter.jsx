@@ -4,7 +4,6 @@ import * as jose from 'jose';
 
 import ProtectedRoutes from './utils/ProtectedRoutes.jsx';
 import Dashboard from './pages/Dashboard/Dashboard.jsx';
-import Document from './pages/Document/Document.jsx';
 import Profile from './pages/Profile/Profile.jsx';
 import Registry from './pages/Registry/Registry.jsx';
 import Office from './pages/Office/Office.jsx';
@@ -109,7 +108,6 @@ function AppRoutes() {
             element={
               <Register
                 normalAccount={accounts.normalAccount}
-                googleAccount={accounts.googleAccount}
               />
             }
           />
@@ -118,7 +116,6 @@ function AppRoutes() {
             element={
               <Dashboard
                 normalAccount={accounts.normalAccount}
-                googleAccount={accounts.googleAccount}
               />
             }
           />
@@ -135,7 +132,6 @@ function AppRoutes() {
             element={
               <Office
                 normalAccount={accounts.normalAccount}
-                googleAccount={accounts.googleAccount}
               />
             }
           />
@@ -144,7 +140,6 @@ function AppRoutes() {
             element={
               <IncomingDocuments
                 normalAccount={accounts.normalAccount}
-                googleAccount={accounts.googleAccount}
               />
             }
           />
@@ -153,7 +148,6 @@ function AppRoutes() {
             element={
               <PendingDocuments
                 normalAccount={accounts.normalAccount}
-                googleAccount={accounts.googleAccount}
               />
             }
           />
@@ -178,7 +172,6 @@ function AppRoutes() {
             element={
               <DocumentTypes
                 normalAccount={accounts.normalAccount}
-                googleAccount={accounts.googleAccount}
               />
             }
           />
@@ -187,16 +180,6 @@ function AppRoutes() {
             element={
               <RecordDocument
                 normalAccount={accounts.normalAccount}
-                googleAccount={accounts.googleAccount}
-              />
-            }
-          />
-          <Route
-            path="/document"
-            element={
-              <Document
-                normalAccount={accounts.normalAccount}
-                googleAccount={accounts.googleAccount}
               />
             }
           />
@@ -205,7 +188,6 @@ function AppRoutes() {
             element={
               <Registry
                 normalAccount={accounts.normalAccount}
-                googleAccount={accounts.googleAccount}
               />
             }
           />
@@ -214,7 +196,6 @@ function AppRoutes() {
             element={
               <Profile
                 normalAccount={accounts.normalAccount}
-                googleAccount={accounts.googleAccount}
               />
             }
           />
