@@ -108,7 +108,7 @@ body.active-modal {
   background: rgba(49, 49, 49, 0.8);
 }
 
-.modal-content {
+.modal-archived {
   font-family: var(--poppins), sans-serif;
   position: absolute;
   top: 55%;

@@ -522,7 +522,7 @@ const OutboxDocs = ({ normalAccount }) => {
           <>
             <div className="modal">
               <div onClick={handleToggleOpenDocs} className="overlay"></div>
-              <div className="modal-document">
+              <div className="modal-outbox">
                 <h1>View Document</h1>
                 <hr></hr>
                 <div className="container">
