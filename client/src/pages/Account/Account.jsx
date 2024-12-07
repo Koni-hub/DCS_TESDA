@@ -10,12 +10,11 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DOMPurify from 'dompurify';
 
-const Account = ({ normalAccount, googleAccount }) => {
+const Account = ({ normalAccount }) => {
   document.title = 'Account Management';
 
   const navigate = useNavigate();
 
-  // State management
   const [accounts, setAccounts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [modalUpdate, setModalUpdate] = useState(false);
@@ -33,7 +32,6 @@ const Account = ({ normalAccount, googleAccount }) => {
     setSideDropDownOpen(!isSideDropDownOpen);
   };
 
-  // Form data state
   const [formData, setFormData] = useState({
     account_username: '',
     account_firstName: '',
@@ -48,7 +46,7 @@ const Account = ({ normalAccount, googleAccount }) => {
     isAccountVerified: false,
   });
 
-  // Toast configuration
+
   const toastConfig = {
     position: 'top-right',
     autoClose: 5000,
@@ -60,7 +58,6 @@ const Account = ({ normalAccount, googleAccount }) => {
     theme: 'light',
   };
 
-  // API calls
   const getAllAccounts = async () => {
     try {
       const response = await axios.get(`${API_URL}/accounts`);
@@ -71,7 +68,6 @@ const Account = ({ normalAccount, googleAccount }) => {
   };
 
 
-  // User authentication and role management
   useEffect(() => {
     const getUsernameForData = async () => {
       if (!normalAccount?.email) {
@@ -93,19 +89,16 @@ const Account = ({ normalAccount, googleAccount }) => {
     getUsernameForData();
   }, [normalAccount]);
 
-  // Role-based access control
   useEffect(() => {
     if (role && role !== 'Admin' && role !== 'System') {
       navigate('/forbidden');
     }
   }, [role, navigate]);
 
-  // Initial data loading
   useEffect(() => {
     getAllAccounts();
   }, []);
 
-  // Event handlers
   const handleMenuItemClick = (index) => {
     setActiveMenuItem(index);
   };
@@ -140,7 +133,6 @@ const Account = ({ normalAccount, googleAccount }) => {
     navigate('/');
   };
 
-  // Search functionality
   const handleSearchSubmit = (event) => {
     event.preventDefault();
     filterAccountList(searchQuery);
@@ -163,7 +155,6 @@ const Account = ({ normalAccount, googleAccount }) => {
     }
   };
 
-  // Form handling
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -171,7 +162,6 @@ const Account = ({ normalAccount, googleAccount }) => {
     }));
   };
 
-  // Modal functions
   const toggleModalUpdate = async (accountEmail) => {
     if (accountEmail) {
       try {
@@ -189,7 +179,6 @@ const Account = ({ normalAccount, googleAccount }) => {
           origin: response.data.origin || '',
         });
         setSelectedAccountID(response.data);
-        console.log('Data', response.data.origin);
       } catch (error) {
         console.error('Error fetching account:', error);
       }
@@ -197,11 +186,9 @@ const Account = ({ normalAccount, googleAccount }) => {
     setModalUpdate(!modalUpdate);
   };
 
-  // Password visibility toggles
   const togglePassword1 = () => setPasswordVisible1(!passwordVisible1);
   const togglePassword2 = () => setPasswordVisible2(!passwordVisible2);
 
-  // Form validation
   const validateInputs = () => {
     const {
       account_username,
@@ -299,7 +286,7 @@ const Account = ({ normalAccount, googleAccount }) => {
 
     try {
       const userName =
-        normalAccount?.username || googleAccount.profile.emails[0].value;
+        normalAccount?.username || '';
       const fullName = normalAccount.fullname || null;
 
       const response = await axios.patch(
@@ -308,7 +295,6 @@ const Account = ({ normalAccount, googleAccount }) => {
       );
 
       if (response.data) {
-        // Update Audit Log
         const auditLogData = {
           userName,
           fullName,
@@ -322,6 +308,9 @@ const Account = ({ normalAccount, googleAccount }) => {
         });
 
         toast.success('Account updated successfully', toastConfig);
+        setTimeout(() => {
+          window.location.reload();
+        }, 2500);
         await getAllAccounts();
         setModalUpdate(false);
         setFormData({
@@ -362,11 +351,9 @@ const Account = ({ normalAccount, googleAccount }) => {
           const response = await axios.get(`${API_URL}/offices`);
           setOffices(response.data);
         } catch (error) {
-          console.log('Error fetching offices', error);
+          console.error('Error fetching offices', error);
         }
       };
-    
-      console.log('Fetch Office', offices);
     
       useEffect(() => {
         getAllOffice();
@@ -374,7 +361,6 @@ const Account = ({ normalAccount, googleAccount }) => {
 
   return (
     <>
-      {/* SIDEBAR */}
       <section id="sidebar">
         <Link to="https://e-tesda.gov.ph/">
           <a href="https://e-tesda.gov.ph/" className="brand">
@@ -535,9 +521,7 @@ const Account = ({ normalAccount, googleAccount }) => {
           )}
         </ul>
       </section>
-      {/* SIDEBAR */}
       <section id="content">
-        {/* NAVBAR */}
         <nav>
           <i className="bx bx-menu" onClick={handleToggleSidebar}></i>
           <form
@@ -548,7 +532,7 @@ const Account = ({ normalAccount, googleAccount }) => {
             <div className="form-input">
               <input
                 type="search"
-                placeholder="Search account..."
+                placeholder="Search account by id..."
                 value={searchQuery}
                 onChange={handleSearchChange}
               />
@@ -560,23 +544,10 @@ const Account = ({ normalAccount, googleAccount }) => {
           <div className="container-logut-drop-down" onClick={toggleDropdown}>
             <div className="profile-name">
               <div className="profile-content-icon">
-                {googleAccount &&
-                googleAccount.profile &&
-                googleAccount.profile.photos &&
-                googleAccount.profile.photos.length > 0 ? (
-                  <img
-                    src={googleAccount.profile.photos[0].value}
-                    width={35}
-                    height={35}
-                  />
-                ) : (
-                  <i id="icon" className="bx bx-user"></i>
-                )}
+                <i id="icon" className="bx bx-user"></i>
               </div>
               <div className="profile-content-name">
-                {loggedInAccount?.account_username ||
-                  googleAccount?.profile?.displayName ||
-                  ''}
+                {loggedInAccount?.account_username || ''}
               </div>
               <div className="profile-content-drop-down-menu">
                 <i
@@ -598,14 +569,9 @@ const Account = ({ normalAccount, googleAccount }) => {
             )}
           </div>
         </nav>
-        {/* NAVBAR */}
-
-        {/* MAIN */}
         <main>
           <div className="account-section">
-            <div className="display-status-account">
-              <h1>Account Table</h1>
-            </div>
+            <h1>Account Table</h1>
             <hr className="account-break-line" />
             <Link to={'/register'}>
               <button className="add-acc-btn">
@@ -673,7 +639,6 @@ const Account = ({ normalAccount, googleAccount }) => {
             </div>
           </div>
         </main>
-        {/* MAIN */}
       </section>
       {modalUpdate && (
         <div className="modal">
