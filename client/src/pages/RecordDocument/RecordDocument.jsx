@@ -59,7 +59,6 @@ const RecordDocument = ({ normalAccount }) => {
     }
   };
 
-  // Function to load the selected image
   const loadImage = (e) => {
     const image = e.target.files[0];
     if (image) {
@@ -111,6 +110,7 @@ const RecordDocument = ({ normalAccount }) => {
         const response = await axios.get(
           `${API_URL}/account/${normalAccount.email}`
         );
+        console.log('Data (origin): ', response.data.origin);
         setLoggedInAccount(response.data);
         setRole(response.data.createdBy);
       } catch (error) {
@@ -120,6 +120,8 @@ const RecordDocument = ({ normalAccount }) => {
 
     getUsernameForData();
   }, [normalAccount]);
+
+  const officeId = normalAccount.origin;
 
   useEffect(() => {
     if (role && role !== 'Admin' && role !== 'System') {
@@ -141,7 +143,6 @@ const RecordDocument = ({ normalAccount }) => {
     localStorage.removeItem('token');
     localStorage.setItem('loggedIn', 'false');
     localStorage.setItem('role', 'guest');
-    window.open(`${API_URL}/auth/logout`, '_self');
     navigate('/');
   };
 
@@ -233,7 +234,6 @@ const RecordDocument = ({ normalAccount }) => {
 
       const documentId = response.data.recordDocument.id;
 
-      //  Create Doc Audit Log
       const DocAuditLogData = {
         document_id: documentId,
         senderName: fullName,
@@ -543,7 +543,7 @@ const RecordDocument = ({ normalAccount }) => {
               </button>
             </div>
           </form>
-          <div className="container-logut-drop-down" onClick={toggleDropdown}>
+          <div className="container-logout-drop-down" onClick={toggleDropdown}>
             <div className="profile-name">
               <div className="profile-content-icon">
                 <i id="icon" className="bx bx-user"></i>
@@ -702,7 +702,9 @@ const RecordDocument = ({ normalAccount }) => {
                 </option>
                 {offices && offices.length > 0 ? (
                   offices.map((office, index) => (
-                    <option key={index} value={office.id}>
+                    <option key={index} value={office.id}
+                      disabled={office.id === officeId}
+                    >
                       {office.name}
                     </option>
                   ))
@@ -975,7 +977,7 @@ const RecordDocument = ({ normalAccount }) => {
                           <span key={i}>
                             {office}
                             <br />
-                            {i < doc.receiver.length - 1 && ', '}
+                            {i < doc.receiver.length - 1 && ' '}
                           </span>
                         ))}
                       </td>

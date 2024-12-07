@@ -104,7 +104,7 @@ const DocumentTypes = ({ normalAccount }) => {
       const response = await axios.get(`${API_URL}/document-types`);
       setDocumentTypes(response.data);
     } catch (error) {
-      console.log('Error fetching document types');
+      console.error('Error fetching document types');
     }
   };
 
@@ -144,7 +144,6 @@ const DocumentTypes = ({ normalAccount }) => {
     localStorage.removeItem('token');
     localStorage.setItem('loggedIn', false);
     localStorage.setItem('role', 'guest');
-    window.open(`${API_URL}/auth/logout`, '_self');
     navigate('/');
   };
 
@@ -192,7 +191,6 @@ const DocumentTypes = ({ normalAccount }) => {
       );
 
       if (response.data) {
-        // Create Audit Log
         const auditLogData = {
           userName,
           fullName,
@@ -229,7 +227,6 @@ const DocumentTypes = ({ normalAccount }) => {
     if (id) {
       try {
         const response = await axios.get(`${API_URL}/document-types/${id}`);
-        console.log('Selected document types Data', response.data);
         setSelectedDocTypesID(response.data);
         setFormData({
           name: response.data.name || '',
@@ -482,7 +479,7 @@ const DocumentTypes = ({ normalAccount }) => {
               </button>
             </div>
           </form>
-          <div className="container-logut-drop-down" onClick={toggleDropdown}>
+          <div className="container-logout-drop-down" onClick={toggleDropdown}>
             <div className="profile-name">
               <div className="profile-content-icon">
                 <i id="icon" className="bx bx-user"></i>
@@ -526,7 +523,7 @@ const DocumentTypes = ({ normalAccount }) => {
                 <thead>
                   <tr>
                     <th>No</th>
-                    <th>Office Name</th>
+                    <th>Name</th>
                     <th>Action</th>
                   </tr>
                 </thead>

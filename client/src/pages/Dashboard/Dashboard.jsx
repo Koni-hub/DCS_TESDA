@@ -96,11 +96,9 @@ const Dashboard = ({ normalAccount }) => {
     localStorage.removeItem('token');
     localStorage.setItem('loggedIn', false);
     localStorage.setItem('role', 'guest');
-    window.open(`${API_URL}/auth/logout`, '_self');
     navigate('/');
   };
 
-  const [documents, setDocuments] = useState([]);
   const [accounts, setAccounts] = useState([]);
   const [adminCount, setAdminCounts] = useState(0);
   const [employeeCount, setEmployeeCount] = useState(0);
@@ -134,15 +132,6 @@ const Dashboard = ({ normalAccount }) => {
     return accounts.account_role == 'Employee';
   };
 
-  const getAllDocuments = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/documents`);
-      setDocuments(response.data);
-    } catch (error) {
-      console.error('Error fetching documents', error);
-    }
-  };
-
   const accountChecker = () => {
     const admin = accounts.filter(isAdmin).length;
     const employee = accounts.filter(isEmployee).length;
@@ -156,7 +145,6 @@ const Dashboard = ({ normalAccount }) => {
   };
 
   useEffect(() => {
-    getAllDocuments();
     getAllAccounts();
     getAllRecDocs();
     getAuditLogs();
@@ -165,7 +153,7 @@ const Dashboard = ({ normalAccount }) => {
   useEffect(() => {
     accountChecker();
     recDocumentChecker();
-  }, [documents]);
+  }, [recDocs]);
 
   const [auditLogs, setAuditLogs] = useState([]);
 
@@ -367,7 +355,7 @@ const Dashboard = ({ normalAccount }) => {
           <form action="#">
             <div className="form-input"></div>
           </form>
-          <div className="container-logut-drop-down" onClick={toggleDropdown}>
+          <div className="container-logout-drop-down" onClick={toggleDropdown}>
             <div className="profile-name">
               <div className="profile-content-icon">
                 <i id="icon" className="bx bx-user"></i>

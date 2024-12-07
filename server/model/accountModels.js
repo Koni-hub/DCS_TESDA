@@ -64,17 +64,16 @@ const Accounts = database.define(
 );
 
 (async () => {
-  // Check if the table exists
   const tableExists = await database
     .getQueryInterface()
     .showAllTables()
     .then((tables) => tables.includes("accounts"));
 
   if (!tableExists) {
-    console.log("Table does not exist. Syncing database...");
+    console.info("Table does not exist. Syncing database...");
     await database.sync();
   } else {
-    console.log("Table already exists. Skipping sync.");
+    console.info("Table already exists. Skipping sync.");
   }
 })();
 

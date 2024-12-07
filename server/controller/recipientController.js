@@ -23,7 +23,6 @@ export const getIncomingDocs = async (req, res) => {
       return res.status(400).json({ msg: "Office ID is required" });
     }
 
-    // Fetch incoming documents with improved error logging
     const incomingDocuments = await Recipient.findAll({
       where: { office_id: officeId, status: "To Receive" },
       include: [
@@ -42,11 +41,11 @@ export const getIncomingDocs = async (req, res) => {
 
     return res.json(incomingDocuments);
   } catch (error) {
-    console.error("Error retrieving incoming documents:", error.message); // Log the error message
-    console.error("Full error object:", error); // Log the full error object for more details
+    console.error("Error retrieving incoming documents:", error.message);
+    console.error("Full error object:", error);
     return res.status(500).json({
       error: "Error retrieving incoming documents",
-      details: error.message, // Return the error message in the response
+      details: error.message,
     });
   }
 };
@@ -72,6 +71,8 @@ export const getReceivedDoc = async (req, res) => {
 export const getDeclineDoc = async (req, res) => {
   const recipientId = req.params.id;
   const { reason } = req.body;
+
+  console.info('Reasoning: ', reason);
 
   try {
     await Recipient.update(
@@ -106,17 +107,10 @@ export const getPendingDoc = async (req, res) => {
 };
 
 export const forwardDoc = async (req, res) => {
-  console.log("Log from backend body: ", req.body);
   const documentId = req.params.id;
   const { recipient, action, remarks, userName, senderEmail, recipientDocId } = req.body;
   
-  console.log('Sender Name: ', userName);
-  console.log('Sender Email: ', senderEmail);
-  console.log('Recipient ID: ', recipientDocId);
-  console.log('Document ID: ', documentId);
-
   try {
-    console.log('Searching for Recipient with ID:', recipientDocId);
     const existingRecipient = await Recipient.findByPk(recipientDocId);
 
     if (!existingRecipient) {
@@ -124,7 +118,6 @@ export const forwardDoc = async (req, res) => {
       return res.status(404).json({ msg: "Recipient not found" });
     }
 
-    console.log('Searching for Document with ID:', documentId);
     const existingDocument = await Document.findByPk(documentId);
 
     if (!existingDocument) {
@@ -132,7 +125,6 @@ export const forwardDoc = async (req, res) => {
       return res.status(404).json({ msg: "Document not found" });
     }
 
-    // Validate input data
     if (!recipient) {
       console.error('No recipient provided');
       return res.status(400).json({ msg: "Recipient is required" });
@@ -224,13 +216,11 @@ export const archiveDoc = async (req, res) => {
       { status: "Archived" },
       { where: { id: documentId } }
     );
-    console.log("Document update result:", documentUpdate);
 
     const recipientUpdate = await Recipient.update(
       { status: "Archived" },
       { where: { document_id: documentId, status: "Pending" } }
     );
-    console.log("Recipient update result:", recipientUpdate);
 
     if (documentUpdate[0] === 0 && recipientUpdate[0] === 0) {
       return res.status(404).json({ error: "Document or recipient not found or already archived." });

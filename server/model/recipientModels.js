@@ -54,7 +54,7 @@ const Recipient = database.define(
       defaultValue: "To Receive",
     },
     declined_reason: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING,
       allowNull: true,
     },
     forwardedAt: {
@@ -71,7 +71,6 @@ const Recipient = database.define(
   }
 );
 
-// Check and sync table
 (async () => {
   try {
     const tableExists = await database
@@ -80,10 +79,10 @@ const Recipient = database.define(
       .then((tables) => tables.includes("recipients"));
 
     if (!tableExists) {
-      console.log("Table does not exist. Syncing database...");
+      console.info("Table does not exist. Syncing database...");
       await database.sync();
     } else {
-      console.log("Table already exists. Skipping sync.");
+      console.info("Table already exists. Skipping sync.");
     }
   } catch (error) {
     console.error("Error syncing database:", error);

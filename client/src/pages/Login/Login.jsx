@@ -71,13 +71,12 @@ const Login = () => {
 
     try {
       const response = await axios.post(`${API_URL}/login`, loginformData);
-      const { message, token } = response.data;
-      console.log(message, token);
+      const { token } = response.data;
 
       const decode = jose.decodeJwt(token);
 
       if (!decode) {
-        console.log('Decoding JWT returned undefined');
+        console.error('Decoding JWT returned undefined');
         return;
       }
 

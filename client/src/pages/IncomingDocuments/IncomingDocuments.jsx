@@ -100,6 +100,9 @@ const IncomingDocuments = ({ normalAccount }) => {
         'Successfully received documents, document set to pending status',
         toastConfig
       );
+      setTimeout(() => {
+        window.location.reload();
+      },  1500);
     } catch (error) {
       toast.error('Error receiving documents', toastConfig);
     }
@@ -121,6 +124,7 @@ const IncomingDocuments = ({ normalAccount }) => {
       if (!isConfirmed) {
         return;
       }
+      console.info('Reason (client): ', reason);
       const userName =
         normalAccount?.username || '';
       const fullName = normalAccount.fullname || null;
@@ -140,6 +144,9 @@ const IncomingDocuments = ({ normalAccount }) => {
         'Successfully decline documents, document set to decline status',
         toastConfig
       );
+      setTimeout(() => {
+        window.location.reload();
+      },  1500);
     } catch (error) {
       toast.error('Error declining documents', toastConfig);
     }
@@ -193,7 +200,6 @@ const IncomingDocuments = ({ normalAccount }) => {
     localStorage.removeItem('token');
     localStorage.setItem('loggedIn', 'false');
     localStorage.setItem('role', 'guest');
-    window.open(`${API_URL}/auth/logout`, '_self');
     navigate('/');
   };
 
@@ -387,7 +393,7 @@ const IncomingDocuments = ({ normalAccount }) => {
             <div className="form-input">
               <input
                 type="search"
-                placeholder="Search for incoming docs..."
+                placeholder="Search for incoming docs by title..."
                 value={searchQuery}
                 onChange={handleSearchChange}
               />
@@ -396,7 +402,7 @@ const IncomingDocuments = ({ normalAccount }) => {
               </button>
             </div>
           </form>
-          <div className="container-logut-drop-down" onClick={toggleDropdown}>
+          <div className="container-logout-drop-down" onClick={toggleDropdown}>
             <div className="profile-name">
               <div className="profile-content-icon">
                 <i id="icon" className="bx bx-user"></i>

@@ -12,26 +12,20 @@ import fileUpload from "express-fileupload";
 import Recipient from "./routes/recipientRoutes.js";
 import DocAuditLogs from "./routes/DocumentAuditRoutes.js";
 
-// Associations
 import "./model/associations.js";
 
-// Setup Accounts
-import AuthRoutes from "./routes/authGoogle.js";
-import passportSetup from "./passport.js";
 import "dotenv/config";
 
 const app = express();
 
-//Database Connection
 
 const port = 5000;
 
 try {
   await database.authenticate();
-  console.log("Successfully Connected to the database");
-  console.log;
+  console.info("Successfully Connected to the database");
 } catch (error) {
-  console.log("Failed to connect!", error);
+  console.error("Failed to connect!", error);
 }
 
 app.use(
@@ -46,12 +40,9 @@ app.use(
   })
 );
 
-app.use(passportSetup.initialize());
-app.use(passportSetup.session());
 app.use(express.static("public"));
 app.use(fileUpload({ createParentPath: true }));
 
-// Middleware setup
 app.use(
   cors({
     origin: [
@@ -67,16 +58,14 @@ app.use(express.json());
 app.use("/", AccountRoutes);
 app.use("/registry", RegistryRoutes);
 app.use("/audit-logs", AuditLog);
-app.use("/auth", AuthRoutes);
 app.use("/offices", Office);
 app.use("/document-types", DocumentTypes);
 app.use("/record-docs", RecordDocument);
 app.use("/recipients", Recipient);
 app.use("/document_audits", DocAuditLogs);
 
-// Check Health
 app.get("/health", (_req, res) => res.status(200).send("OK"));
 
 app.listen(port, () => {
-  console.log(`Server listening on ${port}`);
+  console.info(`Server listening on ${port}`);
 });

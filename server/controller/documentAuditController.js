@@ -12,7 +12,6 @@ export const getAllDocAuditLogs = async (req, res) => {
 };
 
 export const createDocAuditLog = async (req, res) => {
-  console.log("Log from backend body (Doc Audit Logs): ", req.body);
   const { document_id, senderName, receiver, action } = req.body;
   try {
     const log = await DocAuditLog.create({ document_id, senderName, receiver, action });

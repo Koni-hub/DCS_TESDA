@@ -28,14 +28,13 @@ export const getAccountById = async (req, res) => {
 
     res.json(response);
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
     res.status(500).json({ msg: "Internal Server Error" });
   }
 };
 
 export const registerAccount = async (req, res) => {
   try {
-    // Extract data from request body
     const {
       account_username,
       account_firstName,
@@ -49,7 +48,6 @@ export const registerAccount = async (req, res) => {
       origin
     } = req.body;
 
-    // Check if the username already exists
     const existingUser = await Accounts.findOne({
       where: { account_username: account_username },
     });
@@ -64,7 +62,6 @@ export const registerAccount = async (req, res) => {
       return res.status(400).json({ message: "E-mail already exists" });
     }
 
-    // Hash the password
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(account_password, saltRounds);
 
@@ -90,7 +87,7 @@ export const registerAccount = async (req, res) => {
 
 export const editAccount = async (req, res) => {
   try {
-    const { account_id } = req.params; // Get account ID from request parameters
+    const { account_id } = req.params;
     const {
       account_username,
       account_firstName,
@@ -104,13 +101,11 @@ export const editAccount = async (req, res) => {
       origin,
     } = req.body;
 
-    // Find the existing account
     const account = await Accounts.findByPk(account_id);
     if (!account) {
       return res.status(404).json({ message: "Account not found" });
     }
 
-    // Check if the new username already exists (excluding current account)
     if (account_username && account_username !== account.account_username) {
       const existingUser = await Accounts.findOne({
         where: { account_username, account_id: { [Op.ne]: account_id } },
@@ -120,7 +115,6 @@ export const editAccount = async (req, res) => {
       }
     }
 
-    // Check if the new email already exists (excluding current account)
     if (account_email && account_email !== account.account_email) {
       const existingEmail = await Accounts.findOne({
         where: { account_email, account_id: { [Op.ne]: account_id } },
@@ -130,14 +124,12 @@ export const editAccount = async (req, res) => {
       }
     }
 
-    // Hash the new password if provided
-    let updatedPassword = account.account_pass; // Keep the current password by default
+    let updatedPassword = account.account_pass;
     if (account_password) {
       const saltRounds = 10;
       updatedPassword = await bcrypt.hash(account_password, saltRounds);
     }
 
-    // Update the account with the new information
     await account.update({
       account_username: account_username || account.account_username,
       account_firstName: account_firstName || account.account_firstName,
@@ -173,7 +165,6 @@ export const loginAccount = async (req, res) => {
   try {
     const { emailOrUsername, account_password } = req.body;
 
-    // Find the user by email or username
     const user = await Accounts.findOne({
       where: {
         [Op.or]: [
@@ -183,12 +174,10 @@ export const loginAccount = async (req, res) => {
       },
     });
 
-    // Check if user exists
     if (!user) {
       return res.status(401).json({ message: "Invalid email or username" });
     }
 
-    // Compare passwords
     const isPasswordValid = await bcrypt.compare(
       account_password,
       user.account_pass
@@ -201,9 +190,7 @@ export const loginAccount = async (req, res) => {
     }
 
     const origin = user.origin;
-    console.log('Value of Office Department: ', origin);
 
-     // Find the no by name
     const officeNo = await Office.findOne({
       attributes: ['id'],
       where: {
@@ -211,12 +198,10 @@ export const loginAccount = async (req, res) => {
       }
     });
 
-    // Check if officeNo exists
     if (!officeNo) {
       return res.status(401).json({ message: "No office department found" });
     }
 
-    // Generate JWT token
     const token = jwt.sign(
       {
         id: user.id,
@@ -231,7 +216,6 @@ export const loginAccount = async (req, res) => {
       { expiresIn: "24h" }
     );
 
-    // If everything is okay, send a success response with JWT token
     res
       .status(200)
       .json({
@@ -252,7 +236,6 @@ export const updateAccount = async (req, res) => {
   try {
     const { currentPassword, newPassword, ...updateFields } = req.body;
 
-    // Find the account to update by email
     const account = await Accounts.findOne({
       where: { account_email: updateFields.account_email },
     });
@@ -261,7 +244,6 @@ export const updateAccount = async (req, res) => {
       return res.status(404).json({ message: "Account not found" });
     }
 
-    // Check if current password matches
     if (
       currentPassword &&
       !(await bcrypt.compare(currentPassword, account.account_pass))
@@ -269,7 +251,6 @@ export const updateAccount = async (req, res) => {
       return res.status(400).json({ message: "Current password is incorrect" });
     }
 
-    // Check if the username already exists and is not the current account's username
     if (
       updateFields.account_username &&
       updateFields.account_username !== account.account_username
@@ -285,13 +266,11 @@ export const updateAccount = async (req, res) => {
       }
     }
 
-    // Hash the new password if provided
     if (newPassword) {
       const saltRounds = 10;
       updateFields.account_pass = await bcrypt.hash(newPassword, saltRounds);
     }
 
-    // Update the account with provided fields
     await account.update(updateFields);
 
     res.status(200).json({ message: "User updated successfully", account });
@@ -301,29 +280,6 @@ export const updateAccount = async (req, res) => {
   }
 };
 
-export const findGoogleAccount = async (req, res) => {
-  try {
-    const { email } = req.body;
-
-    // Adjust the query to use the correct field name
-    const account = await Accounts.findOne({
-      where: { account_email: email }, // Updated field name
-    });
-
-    if (account) {
-      res.json(account.createdBy);
-    } else {
-      res
-        .status(404)
-        .json({ message: "No account found with the provided email." });
-    }
-  } catch (error) {
-    console.error("Error finding account:", error); // Log the full error object
-    res.status(500).json({ message: "Server error", error: error.message });
-  }
-};
-
-// get account by its Office role
 export const findOfficeAccount = async (req, res) => {
   try {
     const officeAccounts = await Accounts.findAll({

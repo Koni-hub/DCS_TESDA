@@ -115,7 +115,6 @@ const Office = ({ normalAccount }) => {
     localStorage.removeItem('token');
     localStorage.setItem('loggedIn', 'false');
     localStorage.setItem('role', 'guest');
-    window.open(`${API_URL}/auth/logout`, '_self');
     navigate('/');
   };
 
@@ -469,7 +468,7 @@ const Office = ({ normalAccount }) => {
               </button>
             </div>
           </form>
-          <div className="container-logut-drop-down" onClick={toggleDropdown}>
+          <div className="container-logout-drop-down" onClick={toggleDropdown}>
             <div className="profile-name">
               <div className="profile-content-icon">
                 <i id="icon" className="bx bx-user"></i>

@@ -10,7 +10,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const PendingDocuments = ({ normalAccount }) => {
-  document.title = 'Incoming Pending Document';
+  document.title = 'Pending Document';
   const [documents, setDocuments] = useState([]);
   const [role, setRole] = useState(null);
   const [loggedInAccount, setLoggedInAccount] = useState(null);
@@ -159,9 +159,9 @@ const PendingDocuments = ({ normalAccount }) => {
   
     const formData = new FormData();
     
-    const uniqueRecipients = [...new Set(recipient.map((id) => parseInt(id, 10)))];
-    
-    formData.append('recipient', uniqueRecipients.join(','));
+    recipient.forEach((recipientId) => {
+      formData.append('recipient', recipientId)
+    });
     formData.append('action', action);
     formData.append('remarks', remarks);
     formData.append('userName', userName);
@@ -209,7 +209,9 @@ const PendingDocuments = ({ normalAccount }) => {
       });
   
       toast.success('Document forwarded successfully');
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      },  1500);
       closeModal();
     } catch (error) {
       console.error('Error forwarding document:', error);
@@ -249,6 +251,9 @@ const PendingDocuments = ({ normalAccount }) => {
         'Document successfully archived, status set to "Archived".',
         toastConfig
       );
+      setTimeout(() => {
+        window.location.reload();
+      },  1500);
     } catch (error) {
       toast.error(
         `Error archiving document: ${
@@ -307,7 +312,6 @@ const PendingDocuments = ({ normalAccount }) => {
     localStorage.removeItem('token');
     localStorage.setItem('loggedIn', 'false');
     localStorage.setItem('role', 'guest');
-    window.open(`${API_URL}/auth/logout`, '_self');
     navigate('/');
   };
 
@@ -501,7 +505,7 @@ const PendingDocuments = ({ normalAccount }) => {
             <div className="form-input">
               <input
                 type="search"
-                placeholder="Search for incoming docs..."
+                placeholder="Search for pending docs by title..."
                 value={searchQuery}
                 onChange={handleSearchChange}
               />
@@ -510,7 +514,7 @@ const PendingDocuments = ({ normalAccount }) => {
               </button>
             </div>
           </form>
-          <div className="container-logut-drop-down" onClick={toggleDropdown}>
+          <div className="container-logout-drop-down" onClick={toggleDropdown}>
             <div className="profile-name">
               <div className="profile-content-icon">
                 <i id="icon" className="bx bx-user"></i>
@@ -539,10 +543,10 @@ const PendingDocuments = ({ normalAccount }) => {
           </div>
         </nav>
         <main>
-          <div className="incoming-docs-section">
+          <div className="pending-docs-section">
             <h1>Pending Documents</h1>
-            <hr className="incoming-docs-break-line" />
-            <div className="incoming-docs-table">
+            <hr className="pending-docs-break-line" />
+            <div className="pending-docs-table">
               <table>
                 <thead>
                   <tr>
@@ -649,7 +653,7 @@ const PendingDocuments = ({ normalAccount }) => {
           <>
             <div className="modal">
               <div onClick={() => toggleModalSend()} className="overlay"></div>
-              <div className="modal-document">
+              <div className="modal-pending">
                 <h1>Send Documents</h1>
                 <form className="form" onSubmit={handleForward}>
                   <select

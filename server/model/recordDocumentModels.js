@@ -52,7 +52,6 @@ const RecordDocument = database.define(
   }
 );
 
-// Check and sync table
 (async () => {
   try {
     const tableExists = await database
@@ -61,10 +60,10 @@ const RecordDocument = database.define(
       .then((tables) => tables.includes("recorddocument"));
 
     if (!tableExists) {
-      console.log("Table does not exist. Syncing database...");
+      console.info("Table does not exist. Syncing database...");
       await database.sync();
     } else {
-      console.log("Table already exists. Skipping sync.");
+      console.info("Table already exists. Skipping sync.");
     }
   } catch (error) {
     console.error("Error syncing database:", error);

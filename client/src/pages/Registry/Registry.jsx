@@ -10,14 +10,12 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DOMPurify from 'dompurify';
+import Swal from 'sweetalert2';
 
 const Registry = ({ normalAccount }) => {
   document.title = 'Registry';
 
-  const [registries, setRegistries] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [allDocuments, setAllDocuments] = useState([]);
-  const [, setFilterDocuments] = useState([]);
   const [filterRegistries, setFilterRegistries] = useState([]);
   const [modalCreate, setModalCreate] = useState(false);
   const [modalUpdate, setModalUpdate] = useState(false);
@@ -41,7 +39,6 @@ const Registry = ({ normalAccount }) => {
   const getAllRegistries = async () => {
     try {
       const response = await axios.get(`${API_URL}/registry`);
-      setRegistries(response.data);
       setFilterRegistries(response.data);
     } catch (error) {
       console.error('Error fetching registries', error);
@@ -101,16 +98,6 @@ const Registry = ({ normalAccount }) => {
     setValidUntil(registry.valid_until);
   };
 
-  const getAllDocuments = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/documents`);
-      setFilterDocuments(response.data);
-      setAllDocuments(response.data);
-    } catch (error) {
-      console.error('Error fetching docouments', error);
-    }
-  };
-
   const createRegistry = async (e) => {
     e.preventDefault();
     const userName =
@@ -152,6 +139,9 @@ const Registry = ({ normalAccount }) => {
       });
 
       toast.success('Registry created successfully', toastConfig);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500)
       getAllRegistries();
       toggleModalCreate();
     } catch (error) {
@@ -201,6 +191,9 @@ const Registry = ({ normalAccount }) => {
       });
 
       toast.success('Registry updated successfully', toastConfig);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500)
       getAllRegistries();
       toggleModalUpdate(null);
     } catch (error) {
@@ -215,11 +208,17 @@ const Registry = ({ normalAccount }) => {
 
     e.preventDefault();
 
-    const confirmDelete = window.confirm(
-      'Are you sure you want to delete this registry No ' + registryId + ' ?'
-    );
+    const {value: isConfirmed} = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'You wont be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    });
 
-    if (!confirmDelete) {
+    if (!isConfirmed) {
       return;
     }
 
@@ -238,16 +237,15 @@ const Registry = ({ normalAccount }) => {
         },
       });
 
-      alert('Registry deleted successfully!');
+      toast.success('Registry deleted successfully!');
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500)
     } catch (error) {
       console.error('Error deleting registry:', error);
-      alert('Failed to delete registry.');
+      toast.error('Failed to delete registry.');
     }
   };
-
-  useEffect(() => {
-    getAllDocuments();
-  }, []);
 
   const navigate = useNavigate();
 
@@ -325,7 +323,6 @@ const Registry = ({ normalAccount }) => {
     localStorage.removeItem('token');
     localStorage.setItem('loggedIn', false);
     localStorage.setItem('role', 'guest');
-    window.open(`${API_URL}/auth/logout`, '_self');
     navigate('/');
   };
 
@@ -356,28 +353,6 @@ const Registry = ({ normalAccount }) => {
     theme: 'light',
   };
 
-
-  const isPending = async (documentId, document) => {
-      if (document.status !== 'Rejected' && Object.values(document).some(field => field === '' || field === null)) {
-          return true;
-      }
-      return false;
-  };
-  const documentChecker = async () => {
-
-    const pendingDocuments = await Promise.all(
-      allDocuments.map(async (doc) => {
-        if (doc.No) return isPending(doc.No, doc);
-      })
-    );
-
-    pendingDocuments.filter(Boolean).length;
-  };
-
-  useEffect(() => {
-    documentChecker();
-  }, [allDocuments]);
-
   const handleSearchSubmit = (event) => {
     event.preventDefault();
     filterDocumentsList(searchQuery);
@@ -391,14 +366,14 @@ const Registry = ({ normalAccount }) => {
   };
 
   const filterDocumentsList = (query) => {
-    if (query.trim() === '') {
-      setFilterDocuments(registries);
+    if (!query.trim()) {
+      getAllRegistries();
     } else {
-      setFilterDocuments(
-        registries.filter((doc) =>
-          doc.No.toLowerCase().includes(query.toLowerCase())
-        )
+      const filterRegistry = filterRegistries.filter((registry) =>
+        registry.name.toLowerCase().includes(query.toLowerCase())
       );
+      setFilterRegistries(filterRegistry);
+      console.log('Filter registry', filterRegistry);
     }
   };
 
@@ -593,7 +568,7 @@ const Registry = ({ normalAccount }) => {
               </button>
             </div>
           </form>
-          <div className="container-logut-drop-down" onClick={toggleDropdown}>
+          <div className="container-logout-drop-down" onClick={toggleDropdown}>
             <div className="profile-name">
               <div className="profile-content-icon">
                 <i id="icon" className="bx bx-user"></i>
@@ -693,7 +668,7 @@ const Registry = ({ normalAccount }) => {
       {modalCreate && (
         <div className="modal">
           <div onClick={toggleModalCreate} className="overlay"></div>
-          <div className="modal-document">
+          <div className="modal-registry">
             <h1>Add Registry</h1>
             <hr />
             <form className="form" onSubmit={createRegistry}>
@@ -907,12 +882,12 @@ const Registry = ({ normalAccount }) => {
               <div className="btn-container">
                 <button
                   type="button"
-                  className="document-btn-cancel"
+                  className="registry-btn-cancel"
                   onClick={toggleModalCreate}
                 >
                   Discard
                 </button>
-                <button type="submit" className="document-btn-submit">
+                <button type="submit" className="registry-btn-submit">
                   Submit
                 </button>
               </div>
@@ -941,7 +916,7 @@ const Registry = ({ normalAccount }) => {
       {modalUpdate && (
         <div className="modal">
           <div onClick={toggleModalUpdate} className="overlay"></div>
-          <div className="modal-document">
+          <div className="modal-registry">
             <h1>Update Registry</h1>
             <hr />
             <form className="form" onSubmit={updateRegistry}>
@@ -1155,12 +1130,12 @@ const Registry = ({ normalAccount }) => {
               <div className="btn-container">
                 <button
                   type="button"
-                  className="document-btn-cancel"
+                  className="registry-btn-cancel"
                   onClick={toggleModalUpdate}
                 >
                   Discard
                 </button>
-                <button type="submit" className="document-btn-submit">
+                <button type="submit" className="registry-btn-submit">
                   Update
                 </button>
               </div>

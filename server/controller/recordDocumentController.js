@@ -4,7 +4,6 @@ import path from "path";
 import fs from "fs";
 import "dotenv/config";
 
-// Get all record documents
 export const getAllRecordDocument = async (req, res) => {
   try {
     const response = await RecordDocument.findAll();
@@ -14,7 +13,6 @@ export const getAllRecordDocument = async (req, res) => {
   }
 };
 
-// Get a record document by ID
 export const getRecordDocumentByID = async (req, res) => {
   try {
     const response = await RecordDocument.findOne({
@@ -33,9 +31,8 @@ export const getRecordDocumentByID = async (req, res) => {
 
 const generateUniqueNo = async () => {
   const currentYear = new Date().getFullYear();
-  const currentMonth = String(new Date().getMonth() + 1).padStart(2, "0"); // Months are zero-based in JavaScript
+  const currentMonth = String(new Date().getMonth() + 1).padStart(2, "0");
 
-  // Find the last document in the table based on the No field
   const lastDocument = await RecordDocument.findOne({
     order: [["No", "DESC"]],
   });
@@ -43,17 +40,15 @@ const generateUniqueNo = async () => {
   let newAI;
 
   if (lastDocument) {
-    // Extract the AI part and increment it
     const lastNoParts = lastDocument.No.split("-");
     const lastAI = parseInt(lastNoParts[2], 10);
-    newAI = (lastAI + 1).toString().padStart(4, "0"); // Increment and pad with leading zeros
+    newAI = (lastAI + 1).toString().padStart(4, "0");
   } else {
-    newAI = "0001"; // Start with 0001 if the table is empty
+    newAI = "0001";
   }
 
   const uniqueNo = `${currentYear}-${currentMonth}-${newAI}`;
 
-  // Check if No already exists to avoid duplicates
   const existingDocument = await RecordDocument.findOne({
     where: { No: uniqueNo },
   });
@@ -64,7 +59,6 @@ const generateUniqueNo = async () => {
   return uniqueNo;
 };
 
-// Add a new record document
 export const addRecordDocument = async (req, res) => {
   console.log("Log from backend body: ", req.body);
   if (!req.files || Object.keys(req.files).length === 0) {
@@ -85,7 +79,6 @@ export const addRecordDocument = async (req, res) => {
 
   console.log('Unique ID: ', uniqueNo);
 
-  // File details
   const fileSize = file.data.length;
   const ext = path.extname(file.name);
   const fileName = file.md5 + ext;
@@ -99,7 +92,6 @@ export const addRecordDocument = async (req, res) => {
     return res.status(422).json({ msg: "PDF must be less than 5MB" });
   }
 
-  // Absolute path to save PDF
   const uploadDir = path.join(process.cwd(), "public/recordDocuments/");
 
   if (!fs.existsSync(uploadDir)) {
@@ -108,7 +100,6 @@ export const addRecordDocument = async (req, res) => {
 
   const url = `${process.env.ORIGIN}recordDocuments/${fileName}`;
 
-  // Move the file to the designated directory
   file.mv(path.join(uploadDir, fileName), async (err) => {
     if (err) {
       console.error(err);
@@ -116,7 +107,6 @@ export const addRecordDocument = async (req, res) => {
     }
 
     try {
-      // Create the record document first
       const recordDocument = await RecordDocument.create({
         No: uniqueNo,
         title,
@@ -126,15 +116,13 @@ export const addRecordDocument = async (req, res) => {
         mode,
         image: fileName,
         url,
-        status: "To Receive", // Set initial status
+        status: "To Receive",
       });
 
-      // Remove duplicate recipients by creating a Set from the recipient array
       const uniqueRecipients = [
         ...new Set(recipient.map((id) => parseInt(id, 10))),
       ];
 
-      // Forward document to unique recipients
       const recipientEntries = uniqueRecipients.map((recipientId) => ({
         document_id: recordDocument.id,
         office_id: recipientId,
@@ -160,7 +148,6 @@ export const addRecordDocument = async (req, res) => {
   });
 };
 
-// Edit a record document (to forward to another office)
 export const editRecordDocument = async (req, res) => {
   try {
     const recordDocument = await RecordDocument.findOne({
@@ -182,7 +169,6 @@ export const editRecordDocument = async (req, res) => {
       recipient,
     } = req.body;
 
-    // Check if the required fields are provided
     if (
       !source ||
       !type ||
@@ -196,13 +182,11 @@ export const editRecordDocument = async (req, res) => {
       return res.status(400).json({ msg: "All fields are required." });
     }
 
-    // If a new file is provided, handle file upload
-    let fileName = recordDocument.image; // Keep existing image by default
+    let fileName = recordDocument.image;
 
     if (req.files && req.files.file) {
       const file = req.files.file;
 
-      // File details
       const fileSize = file.data.length;
       const ext = path.extname(file.name);
       const newFileName = file.md5 + ext;
@@ -223,10 +207,9 @@ export const editRecordDocument = async (req, res) => {
       }
 
       await file.mv(path.join(uploadDir, newFileName));
-      fileName = newFileName; // Update to the new file name
+      fileName = newFileName;
     }
 
-    // Update record document with new values
     await RecordDocument.update(
       {
         source,
@@ -258,7 +241,6 @@ export const editRecordDocument = async (req, res) => {
   }
 };
 
-// Delete a record document
 export const deleteRecordDocument = async (req, res) => {
   const recordDocument = await RecordDocument.findOne({
     where: { id: req.params.id },
@@ -279,7 +261,6 @@ export const deleteRecordDocument = async (req, res) => {
   }
 };
 
-// Record fetch data by it's status = "To Receive"
 export const getAllToReceiveDocs = async (req, res) => {
   try {
     const findToReceiveDocs = await RecordDocument.findAll({
@@ -298,7 +279,6 @@ export const getAllToReceiveDocs = async (req, res) => {
   }
 };
 
-// Edit Record Document if status is only "To Receive"
 export const editToReceiveDocs = async (req, res) => {
   try {
     const recordDocument = await RecordDocument.findOne({
@@ -319,18 +299,15 @@ export const editToReceiveDocs = async (req, res) => {
 
     const { source, type, title, description, mode } = req.body;
 
-    // Check if the required fields are provided
     if (!source || !type || !title || !description || !mode) {
       return res.status(400).json({ msg: "All fields are required. (t)" });
     }
 
-    // If a new file is provided, handle file upload
-    let fileName = recordDocument.image; // Keep existing image by default
+    let fileName = recordDocument.image;
 
     if (req.files && req.files.file) {
       const file = req.files.file;
 
-      // File details
       const fileSize = file.data.length;
       const ext = path.extname(file.name);
       const newFileName = file.md5 + ext;
@@ -351,10 +328,9 @@ export const editToReceiveDocs = async (req, res) => {
       }
 
       await file.mv(path.join(uploadDir, newFileName));
-      fileName = newFileName; // Update to the new file name
+      fileName = newFileName;
     }
 
-    // Update record document with new values
     await RecordDocument.update(
       {
         source,

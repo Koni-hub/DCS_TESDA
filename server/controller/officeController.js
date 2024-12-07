@@ -1,6 +1,5 @@
 import Office from "../model/officeModels.js";
 
-// Get all offices
 export const getAllOffice = async (req, res) => {
   try {
     const response = await Office.findAll();
@@ -10,7 +9,6 @@ export const getAllOffice = async (req, res) => {
   }
 };
 
-// Get office by ID
 export const getOfficeByID = async (req, res) => {
   try {
     const findOffice = await Office.findOne({
@@ -29,7 +27,6 @@ export const getOfficeByID = async (req, res) => {
   }
 };
 
-// Add a new office
 export const addOffice = async (req, res) => {
   try {
     const { name } = req.body;
@@ -48,7 +45,6 @@ export const addOffice = async (req, res) => {
   }
 };
 
-// Edit an existing office
 export const editOffice = async (req, res) => {
   try {
     const { id } = req.params;

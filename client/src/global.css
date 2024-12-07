@@ -249,13 +249,13 @@ li {
 }
 /* Dropdown Profile */
 
-.container-logut-drop-down {
+.container-logout-drop-down {
   position: relative;
   display: inline-block;
   padding: 10px;
 }
 
-.container-logut-drop-down:hover {
+.container-logout-drop-down:hover {
   background-color: #f1f1f1;
   border-radius: 10px;
 }

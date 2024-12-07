@@ -17,21 +17,21 @@
   background-color: #f9f9ff;
 }
 
-.incoming-docs-section {
+.pending-docs-section {
   height: 100%;
   margin: 20px;
 }
 
-.incoming-docs-section h1 {
+.pending-docs-section h1 {
   color: var(--secondary);
   font-size: 35px;
 }
 
-.incoming-docs-break-line {
+.pending-docs-break-line {
   border-top: 1px solid var(--secondary);
 }
 
-.incoming-docs-section .add-acc-btn {
+.pending-docs-section .add-acc-btn {
   padding: 14px 26px;
   text-transform: uppercase;
   float: right;
@@ -43,7 +43,7 @@
 }
 
 /* Table */
-.incoming-docs-table {
+.pending-docs-table {
   margin-top: 23px;
 }
 
@@ -127,7 +127,7 @@ body.active-modal {
   scrollbar-width: none;
 }
 
-.incoming-docs-description {
+.pending-docs-description {
   max-width: 100%;
   padding: 10px;
 }
@@ -160,7 +160,7 @@ label {
   font-size: 20px;
 }
 
-.incoming-docs-description span {
+.pending-docs-description span {
   color: #db2822;
   font-size: 20px;
 }
@@ -187,7 +187,7 @@ label {
   justify-content: right;
 }
 
-.incoming-docs-btn-cancel {
+.pending-docs-btn-cancel {
   background-color: var(--cancel-button);
   border-radius: 10px;
   color: white;
@@ -197,7 +197,7 @@ label {
   margin-right: 10px;
 }
 
-.incoming-docs-btn-submit {
+.pending-docs-btn-submit {
   background-color: var(--submit-button);
   border-radius: 10px;
   color: white;
@@ -215,11 +215,11 @@ label {
   cursor: pointer;
 }
 
-.incoming-docs-btn-submit:hover {
+.pending-docs-btn-submit:hover {
   background-color: var(--light-submit-button);
 }
 
-.incoming-docs-btn-cancel:hover {
+.pending-docs-btn-cancel:hover {
   background-color: var(--light-cancel-button);
 }
 

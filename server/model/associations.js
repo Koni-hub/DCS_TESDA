@@ -3,7 +3,6 @@ import RecordDocument from "./recordDocumentModels.js";
 import DocumentAuditLogs from "./documentAuditModels.js";
 import Office from "./officeModels.js";
 
-// Define associations
 Recipient.belongsTo(RecordDocument, {
   foreignKey: "document_id",
   as: "document",

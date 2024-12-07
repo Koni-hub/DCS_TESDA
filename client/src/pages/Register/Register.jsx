@@ -30,14 +30,14 @@ const Register = ({normalAccount}) => {
 
   useEffect(() => {
     const getUsernameForData = async () => {
-      if (!normalAccount.normalAccount || !normalAccount.normalAccount.email) {
+      if (!normalAccount || !normalAccount.email) {
         console.error('Normal account or email is not defined');
         return;
       }
 
 
       try {
-        const createdBy = normalAccount.normalAccount.role;
+        const createdBy = normalAccount.role;
         setRole(createdBy);
       } catch (error) {
         if (error.response) {
@@ -161,8 +161,8 @@ const Register = ({normalAccount}) => {
     }
 
     try {
-      const userName = normalAccount.normalAccount.username;
-      const fullName = normalAccount.normalAccount.fullname || null;
+      const userName = normalAccount.username || '';
+      const fullName = normalAccount.fullname || null;
 
       await axios.post(`${API_URL}/register`, formData);
       const auditLogData = {

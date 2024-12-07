@@ -138,7 +138,7 @@ const Profile = ({ normalAccount }) => {
     localStorage.removeItem('token');
     localStorage.setItem('loggedIn', false);
     localStorage.setItem('role', 'guest');
-    window.open(`${API_URL}/auth/logout`, '_self');
+    
     navigate('/');
   };
 
@@ -148,7 +148,7 @@ const Profile = ({ normalAccount }) => {
         <Link to={'https://e-tesda.gov.ph/'} className="logo">
           <img src={Logo} width={35} height={35} />
         </Link>
-        <div className="container-logut-drop-down" onClick={toggleDropdown}>
+        <div className="container-logout-drop-down" onClick={toggleDropdown}>
           <div className="profile-name">
             <div className="profile-content-icon">
               <i id="icon" className="bx bx-user"></i>

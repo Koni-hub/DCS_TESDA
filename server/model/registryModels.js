@@ -78,10 +78,10 @@ const Registry = database.define(
     .then((tables) => tables.includes("registyaccount"));
 
   if (!tableExists) {
-    console.log("Table does not exist. Syncing database...");
+    console.info("Table does not exist. Syncing database...");
     await database.sync();
   } else {
-    console.log("Table already exists. Skipping sync.");
+    console.info("Table already exists. Skipping sync.");
   }
 })();
 

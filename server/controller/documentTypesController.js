@@ -1,6 +1,5 @@
 import DocumentTypes from "../model/documentTypesModels.js";
 
-// Get all Document Types
 export const getAllDocumentTypes = async (req, res) => {
   try {
     const response = await DocumentTypes.findAll();
@@ -10,7 +9,6 @@ export const getAllDocumentTypes = async (req, res) => {
   }
 };
 
-// Get Document Types by ID
 export const getDocumentTypeByID = async (req, res) => {
   try {
     const response = await DocumentTypes.findOne({
@@ -28,7 +26,6 @@ export const getDocumentTypeByID = async (req, res) => {
   }
 };
 
-// Add a new Document Types
 export const addDocumentTypes = async (req, res) => {
   try {
     const { name } = req.body;
@@ -43,7 +40,6 @@ export const addDocumentTypes = async (req, res) => {
   }
 };
 
-// Edit an existing Document Types
 export const editDocumentTypes = async (req, res) => {
   try {
     const { id } = req.params;

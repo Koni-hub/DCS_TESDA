@@ -129,7 +129,6 @@ const Account = ({ normalAccount }) => {
     localStorage.removeItem('token');
     localStorage.setItem('loggedIn', 'false');
     localStorage.setItem('role', 'guest');
-    window.open(`${API_URL}/auth/logout`, '_self');
     navigate('/');
   };
 
@@ -238,7 +237,6 @@ const Account = ({ normalAccount }) => {
       return false;
     }
 
-    // Select Account role (must not be empty)
     if (!account_role) {
       toast.error('Role must be not empty');
       return false;
@@ -263,7 +261,6 @@ const Account = ({ normalAccount }) => {
     return true;
   };
 
-  // Form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -298,7 +295,7 @@ const Account = ({ normalAccount }) => {
         const auditLogData = {
           userName,
           fullName,
-          action: `update account by ID ${userName}`,
+          action: `Update account by ID ${userName}`,
         };
 
         await axios.post(`${API_URL}/audit-logs`, auditLogData, {
@@ -541,7 +538,7 @@ const Account = ({ normalAccount }) => {
               </button>
             </div>
           </form>
-          <div className="container-logut-drop-down" onClick={toggleDropdown}>
+          <div className="container-logout-drop-down" onClick={toggleDropdown}>
             <div className="profile-name">
               <div className="profile-content-icon">
                 <i id="icon" className="bx bx-user"></i>
