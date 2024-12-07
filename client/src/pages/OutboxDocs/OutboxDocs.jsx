@@ -9,7 +9,7 @@ import DOMPurify from 'dompurify';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const OutboxDocs = ({ normalAccount, googleAccount }) => {
+const OutboxDocs = ({ normalAccount }) => {
   document.title = 'Outbox Document';
   const [documents, setDocuments] = useState([]);
   const [role, setRole] = useState(null);
@@ -26,7 +26,7 @@ const OutboxDocs = ({ normalAccount, googleAccount }) => {
       const response = await axios.get(`${API_URL}/document-types`);
       setCategories(response.data);
     } catch (error) {
-      console.log('Error fetching document types', error);
+      console.error('Error fetching document types', error);
     }
   };
 
@@ -37,7 +37,7 @@ const OutboxDocs = ({ normalAccount, googleAccount }) => {
       );
       setDocuments(response.data);
     } catch (error) {
-      console.log('Error fetching archived documents');
+      console.error('Error fetching archived documents');
     }
   };
 
@@ -52,7 +52,6 @@ const OutboxDocs = ({ normalAccount, googleAccount }) => {
 
   const navigate = useNavigate();
 
-  // User authentication and role management
   useEffect(() => {
     const getUsernameForData = async () => {
       if (!normalAccount?.email) {
@@ -64,7 +63,6 @@ const OutboxDocs = ({ normalAccount, googleAccount }) => {
         const response = await axios.get(
           `${API_URL}/account/${normalAccount.email}`
         );
-        console.log(normalAccount.username);
         setLoggedInAccount(response.data);
         setRole(response.data.createdBy);
       } catch (error) {
@@ -72,19 +70,15 @@ const OutboxDocs = ({ normalAccount, googleAccount }) => {
       }
     };
 
-    console.log('Account: ', loggedInAccount);
-
     getUsernameForData();
   }, [normalAccount]);
 
-  // Role-based access control
   useEffect(() => {
     if (role && role !== 'Admin' && role !== 'System') {
       navigate('/forbidden');
     }
   }, [role, navigate]);
 
-  // Toast configuration
   const toastConfig = {
     position: 'top-right',
     autoClose: 5000,
@@ -100,7 +94,6 @@ const OutboxDocs = ({ normalAccount, googleAccount }) => {
     try {
       const response = await axios.get(`${API_URL}/record-docs/${id}`);
       const record = response.data;
-      console.log('Selected Record Data', record);
 
       if (record) {
         setTitle(record.title);
@@ -118,7 +111,6 @@ const OutboxDocs = ({ normalAccount, googleAccount }) => {
     }
   };
 
-  // Event handlers
   const handleMenuItemClick = (index) => {
     setActiveMenuItem(index);
   };
@@ -128,7 +120,6 @@ const OutboxDocs = ({ normalAccount, googleAccount }) => {
     sidebar.classList.toggle('hide');
   };
 
-  // Search functionality
   const handleSearchSubmit = (event) => {
     event.preventDefault();
     filterAccountList(searchQuery);
@@ -172,13 +163,10 @@ const OutboxDocs = ({ normalAccount, googleAccount }) => {
     navigate('/');
   };
 
-  console.log('Document:', documents);
-
   const [openDocs, setOpenDocs] = useState(false);
   const [viewDocs, setViewDocs] = useState([]);
 
   const handleToggleOpenDocs = (docID) => {
-    console.log('modal ID:', docID);
     setOpenDocs(!openDocs);
     getViewDocs(docID);
   };
@@ -188,11 +176,9 @@ const OutboxDocs = ({ normalAccount, googleAccount }) => {
       const response = await axios.get(`${API_URL}/record-docs/${docID}`);
       setViewDocs(response.data);
     } catch (error) {
-      console.log('Error fetching specific');
+      console.error('Error fetching specific');
     }
   };
-
-  console.log('Response ViewDocs: ', viewDocs);
 
   const resetFields = () => {
     setTitle('');
@@ -205,19 +191,15 @@ const OutboxDocs = ({ normalAccount, googleAccount }) => {
     setRecordId(null);
   };
 
-  // Function to load the selected image
   const loadImage = (e) => {
     const image = e.target.files[0];
-    console.log('Selected Image:', image);
     if (image) {
       setFile(image);
       const previewUrl = URL.createObjectURL(image);
-      console.log('Preview URL:', previewUrl);
       setPreview(previewUrl);
     }
   };
 
-  // useState
   const [source, setSource] = useState('');
   const [type, setType] = useState('');
   const [title, setTitle] = useState('');
@@ -231,7 +213,6 @@ const OutboxDocs = ({ normalAccount, googleAccount }) => {
     e.preventDefault();
 
     try {
-      // Create FormData for the update
       const formData = new FormData();
       formData.append('title', title);
       formData.append('source', source);
@@ -239,13 +220,12 @@ const OutboxDocs = ({ normalAccount, googleAccount }) => {
       formData.append('description', description);
       formData.append('mode', mode);
 
-      // Only append the file if it exists
       if (file) {
         formData.append('file', file);
       }
 
       const userName =
-        normalAccount?.username || googleAccount.profile.emails[0].value;
+        normalAccount?.username || '';
       const fullName = normalAccount.fullname || null;
 
       await axios.patch(
@@ -253,7 +233,6 @@ const OutboxDocs = ({ normalAccount, googleAccount }) => {
         formData
       );
 
-      // Create Audit Log
       const auditLogData = {
         userName,
         fullName,
@@ -280,7 +259,6 @@ const OutboxDocs = ({ normalAccount, googleAccount }) => {
 
   return (
     <>
-      {/* SIDEBAR */}
       <section id="sidebar">
         <Link to="https://e-tesda.gov.ph/">
           <a href="https://e-tesda.gov.ph/" className="brand">
@@ -441,7 +419,6 @@ const OutboxDocs = ({ normalAccount, googleAccount }) => {
           )}
         </ul>
       </section>
-      {/* SIDEBAR */}
       <section id="content">
         <nav>
           <i className="bx bx-menu" onClick={handleToggleSidebar}></i>
@@ -465,23 +442,10 @@ const OutboxDocs = ({ normalAccount, googleAccount }) => {
           <div className="container-logut-drop-down" onClick={toggleDropdown}>
             <div className="profile-name">
               <div className="profile-content-icon">
-                {googleAccount &&
-                googleAccount.profile &&
-                googleAccount.profile.photos &&
-                googleAccount.profile.photos.length > 0 ? (
-                  <img
-                    src={googleAccount.profile.photos[0].value}
-                    width={35}
-                    height={35}
-                  />
-                ) : (
-                  <i id="icon" className="bx bx-user"></i>
-                )}
+                <i id="icon" className="bx bx-user"></i>
               </div>
               <div className="profile-content-name">
-                {loggedInAccount?.account_username ||
-                  googleAccount?.profile?.displayName ||
-                  ''}
+                {loggedInAccount?.account_username || ''}
               </div>
               <div className="profile-content-drop-down-menu">
                 <i
@@ -503,8 +467,6 @@ const OutboxDocs = ({ normalAccount, googleAccount }) => {
             )}
           </div>
         </nav>
-        {/* NAVBAR */}
-        {/* MAIN */}
         <main>
           <div className="outbox-docs-section">
             <h1>Outbox Documents</h1>
@@ -698,7 +660,6 @@ const OutboxDocs = ({ normalAccount, googleAccount }) => {
             </div>
           </div>
         )}
-        {/* MAIN */}
       </section>
       <ToastContainer />
     </>
