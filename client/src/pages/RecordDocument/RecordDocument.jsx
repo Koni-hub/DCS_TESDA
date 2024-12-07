@@ -948,8 +948,8 @@ const RecordDocument = ({ normalAccount }) => {
         </div>
       )}
       {modalView && (
-        <div className="modal-office-lg">
-        <div className="overlay-lg" onClick={() => setModalView(false)}></div>
+        <div className="modal-office">
+        <div className="overlay" onClick={() => setModalView(false)}></div>
         <div className="modal-content-office-lg">
           <span className="close" onClick={() => setModalView(false)}>
             &times;
