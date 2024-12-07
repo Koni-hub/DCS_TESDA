@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import './Register.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -6,16 +7,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import logo from '../../assets/logo/logo.png';
 import { API_URL } from '../../config.js';
 
-const Register = (normalAccount, googleAccount) => {
+const Register = ({normalAccount}) => {
   const [role, setRole] = useState(null);
 
   const navigate = useNavigate();
-
-  console.log('here is a passed data from app routes', googleAccount);
-  console.log(
-    'here is a passed normal data from app routes GG',
-    normalAccount.normalAccount.role
-  );
 
   const [offices, setOffices] = useState([]);
 
@@ -24,17 +19,15 @@ const Register = (normalAccount, googleAccount) => {
       const response = await axios.get(`${API_URL}/offices`);
       setOffices(response.data);
     } catch (error) {
-      console.log('Error fetching offices', error);
+      console.error('Error fetching offices', error);
     }
   };
 
-  console.log('Fetch Office', offices);
 
   useEffect(() => {
     getAllOffice();
   }, []);
 
-  // Fetch data from json webtoken local storage = function
   useEffect(() => {
     const getUsernameForData = async () => {
       if (!normalAccount.normalAccount || !normalAccount.normalAccount.email) {
@@ -42,13 +35,10 @@ const Register = (normalAccount, googleAccount) => {
         return;
       }
 
-      const normalAccount_email = normalAccount.email;
-      console.log('User email:', normalAccount_email);
 
       try {
         const createdBy = normalAccount.normalAccount.role;
         setRole(createdBy);
-        console.log('Role:', normalAccount.normalAccount.role);
       } catch (error) {
         if (error.response) {
           console.error('Error response:', error.response);
@@ -64,17 +54,15 @@ const Register = (normalAccount, googleAccount) => {
   }, [normalAccount]);
 
   useEffect(() => {
-    console.log('Select Role: ', role);
     if (role && role !== 'Admin' && role === 'System') {
       navigate('/forbidden');
     } else {
-      console.log('Role:', role || 'not defined yet');
+      console.error('Role:', role || 'not defined yet');
     }
   }, [role, navigate]);
 
   const [verifyPassword, setVerifyPassword] = useState('');
 
-  // User Inputted Data Functions, request => server
   const [formData, setFormData] = useState({
     account_username: '',
     account_firstName: '',
@@ -102,7 +90,6 @@ const Register = (normalAccount, googleAccount) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  console.log('Account Status', formData.account_status);
 
   const validateInputs = () => {
     const {
@@ -115,7 +102,6 @@ const Register = (normalAccount, googleAccount) => {
       account_role,
     } = formData;
 
-    // Username validation: Must be numeric and at most 8 characters
     if (!/^\d{1,8}$/.test(account_username)) {
       toast.error(
         'Employee ID must be numeric and exactly 8 characters long.',
@@ -124,39 +110,33 @@ const Register = (normalAccount, googleAccount) => {
       return;
     }
 
-    // Email validation (valid format)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(account_email)) {
       toast.error('Please enter a valid email address.', toastConfig);
       return false;
     }
 
-    // First Name validation (non-empty and max length)
     if (!account_firstName || account_firstName.length > 30) {
       toast.error('First Name must be 30 characters or less.', toastConfig);
       return false;
     }
 
-    // Last Name validation (non-empty and max length)
     if (!account_lastName || account_lastName.length > 30) {
       toast.error('Last Name must be 30 characters or less.', toastConfig);
       return false;
     }
 
-    // Phone Number validation (must be 10 digits)
-    const phoneRegex = /^\d{11}$/; // Change this regex to match your requirements
+    const phoneRegex = /^\d{11}$/;
     if (!account_contactNo || !phoneRegex.test(account_contactNo)) {
       toast.error('Mobile Number must be 11 digits.', toastConfig);
       return false;
     }
 
-    // Select Account role (must not be empty)
     if (!account_role) {
       toast.error('Role must be not empty');
       return false;
     }
 
-    // Password validation (max length, at least one special character, at least one uppercase letter)
     const passwordRegex = /^(?=.*[!@#$%^&*])(?=.*[A-Z]).{16,}$/;
     if (!passwordRegex.test(account_password)) {
       toast.error(
@@ -166,7 +146,6 @@ const Register = (normalAccount, googleAccount) => {
       return false;
     }
 
-    // Confirm Password validation
     if (account_password !== verifyPassword) {
       toast.error('Passwords do not match.', toastConfig);
       return false;
@@ -178,15 +157,14 @@ const Register = (normalAccount, googleAccount) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateInputs()) {
-      return; // Stop submission if validation fails
+      return;
     }
 
     try {
       const userName = normalAccount.normalAccount.username;
       const fullName = normalAccount.normalAccount.fullname || null;
 
-      const response = await axios.post(`${API_URL}/register`, formData);
-      // Create Audit Log
+      await axios.post(`${API_URL}/register`, formData);
       const auditLogData = {
         userName,
         fullName,
@@ -202,7 +180,6 @@ const Register = (normalAccount, googleAccount) => {
       setTimeout(() => {
         navigate('/');
       }, 2100);
-      console.log(response.data);
     } catch (error) {
       if (error.response) {
         toast.error(
@@ -210,13 +187,11 @@ const Register = (normalAccount, googleAccount) => {
           toastConfig
         );
       } else if (error.request) {
-        // The request was made but no response was received
         toast.error(
           'No response from server. Please try again later.',
           toastConfig
         );
       } else {
-        // Something happened in setting up the request that triggered an Error
         toast.error('An error occurred. Please try again later.', toastConfig);
       }
       console.error('Error registering user:', error);
