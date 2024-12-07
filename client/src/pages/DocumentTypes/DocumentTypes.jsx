@@ -215,7 +215,7 @@ const DocumentTypes = ({ normalAccount }) => {
         });
         setTimeout(() => {
           window.location.reload();
-        }, 2000);
+        }, 2500);
       }
     } catch (error) {
       const errorMessage =
@@ -279,7 +279,7 @@ const DocumentTypes = ({ normalAccount }) => {
         toast.success('Document types updated successfully', toastConfig);
         setTimeout(() => {
           window.location.reload();
-        }, 2000);
+        }, 2500);
         setModalUpdate(false);
         resetFormData();
       }
