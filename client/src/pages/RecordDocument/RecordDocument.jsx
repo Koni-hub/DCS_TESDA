@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/no-unescaped-entities */
 import './RecordDocument.css';
 import axios from 'axios';
@@ -8,8 +9,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import { ToastContainer, toast } from 'react-toastify';
 
-/* eslint-disable react/prop-types */
-const RecordDocument = ({ normalAccount, googleAccount }) => {
+const RecordDocument = ({ normalAccount }) => {
   document.title = 'Record Document';
 
   const [activeMenuItem, setActiveMenuItem] = useState(0);
@@ -36,9 +36,8 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
     try {
       const response = await axios.get(`${API_URL}/document-types`);
       setCategories(response.data);
-      console.log('Categories: ', categories)
     } catch (error) {
-      console.log('Error fetching document types', error);
+      console.error('Error fetching document types', error);
     }
   };
 
@@ -46,9 +45,8 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
     try {
       const response = await axios.get(`${API_URL}/offices`);
       setOffices(response.data);
-      console.log('Employee (Office): ', offices);
     } catch (error) {
-      console.log('Error fetching offices', error);
+      console.error('Error fetching offices', error);
     }
   };
 
@@ -57,23 +55,20 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
       const response = await axios.get(`${API_URL}/record-docs`);
       setRecordDocuments(response.data);
     } catch (error) {
-      console.log('Error fetching record documents', error);
+      console.error('Error fetching record documents', error);
     }
   };
 
   // Function to load the selected image
   const loadImage = (e) => {
     const image = e.target.files[0];
-    console.log('Selected Image:', image);
     if (image) {
       setFile(image);
       const previewUrl = URL.createObjectURL(image);
-      console.log('Preview URL:', previewUrl);
       setPreview(previewUrl);
     }
   };
 
-  // Event handlers
   const handleMenuItemClick = (index) => {
     setActiveMenuItem(index);
   };
@@ -83,7 +78,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
     sidebar.classList.toggle('hide');
   };
 
-  // Search functionality
   const handleSearchSubmit = (event) => {
     event.preventDefault();
     filterAccountList(searchQuery);
@@ -106,7 +100,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
     }
   };
 
-  // User authentication and role management
   useEffect(() => {
     const getUsernameForData = async () => {
       if (!normalAccount?.email) {
@@ -128,14 +121,12 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
     getUsernameForData();
   }, [normalAccount]);
 
-  // Role-based access control
   useEffect(() => {
     if (role && role !== 'Admin' && role !== 'System') {
       navigate('/forbidden');
     }
   }, [role, navigate]);
 
-  // Initial data loading
   useEffect(() => {
     getAllRecordDocument();
     getAllTypes();
@@ -163,7 +154,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
       ? 'Office'
       : 'Unknown';
 
-  // useState
   const [title, setTitle] = useState('');
   const [source, setSource] = useState('');
   const [type, setType] = useState('');
@@ -184,7 +174,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
     setRecipient(selectedOptions);
   };
 
-  // Toast configuration
   const toastConfig = {
     position: 'top-right',
     autoClose: 5000,
@@ -196,29 +185,13 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
     theme: 'light',
   };
 
-  // Save Record Document
   const saveRecDocument = async (e) => {
     e.preventDefault();
     const userName =
-        normalAccount?.username || googleAccount.profile.emails[0].value;
+        normalAccount?.username || '';
       const fullName = normalAccount.fullname || null;
       const senderEmail = normalAccount.email;
 
-    // Log form values
-    console.log('Form submitted with values:', {
-      title,
-      source,
-      type,
-      mode,
-      recipient,
-      action,
-      remarks,
-      description,
-      userName,
-      senderEmail
-    });
-
-    // Validate required fields
     const Fields = {
       title,
       source,
@@ -243,26 +216,21 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
 
     recipient.forEach((recipientId) => {
       formData.append('recipient', recipientId);
-      console.log('Recipient: append ', recipientId);
     });
 
     try {
-
-      console.log('Sending request to:', `${API_URL}/record-docs`);
       const response = await axios.post(`${API_URL}/record-docs`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
 
-      // Create Audit Log
       const auditLogData = {
         userName,
         fullName,
         action: `Created record document by ID ${userName}`,
       };
 
-      console.log('Document ID', response.data);
       const documentId = response.data.recordDocument.id;
 
       //  Create Doc Audit Log
@@ -272,8 +240,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
         receiver: recipient,
         action: `Created record document by ID ${userName} and forward to offices ${recipient}`,
       }
-
-      console.log('Document Log Data', DocAuditLogData);
 
       await axios.post(`${API_URL}/audit-logs`, auditLogData, {
         headers: {
@@ -286,8 +252,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
           'Content-Type': 'application/json',
         }
       });
-
-      console.log('Server response:', response);
 
       if (response.status === 201 || response.status === 200) {
         toast.success('Record Document Created Successfully', toastConfig);
@@ -312,7 +276,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
     e.preventDefault();
 
     try {
-      // Create FormData for the update
       const formData = new FormData();
       formData.append('title', title);
       formData.append('source', source);
@@ -323,13 +286,12 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
       formData.append('remarks', remarks);
       formData.append('description', description);
 
-      // Only append the file if it exists
       if (file) {
         formData.append('file', file);
       }
 
       const userName =
-        normalAccount?.username || googleAccount.profile.emails[0].value;
+        normalAccount?.username || '';
       const fullName = normalAccount.fullname || null;
 
       await axios.patch(`${API_URL}/record-docs/${record}`, formData, {
@@ -338,7 +300,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
         },
       });
 
-      // Create Audit Log
       const auditLogData = {
         userName,
         fullName,
@@ -387,7 +348,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
   };
 
   const handleToggleOpenDocsView = (docID) => {
-    console.log('modal ID:', docID);
     setModalView(!modalView);
     getViewDocsLog(docID);
   }
@@ -397,13 +357,12 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
       const response = await axios.get(`${API_URL}/document_audits/${docID}`);
       setViewDocs(response.data);
     } catch (error) {
-      console.log('Error fetching specific');
+      console.error('Error fetching specific');
     }
   };
 
   return (
     <>
-      {/* SIDEBAR */}
       <section id="sidebar">
         <Link to="https://e-tesda.gov.ph/">
           <a href="https://e-tesda.gov.ph/" className="brand">
@@ -564,9 +523,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
           )}
         </ul>
       </section>
-      {/* SIDEBAR */}
       <section id="content">
-        {/* NAVBAR */}
         <nav>
           <i className="bx bx-menu" onClick={handleToggleSidebar}></i>
           <form
@@ -589,23 +546,10 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
           <div className="container-logut-drop-down" onClick={toggleDropdown}>
             <div className="profile-name">
               <div className="profile-content-icon">
-                {googleAccount &&
-                googleAccount.profile &&
-                googleAccount.profile.photos &&
-                googleAccount.profile.photos.length > 0 ? (
-                  <img
-                    src={googleAccount.profile.photos[0].value}
-                    width={35}
-                    height={35}
-                  />
-                ) : (
-                  <i id="icon" className="bx bx-user"></i>
-                )}
+                <i id="icon" className="bx bx-user"></i>
               </div>
               <div className="profile-content-name">
-                {loggedInAccount?.account_username ||
-                  googleAccount?.profile?.displayName ||
-                  ''}
+                {loggedInAccount?.account_username || ''}
               </div>
               <div className="profile-content-drop-down-menu">
                 <i
@@ -627,9 +571,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
             )}
           </div>
         </nav>
-        {/* NAVBAR */}
-
-        {/* MAIN */}
         <main>
           <div className="record-docs-section">
             <h1>Document Table</h1>
@@ -684,7 +625,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
             </div>
           </div>
         </main>
-        {/* MAIN */}
       </section>
       {modalCreate && (
         <div className="modal-office">
@@ -695,7 +635,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
             </span>
             <h2>Create Document</h2>
             <form className="form" onSubmit={saveRecDocument}>
-              {/* Title */}
               <input
                 type="text"
                 name="title"
@@ -704,9 +643,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 onChange={(e) => setTitle(e.target.value)}
                 required
               />
-              {/* END */}
-
-              {/* Source */}
               <select
                 name="source"
                 id="source"
@@ -720,9 +656,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 <option value="Internal">Internal</option>
                 <option value="External">External</option>
               </select>
-              {/* END */}
-
-              {/* Types */}
               <select
                 name="types"
                 id="types"
@@ -743,9 +676,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                   <option disabled>No document types found</option>
                 )}
               </select>
-              {/* END */}
-
-              {/* Mode */}
               <select
                 name="mode"
                 id="mode"
@@ -759,10 +689,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 <option value="Hard copy">Hard Copy</option>
                 <option value="Soft copy">Soft Copy</option>
               </select>
-
-              {/* END */}
-
-              {/* Recipient */}
               <select
                 name="recipient"
                 id="recipient"
@@ -784,9 +710,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                   <option disabled>No recipient found</option>
                 )}
               </select>
-              {/* END */}
-
-              {/* Action */}
               <select
                 type="text"
                 name="action"
@@ -810,9 +733,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 </option>
                 <option value="For information">For information</option>
               </select>
-              {/* END */}
-
-              {/* Remarks */}
               <input
                 type="text"
                 name="remarks"
@@ -821,9 +741,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 onChange={(e) => setRemarks(e.target.value)}
                 required
               />
-              {/* END */}
-
-              {/* Description */}
               <textarea
                 className="input"
                 value={description}
@@ -833,9 +750,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 placeholder="Enter the description"
                 required
               />
-              {/* END */}
-
-              {/* Attachment */}
               <div className="doc-image">
                 <label>Attachment</label>
                 <span>*</span> <br />
@@ -858,7 +772,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                   </div>
                 )}
               </div>
-              {/* END */}
               <button className="docs-btn-submit" type="submit">
                 Create Document
               </button>
@@ -875,7 +788,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
             </span>
             <h2>Edit Document</h2>
             <form className="form" onSubmit={editRecDocument}>
-              {/* Title */}
               <input
                 type="text"
                 name="title"
@@ -884,9 +796,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 onChange={(e) => setTitle(e.target.value)}
                 required
               />
-              {/* END */}
 
-              {/* Source */}
               <select
                 name="source"
                 id="source"
@@ -900,9 +810,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 <option value="Internal">Internal</option>
                 <option value="External">External</option>
               </select>
-              {/* END */}
 
-              {/* Types */}
               <select
                 name="types"
                 id="types"
@@ -923,9 +831,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                   <option disabled>No document types found</option>
                 )}
               </select>
-              {/* END */}
 
-              {/* Mode */}
               <select
                 name="mode"
                 id="mode"
@@ -940,9 +846,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 <option value="Soft copy">Soft Copy</option>
               </select>
 
-              {/* END */}
-
-              {/* Recipient */}
               <select
                 name="recipient"
                 id="recipient"
@@ -969,9 +872,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                   <option disabled>No recipient found</option>
                 )}
               </select>
-              {/* END */}
 
-              {/* Action */}
               <select
                 type="text"
                 name="action"
@@ -995,9 +896,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 </option>
                 <option value="For information">For information</option>
               </select>
-              {/* END */}
 
-              {/* Remarks */}
               <input
                 type="text"
                 name="remarks"
@@ -1006,9 +905,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 onChange={(e) => setRemarks(e.target.value)}
                 required
               />
-              {/* END */}
 
-              {/* Description */}
               <textarea
                 className="input"
                 value={description}
@@ -1018,9 +915,7 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                 placeholder="Enter the description"
                 required
               />
-              {/* END */}
 
-              {/* Attachment */}
               <div className="doc-image">
                 <label>Attachment</label>
                 <span>*</span> <br />
@@ -1043,7 +938,6 @@ const RecordDocument = ({ normalAccount, googleAccount }) => {
                   </div>
                 )}
               </div>
-              {/* END */}
               <button className="docs-btn-update" type="submit">
                 Update Document
               </button>
