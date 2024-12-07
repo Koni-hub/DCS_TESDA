@@ -2,8 +2,6 @@ import express from "express";
 import database from "./config/dbConfig.js";
 import cors from "cors";
 import AccountRoutes from "./routes/accountRoutes.js";
-import DocumentRoutes from "./routes/documentRoutes.js";
-import RejectDocumentsRoutes from "./routes/rejectDocumentsRoutes.js";
 import RegistryRoutes from "./routes/registryRoutes.js";
 import AuditLog from "./routes/auditRoutes.js";
 import Office from "./routes/officeRoutes.js";
@@ -67,8 +65,6 @@ app.use(
 app.use(express.json());
 
 app.use("/", AccountRoutes);
-app.use("/documents", DocumentRoutes);
-app.use("/rejected-documents", RejectDocumentsRoutes);
 app.use("/registry", RegistryRoutes);
 app.use("/audit-logs", AuditLog);
 app.use("/auth", AuthRoutes);
