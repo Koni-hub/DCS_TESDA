@@ -202,10 +202,6 @@ select {
   z-index: 1000;
 }
 
-.overlay-lg {
-  background: rgba(49, 49, 49, 0.8);
-}
-
 .modal-content-office-lg {
   font-family: var(--poppins), sans-serif;
   position: absolute;
