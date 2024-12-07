@@ -228,7 +228,7 @@ const RecordDocument = ({ normalAccount }) => {
       const auditLogData = {
         userName,
         fullName,
-        action: `Created record document by ID ${userName}`,
+        action: `Created document by ID ${userName}`,
       };
 
       const documentId = response.data.recordDocument.id;
@@ -238,7 +238,7 @@ const RecordDocument = ({ normalAccount }) => {
         document_id: documentId,
         senderName: fullName,
         receiver: recipient,
-        action: `Created record document by ID ${userName} and forward to offices ${recipient}`,
+        action: `Created document by ID ${userName} and forward to offices ${recipient}`,
       }
 
       await axios.post(`${API_URL}/audit-logs`, auditLogData, {
