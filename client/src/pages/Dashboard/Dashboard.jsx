@@ -7,7 +7,7 @@ import logo from '../../assets/logo/logo.png';
 import { API_URL } from '../../config.js';
 import axios from 'axios';
 
-const Dashboard = ({ normalAccount, googleAccount }) => {
+const Dashboard = ({ normalAccount }) => {
   document.title = 'Dashboard';
 
   const [isSideDropDownOpen, setSideDropDownOpen] = useState(false);
@@ -17,24 +17,14 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
     setSideDropDownOpen(!isSideDropDownOpen);
   };
 
-  // Navigation = state
   const navigate = useNavigate();
-  // -- END
-
-  console.log('here is a passed data from app routes', googleAccount);
-  console.log('here is a passed normal data from app routes', normalAccount);
 
   useEffect(() => {
     const userStatus = normalAccount.account_status;
-    console.log('Use Effect Status: ', userStatus);
     setStatus(userStatus)
   }, [status, navigate]);
 
-  // Fetch data from json webtoken local storage = state
   const [loggedInAccount, setLoggedInAccount] = useState(null);
-  // -- END
-
-  // Fetch data from json webtoken local storage = function
 
   useEffect(() => {
     const getUsernameForData = async () => {
@@ -44,14 +34,12 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
       }
 
       const normalAccount_email = normalAccount.email;
-      console.log('User email:', normalAccount_email);
 
       try {
         const response = await axios.get(
           `${API_URL}/account/${normalAccount_email}`
         );
         setLoggedInAccount(response.data);
-        console.log('here is the account details', loggedInAccount);
       } catch (error) {
         if (error.response) {
           console.error('Error response:', error.response);
@@ -66,9 +54,6 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
     getUsernameForData();
   }, []);
 
-  // -- END
-
-  //Toggle Sidebar
   const [activeMenuItem, setActiveMenuItem] = useState(0);
 
   const handleMenuItemClick = (index) => {
@@ -79,10 +64,6 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
     const sidebar = document.getElementById('sidebar');
     sidebar.classList.toggle('hide');
   };
-
-  // -- END
-
-  // Toogle Profile Dropdown
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -103,19 +84,13 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  // -- END
-
-  // Check status
   useEffect(() => {
-    console.log('Status: ', status);
     if (status && status !== 'active' && status === 'closed') {
       navigate('/inactive');
     } else {
-      console.log('Status:', status || 'not defined yet');
+      console.error('Status:', status || 'not defined yet');
     }
   }, [status, navigate]);
-
-  // Logout
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -125,8 +100,6 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
     navigate('/');
   };
 
-  // -- END
-
   const [documents, setDocuments] = useState([]);
   const [accounts, setAccounts] = useState([]);
   const [adminCount, setAdminCounts] = useState(0);
@@ -135,7 +108,6 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
   const [recDocs, setRecDocs] = useState([]);
   const [recDocsCount, setRecDocsCount] = useState(0);
 
-  // Fetch all record documents
   const getAllRecDocs = async () => {
     try {
       const response = await axios.get(`${API_URL}/record-docs`);
@@ -145,7 +117,6 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
     }
   };
 
-  // Fetch all accounts
   const getAllAccounts = async () => {
     try {
       const response = await axios.get(`${API_URL}/accounts`);
@@ -163,7 +134,6 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
     return accounts.account_role == 'Employee';
   };
 
-  // Fetch all documents
   const getAllDocuments = async () => {
     try {
       const response = await axios.get(`${API_URL}/documents`);
@@ -208,7 +178,6 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
     }
   };
 
-  // Function to format a timestamp into a readable date string
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
     const options = {
@@ -232,7 +201,6 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
 
   return (
     <>
-      {/* SIDEBAR */}
       <section id="sidebar">
         <Link to="https://e-tesda.gov.ph/">
           <a href="https://e-tesda.gov.ph/" className="brand">
@@ -393,10 +361,7 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
           )}
         </ul>
       </section>
-      {/* SIDEBAR */}
-
       <section id="content">
-        {/* NAVBAR */}
         <nav>
           <i className="bx bx-menu" onClick={handleToggleSidebar}></i>
           <form action="#">
@@ -405,23 +370,10 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
           <div className="container-logut-drop-down" onClick={toggleDropdown}>
             <div className="profile-name">
               <div className="profile-content-icon">
-                {googleAccount &&
-                googleAccount.profile &&
-                googleAccount.profile.photos &&
-                googleAccount.profile.photos.length > 0 ? (
-                  <img
-                    src={googleAccount.profile.photos[0].value}
-                    width={35}
-                    height={35}
-                  />
-                ) : (
-                  <i id="icon" className="bx bx-user"></i>
-                )}
+                <i id="icon" className="bx bx-user"></i>
               </div>
               <div className="profile-content-name">
-                {loggedInAccount?.account_username ||
-                  googleAccount?.profile?.displayName ||
-                  ''}
+                {loggedInAccount?.account_username || ''}
               </div>
               <div className="profile-content-drop-down-menu">
                 <i
@@ -443,11 +395,7 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
             )}
           </div>
         </nav>
-        {/* NAVBAR */}
-
-        {/* MAIN */}
         <main>
-          {/* Overview Section */}
           <div className="welcome-msg">
             <h1>Hello, {userLoginRole} </h1>
           </div>
@@ -480,7 +428,6 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
               </div>
             </div>
           </div>
-          {/* Overview Section */}
           {userLoginRole === 'Administrator' && (
             <>
               <div className="features-section">
@@ -554,7 +501,6 @@ const Dashboard = ({ normalAccount, googleAccount }) => {
             </>
           )}
         </main>
-        {/* MAIN */}
       </section>
     </>
   );
