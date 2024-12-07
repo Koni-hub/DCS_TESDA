@@ -6,7 +6,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import logo from '../../assets/logo/logo.png';
-// import googleImage from '../../assets/logo/google.png';
 import { API_URL } from '../../config.js';
 import * as jose from 'jose';
 
@@ -50,13 +49,11 @@ const Login = () => {
   const validateInputs = () => {
     const { emailOrUsername, account_password } = loginformData;
 
-    // Email/Username validation (non-empty)
     if (!emailOrUsername) {
       toast.error('Please enter your email or username', toastConfig);
       return false;
     }
 
-    // Password validation (non-empty)
     if (!account_password) {
       toast.error('Please enter your password', toastConfig);
       return false;
@@ -68,9 +65,8 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validate inputs before submitting
     if (!validateInputs()) {
-      return; // Stop submission if validation fails
+      return;
     }
 
     try {
@@ -87,12 +83,10 @@ const Login = () => {
 
       const systemRole = decode.role;
 
-      // Save JWT token securely
       localStorage.setItem('loggedIn', true);
       localStorage.setItem('token', token);
       localStorage.setItem('role', systemRole);
 
-      // Save email/username if "Remember Me" is checked
       if (rememberMe) {
         localStorage.setItem('emailOrUsername', loginformData.emailOrUsername);
       } else {
@@ -109,19 +103,7 @@ const Login = () => {
       }, 2000);
     } catch (error) {
       if (error.response && error.response.status === 429) {
-        // Extract retry-after header and calculate the wait time
-        const retryAfter = error.response.headers['retry-after'];
-        const waitTime = retryAfter ? parseInt(retryAfter, 10) * 1000 : 300000; // Default to 5 minutes if not provided
-        
-        const retryUntil = Date.now() + waitTime;
-        localStorage.setItem('retryUntil', retryUntil);
-
-        const minutes = waitTime / 60000;
-        toast.error(`Too many login attempts. Please try again in ${minutes.toFixed(0)} minutes.`, toastConfig);
-        
-        setTimeout(() => {
-            localStorage.removeItem('retryUntil');
-        }, waitTime);
+        toast.error('Too many login attempts. Please try again.', toastConfig);
       } else if (error.response && error.response.data && error.response.data.message) {
         toast.error('Login failed: ' + error.response.data.message, toastConfig);
       } else {
@@ -133,10 +115,6 @@ const Login = () => {
   const togglePassword = () => {
     setPasswordVisible(!passwordVisible);
   };
-
-  // const googleLogin = () => {
-  //   window.open(`${API_URL}/auth/google`, '_self');
-  // };
 
   return (
     <>
@@ -192,35 +170,10 @@ const Login = () => {
                     </label>
                     <p>Remember Me</p>
                   </div>
-                  {/* <a href="#">Forgot Password</a> */}
                 </div>
-
                 <div className="inputBox">
                   <input onClick={handleSubmit} type="submit" value="Login" />
                 </div>
-
-                {/* <div className="links-register">
-                  <p>Don't have an account?</p>
-                  <Link to={'/register'}> register here</Link>
-                </div> */}
-                {/* <div className="break">
-                  <hr />
-                  <span>Or</span>
-                  <hr />
-                </div> */}
-                {/* <div className="google-container" onClick={googleLogin}>
-                  <div className="google-img">
-                    <img
-                      src={googleImage}
-                      width={25}
-                      height={25}
-                      alt="Google Logo"
-                    />
-                  </div>
-                  <div className="google-text">
-                    <div className="google-login">Continue with Google</div>
-                  </div>
-                </div> */}
               </form>
             </div>
           </div>

@@ -178,25 +178,3 @@
     padding: 0 10px; 
     text-transform: uppercase;
   }
-  
-  .google-container {
-    border: 1px solid #d5d5d5;
-    padding: 15px 25px;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    gap: 25px;
-  }
-
-  .google-container .google-text {
-    color: var(--light);
-  }
-  
-  .google-container:hover {
-    border: 1px solid #b8b8b8c7;
-    cursor: pointer;
-  }
-  
-  .google-container .google-img img {
-    background-attachment: fixed;
-  }
