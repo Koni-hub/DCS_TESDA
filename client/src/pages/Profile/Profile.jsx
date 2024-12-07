@@ -18,7 +18,6 @@ const Profile = ({ normalAccount, googleAccount }) => {
     newPassword: '',
   });
 
-  // Toast Configuration
   const toastConfig = {
     position: 'top-right',
     autoClose: 5000,
@@ -29,7 +28,6 @@ const Profile = ({ normalAccount, googleAccount }) => {
     progress: undefined,
     theme: 'light',
   };
-  // -- END
 
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -44,7 +42,6 @@ const Profile = ({ normalAccount, googleAccount }) => {
       }
 
       const normalAccount_email = normalAccount.email;
-      console.log('User email:', normalAccount_email);
 
       try {
         const response = await axios.get(
@@ -82,7 +79,7 @@ const Profile = ({ normalAccount, googleAccount }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(
+      await axios.put(
         `${API_URL}/account/${formData.account_email}`,
         formData
       );
@@ -90,7 +87,6 @@ const Profile = ({ normalAccount, googleAccount }) => {
       setTimeout(() => {
         window.location.reload();
       }, 1000);
-      console.log(response.data.message);
     } catch (error) {
       console.error('Error updating profile:', error);
       if (error.response.data) {
@@ -148,7 +144,6 @@ const Profile = ({ normalAccount, googleAccount }) => {
 
   return (
     <section id="profile-content">
-      {/* NAVBAR */}
       <nav>
         <Link to={'https://e-tesda.gov.ph/'} className="logo">
           <img src={Logo} width={35} height={35} />
@@ -194,9 +189,6 @@ const Profile = ({ normalAccount, googleAccount }) => {
           )}
         </div>
       </nav>
-      {/* NAVBAR */}
-
-      {/* MAIN */}
       <main>
         <div className="container-account-form">
           <div className="account-form">
@@ -301,7 +293,6 @@ const Profile = ({ normalAccount, googleAccount }) => {
           </div>
         </div>
       </main>
-      {/* MAIN */}
       <ToastContainer />
     </section>
   );
