@@ -26,7 +26,6 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
 
   const navigate = useNavigate();
 
-  // User authentication and role management
   useEffect(() => {
     const getUsernameForData = async () => {
       if (!normalAccount?.email) {
@@ -38,7 +37,6 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
         const response = await axios.get(
           `${API_URL}/account/${normalAccount.email}`
         );
-        console.log(normalAccount.username);
         setLoggedInAccount(response.data);
         setRole(response.data.createdBy);
       } catch (error) {
@@ -46,12 +44,9 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
       }
     };
 
-    console.log('Account: ', loggedInAccount);
-
     getUsernameForData();
   }, [normalAccount]);
 
-  // Toast configuration
   const toastConfig = {
     position: 'top-right',
     autoClose: 5000,
@@ -63,7 +58,6 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
     theme: 'light',
   };
 
-  // Role-based access control
   useEffect(() => {
     if (role && role !== 'Admin' && role !== 'System') {
       navigate('/forbidden');
@@ -72,14 +66,14 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
   
   const officeId = normalAccount.origin;
 
+  const fetchIncomingDocuments = async () => {
+    const response = await axios.get(
+      `${API_URL}/recipients/incoming?officeId=${officeId}`
+    );
+    setDocuments(response.data);
+  };
+
   useEffect(() => {
-    const fetchIncomingDocuments = async () => {
-      const response = await axios.get(
-        `${API_URL}/recipients/incoming?officeId=${officeId}`
-      );
-      console.log('Incoming Document:', response.data);
-      setDocuments(response.data);
-    };
     fetchIncomingDocuments();
   }, [officeId]);
 
@@ -90,7 +84,6 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
       const fullName = normalAccount.fullname || null;
 
       await axios.put(`${API_URL}/recipients/${id}/receive`);
-      // Create Audit Log
       const auditLogData = {
         userName,
         fullName,
@@ -113,7 +106,6 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
   };
 
   const handleDecline = async (id) => {
-    console.log('ID', id);
     try {
       const {value: reason, isConfirmed} = await Swal.fire({
         title: 'Reason for declining',
@@ -127,13 +119,12 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
         }
       });
       if (!isConfirmed) {
-        return; // Do nothing if the user clicks "Cancel"
+        return;
       }
       const userName =
         normalAccount?.username || googleAccount.profile.emails[0].value;
       const fullName = normalAccount.fullname || null;
       await axios.put(`${API_URL}/recipients/${id}/decline`, reason);  
-      // Create Audit Log
       const auditLogData = {
         userName,
         fullName,
@@ -154,7 +145,6 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
     }
   };
 
-  // Event handlers
   const handleMenuItemClick = (index) => {
     setActiveMenuItem(index);
   };
@@ -164,7 +154,6 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
     sidebar.classList.toggle('hide');
   };
 
-  // Search functionality
   const handleSearchSubmit = (event) => {
     event.preventDefault();
     filterAccountList(searchQuery);
@@ -178,12 +167,12 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
 
   const filterAccountList = (query) => {
     if (!query.trim()) {
-      // getAllRecordDocument();
+      fetchIncomingDocuments();
     } else {
-      // const filteredRecordDocs = recordDocument.filter(recdocs =>
-      //     recdocs.title.toLowerCase().includes(query.toLowerCase())
-      // );
-      // setRecordDocuments(filteredRecordDocs);
+      const filteredRecordDocs = documents.filter(doc =>
+        doc.document.title.toLowerCase().includes(query.toLowerCase())
+      );
+      setDocuments(filteredRecordDocs);
     }
   };
 
@@ -208,13 +197,10 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
     navigate('/');
   };
 
-  console.log('Document:', documents);
-
   const [openDocs, setOpenDocs] = useState(false);
   const [viewDocs, setViewDocs] = useState([]);
 
   const handleToggleOpenDocs = (docID) => {
-    console.log('modal ID:', docID);
     setOpenDocs(!openDocs);
     getViewDocs(docID);
   };
@@ -224,11 +210,9 @@ const IncomingDocuments = ({ normalAccount, googleAccount }) => {
       const response = await axios.get(`${API_URL}/record-docs/${docID}`);
       setViewDocs(response.data);
     } catch (error) {
-      console.log('Error fetching specific');
+      console.error('Error fetching specific');
     }
   };
-
-  console.log('Response ViewDocs: ', viewDocs);
 
   return (
     <>
