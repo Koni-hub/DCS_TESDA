@@ -8,7 +8,7 @@ import logo from '../../assets/logo/logo.png';
 import DOMPurify from 'dompurify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const ArchiveDocs = ({ normalAccount, googleAccount }) => {
+const ArchiveDocs = ({ normalAccount }) => {
   document.title = 'Archived Document';
   const [documents, setDocuments] = useState([]);
   const [role, setRole] = useState(null);
@@ -23,7 +23,7 @@ const ArchiveDocs = ({ normalAccount, googleAccount }) => {
       const response = await axios.get(`${API_URL}/recipients/archive-docs`);
       setDocuments(response.data);
     } catch (error) {
-      console.log('Error fetching archived documents');
+      console.error('Error fetching archived documents');
     }
   };
 
@@ -37,7 +37,6 @@ const ArchiveDocs = ({ normalAccount, googleAccount }) => {
 
   const navigate = useNavigate();
 
-  // User authentication and role management
   useEffect(() => {
     const getUsernameForData = async () => {
       if (!normalAccount?.email) {
@@ -49,7 +48,7 @@ const ArchiveDocs = ({ normalAccount, googleAccount }) => {
         const response = await axios.get(
           `${API_URL}/account/${normalAccount.email}`
         );
-        console.log(normalAccount.username);
+        console.error(normalAccount.username);
         setLoggedInAccount(response.data);
         setRole(response.data.createdBy);
       } catch (error) {
@@ -57,19 +56,15 @@ const ArchiveDocs = ({ normalAccount, googleAccount }) => {
       }
     };
 
-    console.log('Account: ', loggedInAccount);
-
     getUsernameForData();
   }, [normalAccount]);
 
-  // Role-based access control
   useEffect(() => {
     if (role && role !== 'Admin' && role !== 'System') {
       navigate('/forbidden');
     }
   }, [role, navigate]);
 
-  // Event handlers
   const handleMenuItemClick = (index) => {
     setActiveMenuItem(index);
   };
@@ -79,7 +74,6 @@ const ArchiveDocs = ({ normalAccount, googleAccount }) => {
     sidebar.classList.toggle('hide');
   };
 
-  // Search functionality
   const handleSearchSubmit = (event) => {
     event.preventDefault();
     filterAccountList(searchQuery);
@@ -123,13 +117,10 @@ const ArchiveDocs = ({ normalAccount, googleAccount }) => {
     navigate('/');
   };
 
-  console.log('Document:', documents);
-
   const [openDocs, setOpenDocs] = useState(false);
   const [viewDocs, setViewDocs] = useState([]);
 
   const handleToggleOpenDocs = (docID) => {
-    console.log('modal ID:', docID);
     setOpenDocs(!openDocs);
     getViewDocs(docID);
   };
@@ -139,15 +130,12 @@ const ArchiveDocs = ({ normalAccount, googleAccount }) => {
       const response = await axios.get(`${API_URL}/record-docs/${docID}`);
       setViewDocs(response.data);
     } catch (error) {
-      console.log('Error fetching specific');
+      console.error('Error fetching specific');
     }
   };
 
-  console.log('Response ViewDocs: ', viewDocs);
-
   return (
     <>
-      {/* SIDEBAR */}
       <section id="sidebar">
         <Link to="https://e-tesda.gov.ph/">
           <a href="https://e-tesda.gov.ph/" className="brand">
@@ -308,7 +296,6 @@ const ArchiveDocs = ({ normalAccount, googleAccount }) => {
           )}
         </ul>
       </section>
-      {/* SIDEBAR */}
       <section id="content">
         <nav>
           <i className="bx bx-menu" onClick={handleToggleSidebar}></i>
@@ -332,23 +319,10 @@ const ArchiveDocs = ({ normalAccount, googleAccount }) => {
           <div className="container-logut-drop-down" onClick={toggleDropdown}>
             <div className="profile-name">
               <div className="profile-content-icon">
-                {googleAccount &&
-                googleAccount.profile &&
-                googleAccount.profile.photos &&
-                googleAccount.profile.photos.length > 0 ? (
-                  <img
-                    src={googleAccount.profile.photos[0].value}
-                    width={35}
-                    height={35}
-                  />
-                ) : (
-                  <i id="icon" className="bx bx-user"></i>
-                )}
+                <i id="icon" className="bx bx-user"></i>
               </div>
               <div className="profile-content-name">
-                {loggedInAccount?.account_username ||
-                  googleAccount?.profile?.displayName ||
-                  ''}
+                {loggedInAccount?.account_username ||''}
               </div>
               <div className="profile-content-drop-down-menu">
                 <i
@@ -370,8 +344,6 @@ const ArchiveDocs = ({ normalAccount, googleAccount }) => {
             )}
           </div>
         </nav>
-        {/* NAVBAR */}
-        {/* MAIN */}
         <main>
           <div className="archive-docs-section">
             <h1>Archived Documents</h1>
@@ -455,7 +427,6 @@ const ArchiveDocs = ({ normalAccount, googleAccount }) => {
             </div>
           </>
         )}
-        {/* MAIN */}
       </section>
     </>
   );

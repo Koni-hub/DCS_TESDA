@@ -42,33 +42,6 @@
   color: var(--light);
 }
 
-/* Notification Badge */
-.notification-container {
-  position: relative;
-  display: inline-block;
-}
-
-.notification-container i {
-  position: relative;
-  right: 25px;
-  font-size: 24px;
-}
-
-.notification-count {
-  position: absolute;
-  top: -10px;
-  right: -1px;
-  background: var(--secondary);
-  color: white;
-  border-radius: 50%;
-  padding: 3px 6px;
-  font-size: 12px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 /* Table */
 .archive-docs-table {
   margin-top: 23px;
@@ -241,19 +214,6 @@ label {
   background-color: var(--light-cancel-button);
 }
 
-/* Status Checker */
-.status-green {
-  background-color: #d4edda; /* Light green */
-}
-
-.status-yellow {
-  background-color: #fff3cd; /* Light yellow */
-}
-
-.status-red {
-  background-color: #f8d7da; /* Light red */
-}
-
 /* Form */
 .form {
   padding: 10px;
@@ -384,60 +344,4 @@ input[type="submit"]:active {
   color: white;
   padding: 10px 5px;
   border-radius: 5px;
-}
-
-/* Container for alignment */
-.container {
-  margin: 10px auto;
-  max-width: 100%;
-  width: 100%;
-  background: #fff;
-  border-radius: 8px;
-  padding: 20px;
-}
-
-.container p:first-of-type {
-  font-weight: 800;
-  font-size: 1.5em;
-  font-weight: 600;
-  margin: 0 0 10px;
-  color: #2c3e50;
-}
-
-/* Image styling */
-.container img {
-  border-radius: 5px;
-  margin: 10px auto;
-}
-
-.container p span {
-  font-size: 1em;
-  color: #555;
-  margin: 5px 0;
-  font-weight: 800;
-}
-
-.container p {
-  font-size: 1em;
-  color: #555;
-  margin: 5px 0;
-}
-
-.container textarea {
-  width: 100%;
-  height: 100px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-  font-size: 1em;
-  color: #333;
-  background-color: #f7f7f7;
-  resize: vertical;
-  margin-top: 10px;
-}
-
-textarea:focus {
-  outline: none;
-  border-color: #3498db;
-  box-shadow: 0 0 4px rgba(52, 152, 219, 0.3);
 }
