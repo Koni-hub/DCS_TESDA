@@ -11,7 +11,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DOMPurify from 'dompurify';
 
-const Registry = ({ normalAccount, googleAccount }) => {
+const Registry = ({ normalAccount }) => {
   document.title = 'Registry';
 
   const [registries, setRegistries] = useState([]);
@@ -23,7 +23,6 @@ const Registry = ({ normalAccount, googleAccount }) => {
   const [modalUpdate, setModalUpdate] = useState(false);
   const [selectedRegistryId, setSelectedRegistryId] = useState(null);
 
-  // Registry Fields
   const [region, setRegion] = useState('');
   const [province, setProvince] = useState('');
   const [name, setName] = useState('');
@@ -45,7 +44,7 @@ const Registry = ({ normalAccount, googleAccount }) => {
       setRegistries(response.data);
       setFilterRegistries(response.data);
     } catch (error) {
-      console.log('Error fetching registries', error);
+      console.error('Error fetching registries', error);
     }
   };
 
@@ -108,7 +107,7 @@ const Registry = ({ normalAccount, googleAccount }) => {
       setFilterDocuments(response.data);
       setAllDocuments(response.data);
     } catch (error) {
-      console.log('Error fetching docouments', error);
+      console.error('Error fetching docouments', error);
     }
   };
 
@@ -116,7 +115,6 @@ const Registry = ({ normalAccount, googleAccount }) => {
     e.preventDefault();
     const userName =
       normalAccount?.username
-    console.log('Username: ', userName);
     const fullName = normalAccount.fullname || null;
 
     const formData = {
@@ -141,7 +139,6 @@ const Registry = ({ normalAccount, googleAccount }) => {
         headers: { 'Content-Type': 'application/json' },
       });
 
-      // Create Audit Log
       const auditLogData = {
         userName,
         fullName,
@@ -167,7 +164,6 @@ const Registry = ({ normalAccount, googleAccount }) => {
     e.preventDefault();
     const userName =
       normalAccount?.username;
-    console.log('Username: ', userName);
     const fullName = normalAccount.fullname || null;
 
     const formData = {
@@ -192,7 +188,6 @@ const Registry = ({ normalAccount, googleAccount }) => {
         headers: { 'Content-Type': 'application/json' },
       });
 
-      // Create Audit Log
       const auditLogData = {
         userName,
         fullName,
@@ -216,12 +211,10 @@ const Registry = ({ normalAccount, googleAccount }) => {
   const deleteRegistries = async (e, registryId) => {
     const userName =
       normalAccount?.username;
-    console.log('Username: ', userName);
     const fullName = normalAccount.fullname || null;
 
     e.preventDefault();
 
-    // Show confirmation dialog
     const confirmDelete = window.confirm(
       'Are you sure you want to delete this registry No ' + registryId + ' ?'
     );
@@ -233,7 +226,6 @@ const Registry = ({ normalAccount, googleAccount }) => {
     try {
       await axios.delete(`${API_URL}/registry/${registryId}`);
 
-      // Create Audit Log
       const auditLogData = {
         userName,
         fullName,
@@ -257,16 +249,10 @@ const Registry = ({ normalAccount, googleAccount }) => {
     getAllDocuments();
   }, []);
 
-  // Navigation = state
   const navigate = useNavigate();
-  // -- END
 
-  // Fetch data from json webtoken local storage = state
   const [role, setRole] = useState(null);
   const [loggedInAccount, setLoggedInAccount] = useState(null);
-  // -- END
-
-  // Fetch data from json webtoken local storage = function
 
   useEffect(() => {
     const getUsernameForData = async () => {
@@ -276,17 +262,13 @@ const Registry = ({ normalAccount, googleAccount }) => {
       }
 
       const normalAccount_email = normalAccount.email;
-      console.log('User email:', normalAccount_email);
-
       try {
         const response = await axios.get(
           `${API_URL}/account/${normalAccount_email}`
         );
         setLoggedInAccount(response.data);
-        console.log('here is the account details', loggedInAccount);
         const createdBy = response.data.createdBy;
         setRole(createdBy);
-        console.log('Role:', createdBy);
       } catch (error) {
         if (error.response) {
           console.error('Error response:', error.response);
@@ -301,21 +283,14 @@ const Registry = ({ normalAccount, googleAccount }) => {
     getUsernameForData();
   }, [normalAccount]);
 
-  // -- END
-
-  // Role
-
   useEffect(() => {
     if (role && role !== 'Admin' && role !== 'System') {
       navigate('/forbidden');
     } else {
-      console.log('Role:', role || 'not defined yet');
+      console.error('Role:', role || 'not defined yet');
     }
   }, [role, navigate]);
 
-  // -- END
-
-  //Toggle Sidebar
   const [activeMenuItem, setActiveMenuItem] = useState(0);
 
   const handleMenuItemClick = (index) => {
@@ -326,10 +301,6 @@ const Registry = ({ normalAccount, googleAccount }) => {
     const sidebar = document.getElementById('sidebar');
     sidebar.classList.toggle('hide');
   };
-
-  // -- END
-
-  // Toogle Profile Dropdown
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -350,10 +321,6 @@ const Registry = ({ normalAccount, googleAccount }) => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  // -- END
-
-  // Logout
-
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.setItem('loggedIn', false);
@@ -362,15 +329,12 @@ const Registry = ({ normalAccount, googleAccount }) => {
     navigate('/');
   };
 
-  // -- END
-
   const [isSideDropDownOpen, setSideDropDownOpen] = useState(false);
 
   const handleDropdownSidebar = () => {
     setSideDropDownOpen(!isSideDropDownOpen);
   };
 
-  // Function to format a timestamp into a readable date string
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
     const options = {
@@ -381,9 +345,6 @@ const Registry = ({ normalAccount, googleAccount }) => {
     return date.toLocaleDateString('en-US', options);
   };
 
-  // -- END
-
-  // Toast Configuration
   const toastConfig = {
     position: 'top-right',
     autoClose: 5000,
@@ -394,7 +355,6 @@ const Registry = ({ normalAccount, googleAccount }) => {
     progress: undefined,
     theme: 'light',
   };
-  // -- END
 
 
   const isPending = async (documentId, document) => {
@@ -403,9 +363,7 @@ const Registry = ({ normalAccount, googleAccount }) => {
       }
       return false;
   };
-  // Main document checker
   const documentChecker = async () => {
-    console.log('Starting document check...');
 
     const pendingDocuments = await Promise.all(
       allDocuments.map(async (doc) => {
@@ -413,12 +371,9 @@ const Registry = ({ normalAccount, googleAccount }) => {
       })
     );
 
-    // Update counts
-    const pendingCount = pendingDocuments.filter(Boolean).length;
-    console.log('Pending count:', pendingCount);
+    pendingDocuments.filter(Boolean).length;
   };
 
-  // Trigger the document check on load or document updates
   useEffect(() => {
     documentChecker();
   }, [allDocuments]);
@@ -458,7 +413,6 @@ const Registry = ({ normalAccount, googleAccount }) => {
 
   return (
     <>
-      {/* SIDEBAR */}
       <section id="sidebar">
         <Link to="https://e-tesda.gov.ph/">
           <a href="https://e-tesda.gov.ph/" className="brand">
@@ -619,9 +573,7 @@ const Registry = ({ normalAccount, googleAccount }) => {
           )}
         </ul>
       </section>
-      {/* SIDEBAR */}
       <section id="content">
-        {/* NAVBAR */}
         <nav>
           <i className="bx bx-menu" onClick={handleToggleSidebar}></i>
           <form
@@ -644,23 +596,10 @@ const Registry = ({ normalAccount, googleAccount }) => {
           <div className="container-logut-drop-down" onClick={toggleDropdown}>
             <div className="profile-name">
               <div className="profile-content-icon">
-                {googleAccount &&
-                googleAccount.profile &&
-                googleAccount.profile.photos &&
-                googleAccount.profile.photos.length > 0 ? (
-                  <img
-                    src={googleAccount.profile.photos[0].value}
-                    width={35}
-                    height={35}
-                  />
-                ) : (
-                  <i id="icon" className="bx bx-user"></i>
-                )}
+                <i id="icon" className="bx bx-user"></i>
               </div>
               <div className="profile-content-name">
-                {loggedInAccount?.account_username ||
-                  googleAccount?.profile?.displayName ||
-                  ''}
+                {loggedInAccount?.account_username || ''}
               </div>
               <div className="profile-content-drop-down-menu">
                 <i
@@ -682,9 +621,6 @@ const Registry = ({ normalAccount, googleAccount }) => {
             )}
           </div>
         </nav>
-        {/* NAVBAR */}
-
-        {/* MAIN */}
         <main>
           <div className="registry-section">
             <div className="display-status-registry">
@@ -753,8 +689,6 @@ const Registry = ({ normalAccount, googleAccount }) => {
             </div>
           </div>
         </main>
-
-        {/* MAIN */}
       </section>
       {modalCreate && (
         <div className="modal">
