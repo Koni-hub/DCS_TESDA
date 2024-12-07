@@ -643,7 +643,7 @@ const Account = ({ normalAccount }) => {
       {modalUpdate && (
         <div className="modal">
           <div onClick={toggleModalUpdate} className="overlay"></div>
-          <div className="modal-document">
+          <div className="modal-account">
             <h1>Update Account</h1>
             <hr></hr>
             <form className="form" onSubmit={handleSubmit}>
