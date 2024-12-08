@@ -60,7 +60,6 @@ const generateUniqueNo = async () => {
 };
 
 export const addRecordDocument = async (req, res) => {
-  console.log("Log from backend body: ", req.body);
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).json({ msg: "No File Uploaded" });
   }
@@ -68,16 +67,9 @@ export const addRecordDocument = async (req, res) => {
   const { title, source, type, description, mode, recipient, action, remarks, userName, senderEmail } =
     req.body;
 
-    console.log('Sender Name: ', userName);
-    console.log('Sender Email: ', senderEmail);
-
-  console.log("Recipient:", recipient);
-
   const file = req.files.file;
 
   const uniqueNo = await generateUniqueNo();
-
-  console.log('Unique ID: ', uniqueNo);
 
   const fileSize = file.data.length;
   const ext = path.extname(file.name);
@@ -256,7 +248,6 @@ export const deleteRecordDocument = async (req, res) => {
     });
     res.status(200).json({ msg: "Record Document deleted successfully" });
   } catch (error) {
-    console.log(error.message);
     res.status(500).json({ error: "Internal Server Error: " + error });
   }
 };

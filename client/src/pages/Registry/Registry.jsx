@@ -323,6 +323,7 @@ const Registry = ({ normalAccount }) => {
     localStorage.removeItem('token');
     localStorage.setItem('loggedIn', false);
     localStorage.setItem('role', 'guest');
+    localStorage.removeItem('currentOffice');
     navigate('/');
   };
 
@@ -373,7 +374,6 @@ const Registry = ({ normalAccount }) => {
         registry.name.toLowerCase().includes(query.toLowerCase())
       );
       setFilterRegistries(filterRegistry);
-      console.log('Filter registry', filterRegistry);
     }
   };
 

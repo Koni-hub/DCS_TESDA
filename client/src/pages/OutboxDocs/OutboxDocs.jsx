@@ -159,6 +159,7 @@ const OutboxDocs = ({ normalAccount }) => {
     localStorage.removeItem('token');
     localStorage.setItem('loggedIn', 'false');
     localStorage.setItem('role', 'guest');
+    localStorage.removeItem('currentOffice');
     navigate('/');
   };
 

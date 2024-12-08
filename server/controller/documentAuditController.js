@@ -1,6 +1,7 @@
 import {Op, Sequelize } from "sequelize";
 import DocAuditLog from "../model/documentAuditModels.js";
 import Office from "../model/officeModels.js";
+import RecordDocument from "../model/recordDocumentModels.js";
 
 export const getAllDocAuditLogs = async (req, res) => {
   try {
@@ -22,15 +23,38 @@ export const createDocAuditLog = async (req, res) => {
 };
 
 export const findAllDocLogs = async (req, res) => {
+  const { receiver } = req.params;
+  if (!receiver) {
+    return res.status(400).json({ error: "Receiver parameter is required." });
+  }
+
   try {
     const logs = await DocAuditLog.findAll({
       include: [
         {
           model: RecordDocument,
           as: "document",
+          attributes: [
+            'id',
+            'No',
+            'title',
+            'source',
+            'type',
+            'mode',
+            'image',
+            'url',
+            'status',
+            'description',
+            'createdAt',
+            'updatedAt',
+          ],
         },
       ],
+      where: {
+        receiver: Sequelize.json(`JSON_CONTAINS(receiver, '[\"${receiver}\"]')`),
+      },
     });
+
     res.json(logs);
   } catch (error) {
     res.status(500).json({ error: error.message });

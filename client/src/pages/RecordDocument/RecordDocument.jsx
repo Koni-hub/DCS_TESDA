@@ -25,6 +25,7 @@ const RecordDocument = ({ normalAccount }) => {
   const [offices, setOffices] = useState([]);
   const [isSideDropDownOpen, setSideDropDownOpen] = useState(false);
   const [viewDocs, setViewDocs] = useState([]);
+  const [currentOffice, setCurrentOffice] = useState('');
 
   const handleDropdownSidebar = () => {
     setSideDropDownOpen(!isSideDropDownOpen);
@@ -44,20 +45,61 @@ const RecordDocument = ({ normalAccount }) => {
   const getAllOffice = async () => {
     try {
       const response = await axios.get(`${API_URL}/offices`);
+
       setOffices(response.data);
     } catch (error) {
       console.error('Error fetching offices', error);
     }
   };
 
-  const getAllRecordDocument = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/record-docs`);
-      setRecordDocuments(response.data);
-    } catch (error) {
-      console.error('Error fetching record documents', error);
-    }
-  };
+    const officeId = normalAccount.origin;
+    localStorage.setItem('currentOffice', officeId);
+
+    const getPersistedOffice = () => {
+      const savedOffice = localStorage.getItem('currentOffice');
+      return savedOffice ? savedOffice : null;
+    };
+
+    const checkIfOfficeExists = async (selectedOffice) => {
+      console.info('Checking if office exists for ID:', selectedOffice);
+      console.info('Offices available:', offices);
+      const matchingOffice = offices.find(office => office.id === selectedOffice);
+      
+      if (matchingOffice) {
+        console.info('Office found (ID):', matchingOffice.id);
+        localStorage.setItem('currentOffice', matchingOffice.id);
+        setCurrentOffice(matchingOffice.id);
+      } else {
+        console.info('Office not found');
+      }
+    };
+
+    useEffect(() => {
+      const persistedOffice = getPersistedOffice();
+      if (persistedOffice) {
+        console.info('Persisted office found:', persistedOffice);
+        setCurrentOffice(persistedOffice);
+      } else {
+        const sessionLogOffice = localStorage.getItem('currentOffice');
+        checkIfOfficeExists(sessionLogOffice);
+      }
+    }, []);
+
+    useEffect(() => {
+      if (currentOffice) {
+        console.info('Fetching documents for office ID:', currentOffice);
+        getAllRecordDocument();
+      }
+    }, [currentOffice]);
+
+    const getAllRecordDocument = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/document_audits/all/${currentOffice}`);
+        setRecordDocuments(response.data);
+      } catch (error) {
+        console.error('Error fetching record documents', error);
+      }
+    };
 
   const loadImage = (e) => {
     const image = e.target.files[0];
@@ -110,7 +152,7 @@ const RecordDocument = ({ normalAccount }) => {
         const response = await axios.get(
           `${API_URL}/account/${normalAccount.email}`
         );
-        console.log('Data (origin): ', response.data.origin);
+
         setLoggedInAccount(response.data);
         setRole(response.data.createdBy);
       } catch (error) {
@@ -120,8 +162,6 @@ const RecordDocument = ({ normalAccount }) => {
 
     getUsernameForData();
   }, [normalAccount]);
-
-  const officeId = normalAccount.origin;
 
   useEffect(() => {
     if (role && role !== 'Admin' && role !== 'System') {
@@ -143,6 +183,7 @@ const RecordDocument = ({ normalAccount }) => {
     localStorage.removeItem('token');
     localStorage.setItem('loggedIn', 'false');
     localStorage.setItem('role', 'guest');
+    localStorage.removeItem('currentOffice');
     navigate('/');
   };
 
@@ -598,17 +639,17 @@ const RecordDocument = ({ normalAccount }) => {
                   {recordDocument.length > 0 ? (
                     recordDocument.map((record_docs, index) => (
                       <tr key={index}>
-                        <td>{record_docs.No}</td>
-                        <td>{record_docs.title}</td>
-                        <td>{record_docs.source}</td>
-                        <td>{record_docs.type}</td>
-                        <td>{record_docs.mode}</td>
-                        <td>{record_docs.description}</td>
-                        <td>{record_docs.status}</td>
+                        <td>{record_docs.document.No}</td>
+                        <td>{record_docs.document.title}</td>
+                        <td>{record_docs.document.source}</td>
+                        <td>{record_docs.document.type}</td>
+                        <td>{record_docs.document.mode}</td>
+                        <td>{record_docs.document.description}</td>
+                        <td>{record_docs.document.status}</td>
                         <td>
                           <button
                             className="btn-view"
-                            onClick={() => handleToggleOpenDocsView(record_docs.id)}
+                            onClick={() => handleToggleOpenDocsView(1)}
                           >
                             View
                           </button>
