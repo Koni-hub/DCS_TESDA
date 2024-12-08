@@ -70,13 +70,13 @@ export const getReceivedDoc = async (req, res) => {
 
 export const getDeclineDoc = async (req, res) => {
   const recipientId = req.params.id;
-  const { reason } = req.body;
+  const { reason_doc } = req.body;
 
-  console.info('Reasoning: ', reason);
+  console.info('Reasoning: ', reason_doc);
 
   try {
     await Recipient.update(
-      { status: "Declined", declined_reason: reason },
+      { status: "Declined", declined_reason: reason_doc },
       { where: { id: recipientId, status: "To Receive" } }
     );
     res.json({ message: "Document declined." });

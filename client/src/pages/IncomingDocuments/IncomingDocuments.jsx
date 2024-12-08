@@ -128,7 +128,9 @@ const IncomingDocuments = ({ normalAccount }) => {
       const userName =
         normalAccount?.username || '';
       const fullName = normalAccount.fullname || null;
-      await axios.put(`${API_URL}/recipients/${id}/decline`, reason);  
+      await axios.put(`${API_URL}/recipients/${id}/decline`,{
+        reason_doc: reason
+      });  
       const auditLogData = {
         userName,
         fullName,

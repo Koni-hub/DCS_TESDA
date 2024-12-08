@@ -3,15 +3,6 @@ import DocAuditLog from "../model/documentAuditModels.js";
 import Office from "../model/officeModels.js";
 import RecordDocument from "../model/recordDocumentModels.js";
 
-export const getAllDocAuditLogs = async (req, res) => {
-  try {
-    const logs = await DocAuditLog.findAll();
-    res.json(logs);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
 export const createDocAuditLog = async (req, res) => {
   const { document_id, senderName, receiver, action } = req.body;
   try {

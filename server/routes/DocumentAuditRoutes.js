@@ -1,5 +1,4 @@
 import {
-    getAllDocAuditLogs,
     createDocAuditLog,
     findDocLogsByID,
     findAllDocLogs
