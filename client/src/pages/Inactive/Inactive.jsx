@@ -1,4 +1,4 @@
-/* eslint-disable react/no-unescaped-entities */
+ 
 import './Inactive.css';
 import {Link} from 'react-router-dom';
 import inactive_account from '../../assets/logo/inactive_account-logo.png'

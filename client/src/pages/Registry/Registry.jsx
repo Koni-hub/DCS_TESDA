@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-/* eslint-disable react-hooks/exhaustive-deps */
+ 
 
 import './Registry.css';
 import { Link, useNavigate } from 'react-router-dom';

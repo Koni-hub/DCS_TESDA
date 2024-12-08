@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-/* eslint-disable react/no-unescaped-entities */
+ 
 import './RecordDocument.css';
 import axios from 'axios';
 import { API_URL } from '../../config';
