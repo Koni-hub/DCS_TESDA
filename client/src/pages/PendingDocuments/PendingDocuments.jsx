@@ -198,8 +198,8 @@ const PendingDocuments = ({ normalAccount }) => {
       const DocAuditLogData = {
         document_id: currentDocId,
         senderName: fullName,
-        receiver: recipient,
-        action: `ID ${userName} Forward document by forward to offices ${recipient}`,
+        receiver: allRecipients,
+        action: `ID ${userName} Forward document by forward to offices ${allRecipients}`,
       }
 
       await axios.post(`${API_URL}/document_audits`, DocAuditLogData, {
