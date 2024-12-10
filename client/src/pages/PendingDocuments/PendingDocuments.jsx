@@ -157,12 +157,17 @@ const PendingDocuments = ({ normalAccount }) => {
     const userName = normalAccount?.username || '';
     const senderEmail = normalAccount.email;
     const fullName = normalAccount.fullname || null;
+    const senderOfficeId = normalAccount.origin;
   
     const formData = new FormData();
     
-    recipient.forEach((recipientId) => {
-      formData.append('recipient', recipientId)
+    const allRecipients = [...recipient, senderOfficeId.toString()];
+    
+    allRecipients.forEach((recipientId) => {
+      formData.append('recipient', recipientId);
     });
+
+    console.log('All Recipient: ', allRecipients);
     formData.append('action', action);
     formData.append('remarks', remarks);
     formData.append('userName', userName);
