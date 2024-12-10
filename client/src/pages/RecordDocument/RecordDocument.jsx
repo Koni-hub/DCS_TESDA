@@ -234,6 +234,7 @@ const RecordDocument = ({ normalAccount }) => {
         normalAccount?.username || '';
       const fullName = normalAccount.fullname || null;
       const senderEmail = normalAccount.email;
+      const senderOfficeId = normalAccount.origin;
 
     const Fields = {
       title,
@@ -257,7 +258,9 @@ const RecordDocument = ({ normalAccount }) => {
       formData.append('file', file);
     }
 
-    recipient.forEach((recipientId) => {
+    const allRecipients = [...recipient, senderOfficeId.toString()];
+    
+    allRecipients.forEach((recipientId) => {
       formData.append('recipient', recipientId);
     });
 
@@ -279,8 +282,8 @@ const RecordDocument = ({ normalAccount }) => {
       const DocAuditLogData = {
         document_id: documentId,
         senderName: fullName,
-        receiver: recipient,
-        action: `Created document by ID ${userName} and forward to offices ${recipient}`,
+        receiver: allRecipients,
+        action: `Created document by ID ${userName} and forward to offices ${allRecipients}`,
       }
 
       await axios.post(`${API_URL}/audit-logs`, auditLogData, {
